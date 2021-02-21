@@ -20,7 +20,8 @@
  * @subpackage Isceb_wiki/public
  * @author     Anastasia Dvoryanchikova <anadvoryanchikova@gmail.com>
  */
-class Isceb_wiki_Public {
+class Isceb_wiki_Public
+{
 
 	/**
 	 * The ID of this plugin.
@@ -47,11 +48,11 @@ class Isceb_wiki_Public {
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct($plugin_name, $version)
+	{
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
 	}
 
 	/**
@@ -59,7 +60,8 @@ class Isceb_wiki_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function enqueue_styles()
+	{
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -73,8 +75,7 @@ class Isceb_wiki_Public {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/isceb_wiki-public.css', array(), $this->version, 'all' );
-
+		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/isceb_wiki-public.css', array(), $this->version, 'all');
 	}
 
 	/**
@@ -82,7 +83,8 @@ class Isceb_wiki_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
+	public function enqueue_scripts()
+	{
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -96,8 +98,30 @@ class Isceb_wiki_Public {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/isceb_wiki-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/isceb_wiki-public.js', array('jquery'), $this->version, false);
 
+		
 	}
 
+	
+
+	function shortcode_wiki_submit($atts)
+	{
+
+		$args = shortcode_atts(
+			array(
+				'arg1'   => 'arg1',
+				'arg2'   => 'arg2',
+			),
+			$atts
+		);
+
+		// code...
+
+		$var = (strtolower($args['arg1']) != "") ? strtolower($args['arg1']) : 'default';
+
+		// code...
+		include dirname(__FILE__) . '\partials\isceb-wiki-public-form.php';
+		// return $var;
+	}
 }

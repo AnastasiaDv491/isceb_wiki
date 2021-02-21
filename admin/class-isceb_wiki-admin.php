@@ -20,7 +20,8 @@
  * @subpackage Isceb_wiki/admin
  * @author     Anastasia Dvoryanchikova <anadvoryanchikova@gmail.com>
  */
-class Isceb_wiki_Admin {
+class Isceb_wiki_Admin
+{
 
 	/**
 	 * The ID of this plugin.
@@ -47,11 +48,11 @@ class Isceb_wiki_Admin {
 	 * @param      string    $plugin_name       The name of this plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct($plugin_name, $version)
+	{
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
 	}
 
 	/**
@@ -59,7 +60,8 @@ class Isceb_wiki_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function enqueue_styles()
+	{
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -73,8 +75,7 @@ class Isceb_wiki_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/isceb_wiki-admin.css', array(), $this->version, 'all' );
-
+		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/isceb_wiki-admin.css', array(), $this->version, 'all');
 	}
 
 	/**
@@ -82,7 +83,8 @@ class Isceb_wiki_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
+	public function enqueue_scripts()
+	{
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -96,8 +98,35 @@ class Isceb_wiki_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/isceb_wiki-admin.js', array( 'jquery' ), $this->version, false );
-
+		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/isceb_wiki-admin.js', array('jquery'), $this->version, false);
 	}
 
+	function post_first()
+	{
+		/**
+		 * Do not forget to check your nonce for security!
+		 *
+		 * @link https://codex.wordpress.org/Function_Reference/wp_verify_nonce
+		 */
+		if (!wp_verify_nonce($_POST['my_nonce_field'], 'submit_content')) {
+			//TODO: replace with right page to respond
+			wp_send_json_error();
+			die();
+		}
+
+		
+
+		$post_data = array(
+			'post_title' => $_POST['post_title'],
+			'post_content' => $_POST['post_content'],
+			'post_status' => 'draft'
+		);
+
+		$post_id = wp_insert_post($post_data);
+
+		wp_redirect(site_url() . '/thank-you/');
+
+		// die();
+
+	}
 }

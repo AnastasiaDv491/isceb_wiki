@@ -160,11 +160,17 @@ class Isceb_wiki
 	private function define_admin_hooks()
 	{
 		$plugin_post_types = new Isceb_Wiki_Post_Types();
-		$this->loader->add_action( 'init', $plugin_post_types, 'create_custom_post_type', 999 );
+		$this->loader->add_action('init', $plugin_post_types, 'create_custom_post_type', 999);
 		$plugin_admin = new Isceb_wiki_Admin($this->get_plugin_name(), $this->get_version());
 
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
+		/*
+     * Handle POST
+     */
+		$this->loader->add_action('admin_post_post_first', $plugin_admin, 'post_first');
+		//Turn this on if you also want it for non authenticated users
+		// $this->loader->add_action('admin_post_nopriv_post_first', $plugin_admin, 'post_first');
 	}
 
 	/**
@@ -181,7 +187,18 @@ class Isceb_wiki
 
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
+
+		/**
+		 * Register shortcode via loader
+		 *
+		 * Use: [short-code-name args]
+		 *
+		 * @link https://github.com/DevinVinson/WordPress-Plugin-Boilerplate/issues/262
+		 */
+
+		$this->loader->add_shortcode("wiki-form", $plugin_public, "shortcode_wiki_submit", $priority = 10, $accepted_args = 2);
 	}
+
 
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
