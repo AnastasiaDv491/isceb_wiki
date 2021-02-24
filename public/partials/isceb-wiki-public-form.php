@@ -31,7 +31,7 @@ if (!defined('WPINC')) die;
 	</p>
 
 	<p>
-		<input type='file' name='image' accept='image/*'>
+		<input type='file' name='wiki_file' accept='.pdf'>
 	</p>
 	
 	<?php

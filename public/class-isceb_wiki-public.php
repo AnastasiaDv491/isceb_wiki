@@ -99,11 +99,9 @@ class Isceb_wiki_Public
 		 */
 
 		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/isceb_wiki-public.js', array('jquery'), $this->version, false);
-
-		
 	}
 
-	
+
 
 	function shortcode_wiki_submit($atts)
 	{
@@ -121,7 +119,74 @@ class Isceb_wiki_Public
 		$var = (strtolower($args['arg1']) != "") ? strtolower($args['arg1']) : 'default';
 
 		// code...
+		//TODO check if text of page where shortcode is included is shown
 		include dirname(__FILE__) . '\partials\isceb-wiki-public-form.php';
 		// return $var;
+	}
+
+	function locate_template($template, $settings, $page_type)
+	{
+
+		$theme_files = array(
+			$page_type . '-' . $settings['custom_post_type'] . '.php',
+			$this->plugin_name . DIRECTORY_SEPARATOR . $page_type . '-' . $settings['custom_post_type'] . '.php',
+		);
+
+		$exists_in_theme = locate_template($theme_files, false);
+
+		if ($exists_in_theme != '') {
+
+			// Try to locate in theme first
+			return $template;
+		} else {
+
+			// Try to locate in plugin base folder,
+			// try to locate in plugin $settings['templates'] folder,
+			// return $template if non of above exist
+			$locations = array(
+				join(DIRECTORY_SEPARATOR, array(WP_PLUGIN_DIR, $this->plugin_name, '')),
+				join(DIRECTORY_SEPARATOR, array(WP_PLUGIN_DIR, $this->plugin_name, $settings['templates_dir'], '')), //plugin $settings['templates'] folder
+			);
+
+			foreach ($locations as $location) {
+				if (file_exists($location . $theme_files[0])) {
+					return $location . $theme_files[0];
+				}
+			}
+
+			return $template;
+		}
+	}
+
+	function get_custom_post_type_templates($template)
+	{
+		global $post;
+
+		$settings = array(
+			'custom_post_type' => 'course',
+			'templates_dir' => 'templates',
+		);
+
+		//if ( $settings['custom_post_type'] == get_post_type() && ! is_archive() && ! is_search() ) {
+		if ($settings['custom_post_type'] == get_post_type() && is_single()) {
+
+			return $this->locate_template($template, $settings, 'single');
+		}
+
+		return $template;
+	}
+
+	function add_files_to_single_if_course($content)
+	{
+		if (get_post_type() == 'course') {
+
+			ob_start();
+			include dirname(__FILE__) . '\partials\isceb_wiki_files.php';
+			$my_content = ob_get_contents();
+			ob_end_clean();
+			return $content . "\n" . $my_content;
+			// $content .= '<p>Your new content here</p>';
+		}
+		return $content;
 	}
 }

@@ -197,6 +197,12 @@ class Isceb_wiki
 		 */
 
 		$this->loader->add_shortcode("wiki-form", $plugin_public, "shortcode_wiki_submit", $priority = 10, $accepted_args = 2);
+
+		// Template page courses
+		//Uncomment to register custom post type course
+		// $this->loader->add_filter( 'template_include', $plugin_public, 'get_custom_post_type_templates' );
+
+		$this->loader->add_filter( 'the_content', $plugin_public ,'add_files_to_single_if_course');
 	}
 
 
