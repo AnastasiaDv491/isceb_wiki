@@ -158,7 +158,7 @@ class Isceb_wiki_Public
 		}
 	}
 
-	function get_custom_post_type_templates($template)
+	function stom_post_type_templates($template)
 	{
 		global $post;
 
@@ -182,6 +182,35 @@ class Isceb_wiki_Public
 
 			ob_start();
 			include dirname(__FILE__) . '\partials\isceb_wiki_files.php';
+			$my_content = ob_get_contents();
+			ob_end_clean();
+			return $content . "\n" . $my_content;
+			// $content .= '<p>Your new content here</p>';
+		}
+		return $content;
+	}
+
+	function add_course_to_single_if_phase($content)
+	{
+		if (get_post_type() == 'phase') {
+
+			ob_start();
+			include dirname(__FILE__) . '\partials\isceb_wiki_phases.php';
+			$my_content = ob_get_contents();
+			ob_end_clean();
+			return $content . "\n" . $my_content;
+			// $content .= '<p>Your new content here</p>';
+		}
+		return $content;
+	}
+
+	
+	function add_phase_to_single_if_program($content)
+	{
+		if (get_post_type() == 'program') {
+
+			ob_start();
+			include dirname(__FILE__) . '\partials\isceb_wiki_programs.php';
 			$my_content = ob_get_contents();
 			ob_end_clean();
 			return $content . "\n" . $my_content;

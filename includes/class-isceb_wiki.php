@@ -203,6 +203,11 @@ class Isceb_wiki
 		// $this->loader->add_filter( 'template_include', $plugin_public, 'get_custom_post_type_templates' );
 
 		$this->loader->add_filter( 'the_content', $plugin_public ,'add_files_to_single_if_course');
+
+		$this->loader->add_filter( 'the_content', $plugin_public ,'add_course_to_single_if_phase');
+
+		$this->loader->add_filter( 'the_content', $plugin_public ,'add_phase_to_single_if_program');
+		
 	}
 
 

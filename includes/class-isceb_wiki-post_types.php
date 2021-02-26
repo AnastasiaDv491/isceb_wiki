@@ -391,17 +391,60 @@ class Isceb_Wiki_Post_Types
                 'custom_caps_users'     => array(
                     'administrator',
                 ),
+            ),
+            array(
+                'slug'                  => 'phase',
+                'singular'              => 'Phase',
+                'plural'                => 'Phases',
+                'menu_name'             =>  'Phases',
+                'description'           =>  'Phases',
+                'has_archive'           => true,
+                'hierarchical'          => false,
+                'menu_icon'             => 'dashicons-tag',
+                'rewrite' => array(
+                    'slug'                  => 'phases',
+                    'with_front'            => true,
+                    'pages'                 => true,
+                    'feeds'                 => true,
+                    'ep_mask'               => EP_PERMALINK,
+                ),
+                'menu_position'         => 21,
+                'public'                => true,
+                'publicly_queryable'    => true,
+                'exclude_from_search'   => true,
+                'show_ui'               => true,
+                'show_in_menu'          => true,
+                'query_var'             => true,
+                'show_in_admin_bar'     => true,
+                'show_in_nav_menus'     => true,
+                'supports'              => array(
+                    'title',
+                    'editor',
+                    'excerpt',
+                    'author',
+                    'thumbnail',
+                    'comments',
+                    'trackbacks',
+                    'custom-fields',
+                    'revisions',
+                    'page-attributes',
+                    'post-formats',
+                ),
+                'custom_caps'           => true,
+                'custom_caps_users'     => array(
+                    'administrator',
+                ),
                 'taxonomies'            => array(
 
                     array(
-                        'taxonomy'          => 'wiki_file_category',
-                        'plural'            => 'Wiki-file Categories',
-                        'single'            => 'Wiki-file Category',
-                        'post_types'        => array('wiki-file'),
+                        'taxonomy'          => 'phase_category',
+                        'plural'            => 'Phase Categories',
+                        'single'            => 'Phase Category',
+                        'post_types'        => array('phase'),
                     ),
 
                 ),
-            ),
+            )
         );
 
         foreach ($post_types_fields as $fields) {
