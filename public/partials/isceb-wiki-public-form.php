@@ -31,18 +31,35 @@ if (!defined('WPINC')) die;
 	</p>
 
 	<p>
-		<input type='file' name='wiki_file' accept='.pdf'>
+		<input id='filesInput' multiple onchange='updateList()' type='file' name='wiki_file' accept='.pdf'>
 	</p>
-	
+	<div id="fileList"></div>
+
+	<?php
+	$taxonomy = 'wiki_file_category';
+	$terms = get_terms(array(
+		'taxonomy' => $taxonomy,
+		'hide_empty' => false,
+	));
+
+	?>
+
+	<script type="text/javascript">
+		//Assign php generated json to JavaScript variable
+		var tempArray = <?php echo json_encode($terms); ?>;
+		console.log(tempArray);
+	</script>
+
+
 	<?php
 
 
-	$taxonomy = 'wiki_file_category';
-	$terms = get_terms( array(
-		'taxonomy' => $taxonomy,
-		'hide_empty' => false,
-	) );
-	
+	// $taxonomy = 'wiki_file_category';
+	// $terms = get_terms( array(
+	// 	'taxonomy' => $taxonomy,
+	// 	'hide_empty' => false,
+	// ) );
+	/*
 	if ($terms && !is_wp_error($terms)) :
 	?>
 	    <label for="file_categories">Choose a file category:</label>
@@ -51,13 +68,18 @@ if (!defined('WPINC')) die;
 				<option value='<?php echo $term->name; ?>'><?php echo $term->name; ?></option>
 			<?php } ?>
 		</select>
-	<?php endif; ?>
+	<?php endif; */ ?>
+
+
 
 
 	<p>
 		<input type='hidden' name='action' value='post_first'>
 		<input type='submit' value='Submit Content'>
 	</p>
+
+
+
 
 
 

@@ -161,7 +161,7 @@ class Isceb_wiki_Public
 		}
 	}
 
-	function stom_post_type_templates($template)
+	function get_custom_post_type_templates($template)
 	{
 		global $post;
 

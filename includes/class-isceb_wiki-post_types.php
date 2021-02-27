@@ -391,6 +391,14 @@ class Isceb_Wiki_Post_Types
                 'custom_caps_users'     => array(
                     'administrator',
                 ),
+                'taxonomies'            => array(
+                    array(
+                        'taxonomy'          => 'wiki_file_category',
+                        'plural'            => 'Wiki-file Categories',
+                        'single'            => 'Wiki-file Category',
+                        'post_types'        => array('wiki-file'),
+                    ),
+                ),
             ),
             array(
                 'slug'                  => 'phase',
