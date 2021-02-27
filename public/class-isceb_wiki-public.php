@@ -118,10 +118,13 @@ class Isceb_wiki_Public
 
 		$var = (strtolower($args['arg1']) != "") ? strtolower($args['arg1']) : 'default';
 
-		// code...
+		ob_start();
 		//TODO check if text of page where shortcode is included is shown
 		include dirname(__FILE__) . '\partials\isceb-wiki-public-form.php';
 		// return $var;
+		
+
+		return ob_get_clean();
 	}
 
 	function locate_template($template, $settings, $page_type)
