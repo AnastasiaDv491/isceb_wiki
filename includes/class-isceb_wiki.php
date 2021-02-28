@@ -45,9 +45,9 @@ class Isceb_wiki
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      string    $isceb_wiki    The string used to uniquely identify this plugin.
+	 * @var      string    $plugin_name    The string used to uniquely identify this plugin.
 	 */
-	protected $isceb_wiki;
+	protected $plugin_name;
 
 	/**
 	 * The current version of the plugin.
@@ -74,7 +74,7 @@ class Isceb_wiki
 		} else {
 			$this->version = '1.0.0';
 		}
-		$this->isceb_wiki = 'isceb_wiki';
+		$this->plugin_name = 'isceb_wiki';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -204,7 +204,7 @@ class Isceb_wiki
 	{
 		$plugin_post_types = new Isceb_Wiki_Post_Types();
 		$this->loader->add_action('init', $plugin_post_types, 'create_custom_post_type', 999);
-		$plugin_admin = new Isceb_wiki_Admin($this->get_isceb_wiki(), $this->get_version());
+		$plugin_admin = new Isceb_wiki_Admin($this->get_plugin_name(), $this->get_version());
 
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
@@ -227,7 +227,7 @@ class Isceb_wiki
 	private function define_public_hooks()
 	{
 
-		$plugin_public = new Isceb_wiki_Public($this->get_isceb_wiki(), $this->get_version());
+		$plugin_public = new Isceb_wiki_Public($this->get_plugin_name(), $this->get_version());
 
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
@@ -271,9 +271,9 @@ class Isceb_wiki
 	 * @since     1.0.0
 	 * @return    string    The name of the plugin.
 	 */
-	public function get_isceb_wiki()
+	public function get_plugin_name()
 	{
-		return $this->isceb_wiki;
+		return $this->plugin_name;
 	}
 
 	/**
