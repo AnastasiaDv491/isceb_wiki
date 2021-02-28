@@ -222,23 +222,4 @@ class Isceb_wiki_Public
 		return $content;
 	}
 
-	function my_acf_settings_url($url)
-	{
-		return MY_ACF_URL;
-	}
-
-	function my_acf_json_load_point( $paths ) {
-		
-		// remove original path (optional)
-		unset($paths[0]);
-		
-		
-		// append path
-		// $paths[] = dirname(__FILE__) . '/acf-json';
-		$paths[] = MY_ACF_JSON;
-		
-		// return
-		return $paths;
-		
-	}
 }
