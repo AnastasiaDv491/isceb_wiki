@@ -129,9 +129,26 @@ class Isceb_wiki
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-isceb_wiki-post_types.php';
 
+		// Define path and URL to the ACF plugin.
+		define('MY_ACF_PATH', dirname(__FILE__) . '/advanced-custom-fields/');
+		define('MY_ACF_URL', dirname(__FILE__) . '/advanced-custom-fields/');
+		define('MY_ACF_JSON',dirname(__FILE__) . '/acf-json');
 
+		// Include the ACF plugin.
+		include_once(MY_ACF_PATH . 'acf.php');
+
+		// Customize the url setting to fix incorrect asset URLs.
+		// add_filter('acf/settings/url', 'my_acf_settings_url');
+
+		/*acf-fields.json*/
 		$this->loader = new Isceb_wiki_Loader();
 	}
+
+	
+
+
+	
+
 
 	/**
 	 * Define the locale for this plugin for internationalization.
@@ -202,12 +219,16 @@ class Isceb_wiki
 		//Uncomment to register custom post type course
 		// $this->loader->add_filter( 'template_include', $plugin_public, 'get_custom_post_type_templates' );
 
-		$this->loader->add_filter( 'the_content', $plugin_public ,'add_files_to_single_if_course');
+		$this->loader->add_filter('the_content', $plugin_public, 'add_files_to_single_if_course');
 
-		$this->loader->add_filter( 'the_content', $plugin_public ,'add_course_to_single_if_phase');
+		$this->loader->add_filter('the_content', $plugin_public, 'add_course_to_single_if_phase');
 
-		$this->loader->add_filter( 'the_content', $plugin_public ,'add_phase_to_single_if_program');
-		
+		$this->loader->add_filter('the_content', $plugin_public, 'add_phase_to_single_if_program');
+
+		// ACF: Customize the url setting to fix incorrect asset URLs.
+		$this->loader->add_filter('acf/settings/url', $plugin_public, 'my_acf_settings_url');
+
+		$this->loader->add_filter('acf/settings/load_json',$plugin_public, 'my_acf_json_load_point');
 	}
 
 
