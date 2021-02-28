@@ -1,0 +1,48 @@
+
+    {
+        "key": "group_603293235bfdb",
+        "title": "Add file field",
+        "fields": [
+            {
+                "key": "field_603293bf1718f",
+                "label": "File Attachment",
+                "name": "file_attachment",
+                "type": "file",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "array",
+                "library": "all",
+                "min_size": "",
+                "max_size": "",
+                "mime_types": ".docx, .pdf"
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "wiki-file"
+                }
+            ]
+        ],
+        "menu_order": -500,
+        "position": "side",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": [
+            "format",
+            "page_attributes",
+            "featured_image",
+            "send-trackbacks"
+        ],
+        "active": true,
+        "description": ""
+    }
