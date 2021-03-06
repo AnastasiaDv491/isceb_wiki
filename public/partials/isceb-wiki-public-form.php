@@ -24,14 +24,14 @@ if (!defined('WPINC')) die;
 	<?php wp_nonce_field('submit_content', 'my_nonce_field'); ?>
 
 	<p>
-		<label><input type="text" name="post_title" placeholder="Enter a Title"></label>
+		<label><input type="text" name="post_title" placeholder="Enter a Title" value="Title"></label>
 	</p>
 	<p>
 		<label><textarea rows='5' name="post_content" placeholder="Enter a description"></textarea></label>
 	</p>
 
 	<p>
-		<input id='filesInput' multiple onchange='updateList()' type='file' name='wiki_file' accept='.pdf'>
+		<input id='filesInput' multiple onchange='updateList()' type='file' name='wiki_file[]' accept='.pdf'>
 	</p>
 	<div id="fileList"></div>
 
@@ -50,25 +50,6 @@ if (!defined('WPINC')) die;
 		console.log(tempArray);
 	</script>
 
-
-	<?php
-
-
-	// $taxonomy = 'wiki_file_category';
-	// $terms = get_terms( array(
-	// 	'taxonomy' => $taxonomy,
-	// 	'hide_empty' => false,
-	// ) );
-	/*
-	if ($terms && !is_wp_error($terms)) :
-	?>
-	    <label for="file_categories">Choose a file category:</label>
-		<select name='file_categories' form="file_form" >
-			<?php foreach ($terms as $term) { ?>
-				<option value='<?php echo $term->name; ?>'><?php echo $term->name; ?></option>
-			<?php } ?>
-		</select>
-	<?php endif; */ ?>
 
 
 

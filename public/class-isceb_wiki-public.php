@@ -1,13 +1,13 @@
 <?php
 
 /**
- * The public-facing functionality of the plugin.
- *
- * @link       isceb.be
- * @since      1.0.0
- *
- * @package    Isceb_wiki
- * @subpackage Isceb_wiki/public
+			 * The public-facing functionality of the plugin.
+			 *
+			 * @link       isceb.be
+			 * @since      1.0.0
+			 *
+			 * @package    Isceb_wiki
+			 * @subpackage Isceb_wiki/public
  */
 
 /**
@@ -76,6 +76,7 @@ class Isceb_wiki_Public
 		 */
 
 		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/isceb_wiki-public.css', array(), $this->version, 'all');
+		wp_enqueue_style('select2style', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), $this->version, 'all');
 	}
 
 	/**
@@ -99,6 +100,22 @@ class Isceb_wiki_Public
 		 */
 
 		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/isceb_wiki-public.js', array('jquery'), $this->version, false);
+		wp_enqueue_script('select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', array('jquery'), $this->version, false);
+		
+		/**
+		 *  In backend there is global ajaxurl variable defined by WordPress itself.
+		 *
+		 * This variable is not created by WP in frontend. It means that if you want to use AJAX calls in frontend, then you have to define such variable by yourself.
+		 * Good way to do this is to use wp_localize_script.
+		 *
+		 * @link http://wordpress.stackexchange.com/a/190299/90212
+		 *
+		 * You could also pass this datas with the "data" attribute somewhere in your form.
+		 */
+
+		wp_localize_script($this->plugin_name, 'wp_ajax', array(
+			'ajax_url' => admin_url('admin-ajax.php'),		
+		));
 	}
 
 
@@ -122,7 +139,7 @@ class Isceb_wiki_Public
 		//TODO check if text of page where shortcode is included is shown
 		include dirname(__FILE__) . '\partials\isceb-wiki-public-form.php';
 		// return $var;
-		
+
 
 		return ob_get_clean();
 	}
@@ -207,7 +224,7 @@ class Isceb_wiki_Public
 		return $content;
 	}
 
-	
+
 	function add_phase_to_single_if_program($content)
 	{
 		if (get_post_type() == 'program') {
@@ -222,4 +239,21 @@ class Isceb_wiki_Public
 		return $content;
 	}
 
+	public function get_wiki_courses_ajax() {
+		 // Query Arguments
+		 $args = array(
+			'post_type' => "course",
+			'post_status' => array('publish'),
+			'nopaging' => true,
+			'order' => 'DESC',
+		);
+	
+		// The Query
+		$ajaxposts = get_posts( $args ); // changed to get_posts from wp_query, because `get_posts` returns an array
+		
+		// echo json_encode( $ajaxposts );
+	
+		// exit; // exit ajax call(or it will return useless information to the response)s
+		wp_send_json_success($ajaxposts);
+	}
 }

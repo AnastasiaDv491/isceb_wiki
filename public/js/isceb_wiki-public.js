@@ -1,4 +1,6 @@
-(function( $ ) {
+var courses = [];
+
+(function ($) {
 	'use strict';
 
 	/**
@@ -28,23 +30,56 @@
 	 * Although scripts in the WordPress core, Plugins and Themes may be
 	 * practising this, we should strive to set a better example in our own work.
 	 */
- 
-})( jQuery );
 
-function updateList(){
-	var fileCategoryOptions ="";
-
-	for(var j = 0; j < tempArray.length; ++j) {
+	$.ajax({
+		type: 'POST',
+		url: wp_ajax.ajax_url,
+		dataType: "json", // add data type
+		data: { action : 'get_wiki_courses_ajax' },
+		success: function( response ) {
+			$.each( response["data"], function( key, value ) {
+				courses.push( value["post_title"] ); // that's the posts data.
+			} );
+			// console.log(response["data"][0]["post_title"]);
+		}
+	});
+	
 		
+	
+	
+
+
+})(jQuery);
+
+function updateList() {
+	var fileCategoryOptions = "";
+	var fileCourseOptions = "";
+
+	for (var j = 0; j < tempArray.length; ++j) {
+
 		fileCategoryOptions += '<option>' + tempArray[j].name + '</option>';
+	}
+	
+	for (let j = 0; j < courses.length; j++) {
+		fileCourseOptions += '<option>' + courses[j] + '</option>';
+
 	}
 
 	var input = document.getElementById('filesInput');
-    var output = document.getElementById('fileList');
-    var children = "";
-    for (var i = 0; i < input.files.length; ++i) {
-        children += '<li>' + input.files.item(i).name + '<select name="file_category_'+i+'">'+fileCategoryOptions +'</select></li>';
-		
-    }
-    output.innerHTML = '<ul>'+children+'</ul>';
+	var output = document.getElementById('fileList');
+	var children = "";
+	for (var i = 0; i < input.files.length; ++i) {
+		children += '<li>' + '<input class="inputFileName"  name="fileName" type="text" value="'
+				+input.files[i].name +'">' + '<select name="file_category_' + i 
+				+ '" class="js-example-basic-single">' + fileCategoryOptions 
+				+ '</select><select class="js-example-basic-single" name=file_course_'+i+'>'
+				+fileCourseOptions+'</select> </li>';
+
+	}
+	output.innerHTML = '<ul>' + children + '</ul>';
+
+	(function ($) {$('.js-example-basic-single').select2({theme: "classic",width: 'resolve'});})(jQuery);
+	
 }
+
+

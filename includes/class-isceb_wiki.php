@@ -162,13 +162,13 @@ class Isceb_wiki
 			return $path;
 		}
 
-		add_filter('acf/settings/load_json', 'isceb_wiki_json_load_point',1);
+		add_filter('acf/settings/load_json', 'isceb_wiki_json_load_point', 1);
 		function isceb_wiki_json_load_point($paths)
 		{
 			unset($paths[0]);
 			$paths[] = plugin_dir_path(dirname(__FILE__)) . '/acf-json';
 			error_log("ddddddddd");
-			error_log( plugin_dir_path(dirname(__FILE__)) . '/acf-json');
+			error_log(plugin_dir_path(dirname(__FILE__)) . '/acf-json');
 			return $paths;
 		}
 
@@ -251,6 +251,17 @@ class Isceb_wiki
 		$this->loader->add_filter('the_content', $plugin_public, 'add_course_to_single_if_phase');
 
 		$this->loader->add_filter('the_content', $plugin_public, 'add_phase_to_single_if_program');
+		/**
+		 * The wp_ajax_ is telling wordpress to use ajax and the prefix_ajax_first is the hook name to use in JavaScript or in URL.
+		 *
+		 * Call AJAX function via URL: https://www.yourwebsite.com/wp-admin/admin-ajax.php?action=prefix_ajax_first&post_id=23&other_param=something
+		 *
+		 * The ajax_wiki_file is the callback function.
+		 * wp_ajax_ is for authenticated users
+		 * wp_ajax_nopriv_ is for NOT authenticated users
+		 */
+		$this->loader->add_action('wp_ajax_get_wiki_courses_ajax', $plugin_public, 'get_wiki_courses_ajax');
+		$this->loader->add_action('wp_ajax_nopriv_get_wiki_courses_ajax', $plugin_public, 'get_wiki_courses_ajax');
 	}
 
 
