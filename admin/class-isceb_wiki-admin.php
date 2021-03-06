@@ -76,6 +76,7 @@ class Isceb_wiki_Admin
 		 */
 
 		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/isceb_wiki-admin.css', array(), $this->version, 'all');
+		
 	}
 
 	/**
@@ -109,22 +110,29 @@ class Isceb_wiki_Admin
 		 * @link https://codex.wordpress.org/Function_Reference/wp_verify_nonce
 		 */
 
+		// var_dump($_POST);
 
+		$files = array_filter($_FILES['wiki_file']['name']);
+		var_dump($files);
+		$total = count($files);
+		var_dump($total);
 
-		$post_data = array(
-			'post_title' => $_POST['post_title'],
-			'post_content' => $_POST['post_content'],
-			'post_status' => 'draft',
-			'post_type' => 'wiki-file'
+		for ($i=0; $i < $total; $i++) {
+			 $post_data = array();
+			 $post_id = null;
+			 $post_data = array(
+				'post_title' => $_POST['fileName'],
+				'post_status' => 'draft',
+				'post_type' => 'wiki-file'
+			);
+			$post_id = wp_insert_post($post_data);
 
-		);
+			wp_set_object_terms($post_id, $_POST['file_categories_'+$i], 'wiki_file_category');
 
-		$post_id = wp_insert_post($post_data);
+				
+		}
 
-		// For the category of the post
-
-		wp_set_object_terms($post_id, $_POST['file_categories'], 'wiki_file_category');
-
+       
 		if (
 			isset($_POST['my_nonce_field'])
 			&& wp_verify_nonce($_POST['my_nonce_field'], 'submit_content')
@@ -149,29 +157,6 @@ class Isceb_wiki_Admin
 			die();
 		}
 
-		// $upload = wp_upload_bits($_FILES['image']['name'], null, file_get_contents($_FILES['image']['tmp_name']));
-
-		// $wp_filetype = wp_check_filetype(basename($upload['file']), null);
-
-
-		// $wp_upload_dir = wp_upload_dir();
-
-		// $attachment = array(
-		// 	'guid' => $wp_upload_dir['baseurl'] . _wp_relative_upload_path($upload['file']),
-		// 	'post_mime_type' => $wp_filetype['type'],
-		// 	'post_title' => preg_replace('/\.[^.]+$/', '', basename($upload['file'])),
-		// 	'post_content' => '',
-		// 	'post_status' => 'inherit'
-		// );
-
-		// $attach_id = wp_insert_attachment($attachment, $upload['file'], $post_id);
-
-		// require_once(ABSPATH . 'wp-admin/includes/image.php');
-
-		// $attach_data = wp_generate_attachment_metadata($attach_id, $upload['file']);
-		// wp_update_attachment_metadata($attach_id, $attach_data);
-
-		// update_post_meta( $post_id, '_thumbnail_id', $attach_id );
 		update_post_meta($post_id, 'file_attachment', $attachment_id );
 
 
