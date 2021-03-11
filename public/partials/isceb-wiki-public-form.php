@@ -23,13 +23,16 @@ if (!defined('WPINC')) die;
 
 	<?php wp_nonce_field('submit_content', 'my_nonce_field'); ?>
 
-	<p>
-		<label><input type="text" name="post_title" placeholder="Enter a Title" value="Title"></label>
-	</p>
-	<p>
-		<label><textarea rows='5' name="post_content" placeholder="Enter a description"></textarea></label>
-	</p>
-
+	<h2> Here you can upload your files to WikiISCEB ! </h2>
+	<br>
+	<p> Only <b>PDF</b> files are allowed!</p>
+	<ul>
+		<li> You can change the name of the file </li>
+		<li> Upload multiple files at once </li>
+		<li> Select the corresponding course </li>
+		<li> Select summary/exercises/exam types </li>
+	</ul>
+	<br>
 	<p>
 		<input id='filesInput' multiple onchange='updateList()' type='file' name='wiki_file[]' accept='.pdf'>
 	</p>
@@ -56,7 +59,7 @@ if (!defined('WPINC')) die;
 
 	<p>
 		<input type='hidden' name='action' value='post_first'>
-		<input type='submit' value='Submit Content'>
+		<input id="button_wiki_file_submit" type='submit' value='Submit Content' disabled>
 	</p>
 
 

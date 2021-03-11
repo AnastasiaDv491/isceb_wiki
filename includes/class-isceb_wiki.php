@@ -172,6 +172,14 @@ class Isceb_wiki
 			return $paths;
 		}
 
+		add_filter( 'manage_wiki-file_posts_columns', 'set_custom_wiki_file_posts_custom_column' );
+
+		function set_custom_wiki_file_posts_custom_column($columns) {
+			$columns['course'] = __( 'Course', 'isceb_wiki' );
+		
+			return $columns;
+		}
+		
 
 		$this->loader = new Isceb_wiki_Loader();
 	}
@@ -212,9 +220,14 @@ class Isceb_wiki
      * Handle POST
      */
 		$this->loader->add_action('admin_post_post_first', $plugin_admin, 'post_first');
+		
 
 		//Turn this on if you also want it for non authenticated users
 		// $this->loader->add_action('admin_post_nopriv_post_first', $plugin_admin, 'post_first');
+
+		$this->loader-> add_action( 'manage_wiki-file_posts_custom_column' ,$plugin_admin, 'custom_wiki_file_column', 10, 2 );
+
+
 	}
 
 	/**

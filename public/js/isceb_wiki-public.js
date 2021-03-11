@@ -38,7 +38,8 @@ var courses = [];
 		data: { action : 'get_wiki_courses_ajax' },
 		success: function( response ) {
 			$.each( response["data"], function( key, value ) {
-				courses.push( value["post_title"] ); // that's the posts data.
+				console.log(value);
+				courses.push( [value["post_title"], value["ID"]] ); // that's the posts data.
 			} );
 			// console.log(response["data"][0]["post_title"]);
 		}
@@ -52,33 +53,48 @@ var courses = [];
 })(jQuery);
 
 function updateList() {
-	var fileCategoryOptions = "";
-	var fileCourseOptions = "";
-
-	for (var j = 0; j < tempArray.length; ++j) {
-
-		fileCategoryOptions += '<option>' + tempArray[j].name + '</option>';
-	}
-	
-	for (let j = 0; j < courses.length; j++) {
-		fileCourseOptions += '<option>' + courses[j] + '</option>';
-
-	}
-
 	var input = document.getElementById('filesInput');
-	var output = document.getElementById('fileList');
-	var children = "";
-	for (var i = 0; i < input.files.length; ++i) {
-		children += '<li>' + '<input class="inputFileName"  name="fileName" type="text" value="'
-				+input.files[i].name +'">' + '<select name="file_category_' + i 
-				+ '" class="js-example-basic-single">' + fileCategoryOptions 
-				+ '</select><select class="js-example-basic-single" name=file_course_'+i+'>'
-				+fileCourseOptions+'</select> </li>';
 
+	if (input.files.length > 0) {
+
+		var fileCategoryOptions = "";
+		var fileCourseOptions = "";
+	
+		for (var j = 0; j < tempArray.length; ++j) {
+	
+			fileCategoryOptions += '<option>' + tempArray[j].name + '</option>';
+		}
+		
+		console.log(courses);
+		for (let j = 0; j < courses.length; j++) {
+			fileCourseOptions += '<option value="'+courses[j][1] + '">' + courses[j][0] + '</option>';
+	
+		}
+	
+		var output = document.getElementById('fileList');
+		var children = "";
+		for (var i = 0; i < input.files.length; ++i) {
+			children += '<li>' + '<input class="inputFileName"  name="fileName_'+i+'" type="text" value="'
+					+input.files[i].name +'">' + '<select name="file_category_' + i 
+					+ '" class="js-example-basic-single">' + fileCategoryOptions 
+					+ '</select><select class="js-example-basic-single" name=file_course_'+i+'>'
+					+fileCourseOptions+'</select> </li>';
+	
+		}
+		output.innerHTML = '<ul>' + children + '</ul>';
+	
+		(function ($) {
+			$('.js-example-basic-single').select2({theme: "classic",width: 'resolve'});
+			$('#button_wiki_file_submit').prop("disabled", false);
+		
+		})(jQuery);
+		
+	} 
+	else {
+		(function ($) {
+			$('#button_wiki_file_submit').prop("disabled", true);
+		})(jQuery);
 	}
-	output.innerHTML = '<ul>' + children + '</ul>';
-
-	(function ($) {$('.js-example-basic-single').select2({theme: "classic",width: 'resolve'});})(jQuery);
 	
 }
 

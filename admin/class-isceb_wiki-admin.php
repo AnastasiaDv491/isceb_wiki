@@ -76,7 +76,6 @@ class Isceb_wiki_Admin
 		 */
 
 		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/isceb_wiki-admin.css', array(), $this->version, 'all');
-		
 	}
 
 	/**
@@ -102,8 +101,25 @@ class Isceb_wiki_Admin
 		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/isceb_wiki-admin.js', array('jquery'), $this->version, false);
 	}
 
+
+
 	function post_first()
 	{
+		// var_dump($_POST);
+		function handle_wiki_form_attachment($file_handler, $post_id)
+		{
+			// check to make sure its a successful upload
+			if ($_FILES[$file_handler]['error'] !== UPLOAD_ERR_OK) __return_false();
+
+			// require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+			require_once(ABSPATH . "wp-admin" . '/includes/file.php');
+			// require_once(ABSPATH . "wp-admin" . '/includes/media.php');
+
+			$attach_id = media_handle_upload($file_handler, $post_id);
+
+			return $attach_id;
+		}
+
 		/**
 		 * Do not forget to check your nonce for security!
 		 *
@@ -112,56 +128,101 @@ class Isceb_wiki_Admin
 
 		// var_dump($_POST);
 
-		$files = array_filter($_FILES['wiki_file']['name']);
-		var_dump($files);
-		$total = count($files);
-		var_dump($total);
+		// $files = array_filter($_FILES['wiki_file']['name']);
+		// var_dump($files);
+		// $total = count($files);
+		// var_dump($total);
+		$i = 0;
 
-		for ($i=0; $i < $total; $i++) {
-			 $post_data = array();
-			 $post_id = null;
-			 $post_data = array(
-				'post_title' => $_POST['fileName'],
-				'post_status' => 'draft',
-				'post_type' => 'wiki-file'
-			);
-			$post_id = wp_insert_post($post_data);
 
-			wp_set_object_terms($post_id, $_POST['file_categories_'+$i], 'wiki_file_category');
+		if ($_FILES) {
+			$files = $_FILES["wiki_file"];
+			foreach ($files['name'] as $key => $value) {
+				if ($files['name'][$key]) {
+					$file = array(
+						'name' => $files['name'][$key],
+						'type' => $files['type'][$key],
+						'tmp_name' => $files['tmp_name'][$key],
+						'error' => $files['error'][$key],
+						'size' => $files['size'][$key]
+					);
+					$_FILES = array("wiki_file" => $file);
+					foreach ($_FILES as $file => $array) {
 
-				
-		}
+						if (
+							isset($_POST['my_nonce_field'])
+							&& wp_verify_nonce($_POST['my_nonce_field'], 'submit_content')
 
-       
-		if (
-			isset($_POST['my_nonce_field'])
-			&& wp_verify_nonce($_POST['my_nonce_field'], 'submit_content')
+						) {
+							$attachment_id = handle_wiki_form_attachment($file, 0);
 
-		) {
+							// check if upload was succesfull
+							if (is_wp_error($attachment_id)) {
+								wp_redirect(site_url() . '/404/');
+								echo ('no upload');
+							} else {
+								//upload succesfull
+								$post_data = array();
+								$post_id = null;
+								$post_data = array(
+									'post_title' => $_POST["fileName_{$i}"],
+									'post_status' => 'draft',
+									'post_type' => 'wiki-file'
+								);
 
-			require_once( ABSPATH . 'wp-admin/includes/file.php' );
-			$attachment_id = media_handle_upload('wiki_file', 0);
+								$post_id = wp_insert_post($post_data);
 
-			if (is_wp_error($attachment_id)) {
-				var_dump($attachment_id);
-				echo ('no upload');
-				var_dump($_FILES);
-				if(isset($_POST['wiki_file'])){
-					echo('i am set');
+								var_dump($_POST);
+								wp_set_object_terms($post_id, $_POST["file_category_{$i}"], 'wiki_file_category');
+
+								update_field('course', $_POST["file_course_{$i}"], $post_id);
+								update_post_meta($post_id, 'file_attachment', $attachment_id);
+
+								// If upload was succesful TODO
+								wp_redirect(site_url() . '/thank-you/');
+							}
+						}
+
+						// Returns error if nonce is not set or invalid
+						else {
+							wp_send_json_error();
+							die();
+						}
+					}
+					++$i;
 				}
 			}
 		}
-		//TODO: replace with right page to respond
-		else {
-			wp_send_json_error();
-			die();
-		}
-
-		update_post_meta($post_id, 'file_attachment', $attachment_id );
-
-
-		// wp_redirect(site_url() . '/thank-you/');
-
+		//There are no files
 		die();
+	}
+
+	function custom_wiki_file_column($column, $post_id)
+	{
+		switch ($column) {
+
+			case 'course':
+				$terms = get_field('course', $post_id);
+				$output = "";
+
+				$count = count($terms);
+				$i = 1;
+
+				if ($terms) {
+					foreach ($terms as $value) {
+						$output = $output . $value->post_title;
+
+						if ($i < $count) {
+							$output = $output . ", ";
+						}
+						$i++;
+					}
+
+					echo "$output";
+				} else {
+					_e('Unable to get course', 'isceb_wiki');
+				}
+				break;
+		}
 	}
 }
