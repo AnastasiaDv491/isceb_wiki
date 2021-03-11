@@ -137,7 +137,8 @@ class Isceb_wiki_Public
 
 		ob_start();
 		//TODO check if text of page where shortcode is included is shown
-		include dirname(__FILE__) . '\partials\isceb-wiki-public-form.php';
+		include plugin_dir_path(__FILE__) . 'partials/isceb-wiki-public-form.php';
+		echo("hello");
 		// return $var;
 
 
@@ -201,7 +202,7 @@ class Isceb_wiki_Public
 		if (get_post_type() == 'course') {
 
 			ob_start();
-			include dirname(__FILE__) . '\partials\isceb_wiki_files.php';
+			include plugin_dir_path(__FILE__) . 'partials/isceb_wiki_files.php';
 			$my_content = ob_get_contents();
 			ob_end_clean();
 			return $content . "\n" . $my_content;
@@ -215,7 +216,7 @@ class Isceb_wiki_Public
 		if (get_post_type() == 'phase') {
 
 			ob_start();
-			include dirname(__FILE__) . '\partials\isceb_wiki_phases.php';
+			include plugin_dir_path(__FILE__) . 'partials/isceb_wiki_phases.php';
 			$my_content = ob_get_contents();
 			ob_end_clean();
 			return $content . "\n" . $my_content;
@@ -230,7 +231,7 @@ class Isceb_wiki_Public
 		if (get_post_type() == 'program') {
 
 			ob_start();
-			include dirname(__FILE__) . '\partials\isceb_wiki_programs.php';
+			include plugin_dir_path(__FILE__) . 'partials/isceb_wiki_programs.php';
 			$my_content = ob_get_contents();
 			ob_end_clean();
 			return $content . "\n" . $my_content;
