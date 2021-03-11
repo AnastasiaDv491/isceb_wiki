@@ -59,7 +59,7 @@ if (!defined('WPINC')) die;
 
 	<p>
 		<input type='hidden' name='action' value='post_first'>
-		<input id="button_wiki_file_submit" type='submit' value='Submit Content' disabled>
+		<input id="button_wiki_file_submit" type='submit' value='Submit Content' disabled="disabled">
 	</p>
 
 

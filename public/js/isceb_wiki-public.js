@@ -54,48 +54,69 @@ var courses = [];
 
 function updateList() {
 	var input = document.getElementById('filesInput');
-
+	var output = document.getElementById('fileList');
+	var maxFileSize = 10; // MB
+	var error_message = "";
 	if (input.files.length > 0) {
 
-		var fileCategoryOptions = "";
-		var fileCourseOptions = "";
+		// Check the file size
+		for (var x in input.files) {
+
+			var filesize = ((input.files[x].size/1024)/1024).toFixed(4); // MB
 	
-		for (var j = 0; j < tempArray.length; ++j) {
-	
-			fileCategoryOptions += '<option>' + tempArray[j].name + '</option>';
+			if (input.files[x].name != "item" 
+			&& typeof input.files[x].name != "undefined" 
+			&& filesize > maxFileSize) { 
+				error_message += `<li><b>${input.files[x].name} </b> is too big. Max size is ${maxFileSize} MB </li>`;
+				console.log(error_message);  
+			}
 		}
 		
-		console.log(courses);
-		for (let j = 0; j < courses.length; j++) {
-			fileCourseOptions += '<option value="'+courses[j][1] + '">' + courses[j][0] + '</option>';
-	
-		}
-	
-		var output = document.getElementById('fileList');
-		var children = "";
-		for (var i = 0; i < input.files.length; ++i) {
-			children += '<li>' + '<input class="inputFileName"  name="fileName_'+i+'" type="text" value="'
-					+input.files[i].name +'">' + '<select name="file_category_' + i 
-					+ '" class="js-example-basic-single">' + fileCategoryOptions 
-					+ '</select><select class="js-example-basic-single" name=file_course_'+i+'>'
-					+fileCourseOptions+'</select> </li>';
-	
-		}
-		output.innerHTML = '<ul>' + children + '</ul>';
-	
-		(function ($) {
-			$('.js-example-basic-single').select2({theme: "classic",width: 'resolve'});
-			$('#button_wiki_file_submit').prop("disabled", false);
+		if (error_message === "") {
+
+			var fileCategoryOptions = "";
+			var fileCourseOptions = "";
 		
-		})(jQuery);
+			for (var j = 0; j < tempArray.length; ++j) {
 		
+				fileCategoryOptions += '<option>' + tempArray[j].name + '</option>';
+			}
+			
+			for (let j = 0; j < courses.length; j++) {
+				fileCourseOptions += '<option value="'+courses[j][1] + '">' + courses[j][0] + '</option>';
+		
+			}
+		
+			var children = "";
+			for (var i = 0; i < input.files.length; ++i) {
+				children += '<li>' + '<input class="inputFileName"  name="fileName_'+i+'" type="text" value="'
+						+input.files[i].name +'">' + '<select name="file_category_' + i 
+						+ '" class="js-example-basic-single">' + fileCategoryOptions 
+						+ '</select><select class="js-example-basic-single" name=file_course_'+i+'>'
+						+fileCourseOptions+'</select> </li>';
+		
+			}
+			output.innerHTML = '<ul>' + children + '</ul>';
+		
+			(function ($) {
+				$('.js-example-basic-single').select2({theme: "classic",width: 'resolve'});
+				$("#button_wiki_file_submit").removeAttr("disabled");
+				
+			})(jQuery);
+		} 	
+		else {
+			output.innerHTML = '<ul style="color: red">'+ error_message+ '</ul>';
+		}
 	} 
 	else {
+		output.innerHTML ="";
+
 		(function ($) {
 			$('#button_wiki_file_submit').prop("disabled", true);
 		})(jQuery);
 	}
 	
 }
+
 
 
