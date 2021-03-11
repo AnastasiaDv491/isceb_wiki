@@ -138,58 +138,68 @@ class Isceb_wiki_Admin
 		if ($_FILES) {
 			$files = $_FILES["wiki_file"];
 			foreach ($files['name'] as $key => $value) {
-				if ($files['name'][$key]) {
-					$file = array(
-						'name' => $files['name'][$key],
-						'type' => $files['type'][$key],
-						'tmp_name' => $files['tmp_name'][$key],
-						'error' => $files['error'][$key],
-						'size' => $files['size'][$key]
-					);
-					$_FILES = array("wiki_file" => $file);
-					foreach ($_FILES as $file => $array) {
+				//Check filetype
+				$allowed = array('pdf');
+				$filename = $files['name'][$key];
+				$ext = pathinfo($filename, PATHINFO_EXTENSION);
+				if (in_array($ext, $allowed)) {
+					if ($files['name'][$key]) {
+						$file = array(
+							'name' => $files['name'][$key],
+							'type' => $files['type'][$key],
+							'tmp_name' => $files['tmp_name'][$key],
+							'error' => $files['error'][$key],
+							'size' => $files['size'][$key]
+						);
+						$_FILES = array("wiki_file" => $file);
 
-						if (
-							isset($_POST['my_nonce_field'])
-							&& wp_verify_nonce($_POST['my_nonce_field'], 'submit_content')
 
-						) {
-							$attachment_id = handle_wiki_form_attachment($file, 0);
+						foreach ($_FILES as $file => $array) {
 
-							// check if upload was succesfull
-							if (is_wp_error($attachment_id)) {
-								wp_redirect(site_url() . '/404/');
-								echo ('no upload');
-							} else {
-								//upload succesfull
-								$post_data = array();
-								$post_id = null;
-								$post_data = array(
-									'post_title' => $_POST["fileName_{$i}"],
-									'post_status' => 'draft',
-									'post_type' => 'wiki-file'
-								);
+							if (
+								isset($_POST['my_nonce_field'])
+								&& wp_verify_nonce($_POST['my_nonce_field'], 'submit_content')
 
-								$post_id = wp_insert_post($post_data);
+							) {
+								$attachment_id = handle_wiki_form_attachment($file, 0);
 
-								var_dump($_POST);
-								wp_set_object_terms($post_id, $_POST["file_category_{$i}"], 'wiki_file_category');
+								// check if upload was succesfull
+								if (is_wp_error($attachment_id)) {
+									wp_redirect(site_url() . 'oops-something-went-wrong');
+									echo ('no upload');
+								} else {
+									//upload succesfull
+									$post_data = array();
+									$post_id = null;
+									$post_data = array(
+										'post_title' => substr($_POST["fileName_{$i}"], 0, 50),
+										'post_status' => 'draft',
+										'post_type' => 'wiki-file'
+									);
 
-								update_field('course', $_POST["file_course_{$i}"], $post_id);
-								update_post_meta($post_id, 'file_attachment', $attachment_id);
+									$post_id = wp_insert_post($post_data);
 
-								// If upload was succesful TODO
-								wp_redirect(site_url() . '/thank-you/');
+									var_dump($_POST);
+									wp_set_object_terms($post_id, $_POST["file_category_{$i}"], 'wiki_file_category');
+
+									update_field('course', $_POST["file_course_{$i}"], $post_id);
+									update_post_meta($post_id, 'file_attachment', $attachment_id);
+
+									// If upload was succesful TODO
+									wp_redirect(site_url() . '/thank-you/');
+								}
+							}
+
+							// Returns error if nonce is not set or invalid
+							else {
+								wp_send_json_error();
+								die();
 							}
 						}
-
-						// Returns error if nonce is not set or invalid
-						else {
-							wp_send_json_error();
-							die();
-						}
+						++$i;
 					}
-					++$i;
+				} else {
+					//errorS
 				}
 			}
 		}
