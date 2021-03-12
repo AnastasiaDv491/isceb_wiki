@@ -210,15 +210,14 @@ class Isceb_wiki_Admin
 	function custom_wiki_file_column($column, $post_id)
 	{
 		switch ($column) {
-
 			case 'course':
 				$terms = get_field('course', $post_id);
 				$output = "";
 
-				$count = count($terms);
-				$i = 1;
-
 				if ($terms) {
+					$count = count($terms);
+					$i = 1;
+
 					foreach ($terms as $value) {
 						$output = $output . $value->post_title;
 
@@ -228,7 +227,7 @@ class Isceb_wiki_Admin
 						$i++;
 					}
 
-					echo "$output";
+					echo esc_html($output);
 				} else {
 					_e('Unable to get course', 'isceb_wiki');
 				}
