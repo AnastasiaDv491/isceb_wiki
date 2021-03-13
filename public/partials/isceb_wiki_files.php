@@ -8,6 +8,7 @@
 if (is_user_logged_in()) {
     $get_wiki_files = get_posts(array(
         'post_type' => 'wiki-file',
+        'post-status' => 'publish',
         'meta_query' => array(
             'relation' => 'AND',
             array (

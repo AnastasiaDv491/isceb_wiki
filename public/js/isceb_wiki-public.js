@@ -38,7 +38,6 @@ var courses = [];
 		data: { action : 'get_wiki_courses_ajax' },
 		success: function( response ) {
 			$.each( response["data"], function( key, value ) {
-				console.log(value);
 				courses.push( [value["post_title"], value["ID"]] ); // that's the posts data.
 			} );
 			// console.log(response["data"][0]["post_title"]);
