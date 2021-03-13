@@ -253,7 +253,7 @@ class Isceb_Wiki_Post_Types
                 'hierarchical'          => false,
                 'menu_icon'             => 'dashicons-tag',
                 'rewrite' => array(
-                    'slug'                  => 'programs',
+                    'slug'                  => 'wiki/programs',
                     'with_front'            => true,
                     'pages'                 => true,
                     'feeds'                 => true,
@@ -305,7 +305,7 @@ class Isceb_Wiki_Post_Types
                 'hierarchical'          => false,
                 'menu_icon'             => 'dashicons-tag',
                 'rewrite' => array(
-                    'slug'                  => 'phases',
+                    'slug'                  => 'wiki/phases',
                     'with_front'            => true,
                     'pages'                 => true,
                     'feeds'                 => true,
@@ -357,7 +357,7 @@ class Isceb_Wiki_Post_Types
                 'hierarchical'          => false,
                 'menu_icon'             => 'dashicons-tag',
                 'rewrite' => array(
-                    'slug'                  => 'courses',
+                    'slug'                  => 'wiki/courses',
                     'with_front'            => true,
                     'pages'                 => true,
                     'feeds'                 => true,
@@ -409,7 +409,7 @@ class Isceb_Wiki_Post_Types
                 'hierarchical'          => false,
                 'menu_icon'             => 'dashicons-tag',
                 'rewrite' => array(
-                    'slug'                  => 'wiki-files',
+                    'slug'                  => 'wiki/wiki-files',
                     'with_front'            => true,
                     'pages'                 => true,
                     'feeds'                 => true,

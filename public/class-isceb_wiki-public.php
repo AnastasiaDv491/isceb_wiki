@@ -1,13 +1,13 @@
 <?php
 
 /**
-			 * The public-facing functionality of the plugin.
-			 *
-			 * @link       isceb.be
-			 * @since      1.0.0
-			 *
-			 * @package    Isceb_wiki
-			 * @subpackage Isceb_wiki/public
+ * The public-facing functionality of the plugin.
+ *
+ * @link       isceb.be
+ * @since      1.0.0
+ *
+ * @package    Isceb_wiki
+ * @subpackage Isceb_wiki/public
  */
 
 /**
@@ -101,7 +101,7 @@ class Isceb_wiki_Public
 
 		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/isceb_wiki-public.js', array('jquery'), $this->version, false);
 		wp_enqueue_script('select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', array('jquery'), $this->version, false);
-		
+
 		/**
 		 *  In backend there is global ajaxurl variable defined by WordPress itself.
 		 *
@@ -114,7 +114,7 @@ class Isceb_wiki_Public
 		 */
 
 		wp_localize_script($this->plugin_name, 'wp_ajax', array(
-			'ajax_url' => admin_url('admin-ajax.php'),		
+			'ajax_url' => admin_url('admin-ajax.php'),
 		));
 	}
 
@@ -138,7 +138,7 @@ class Isceb_wiki_Public
 		ob_start();
 		//TODO check if text of page where shortcode is included is shown
 		include plugin_dir_path(__FILE__) . 'partials/isceb-wiki-public-form.php';
-		echo("hello");
+		echo ("hello");
 		// return $var;
 
 
@@ -240,21 +240,53 @@ class Isceb_wiki_Public
 		return $content;
 	}
 
-	public function get_wiki_courses_ajax() {
-		 // Query Arguments
-		 $args = array(
+	public function get_wiki_courses_ajax()
+	{
+		// Query Arguments
+		$args = array(
 			'post_type' => "course",
 			'post_status' => array('publish'),
 			'nopaging' => true,
 			'order' => 'DESC',
 		);
-	
+
 		// The Query
-		$ajaxposts = get_posts( $args ); // changed to get_posts from wp_query, because `get_posts` returns an array
-		
+		$ajaxposts = get_posts($args); // changed to get_posts from wp_query, because `get_posts` returns an array
+
 		// echo json_encode( $ajaxposts );
-	
+
 		// exit; // exit ajax call(or it will return useless information to the response)s
 		wp_send_json_success($ajaxposts);
+	}
+
+	//Only called when initalising
+	public function rewrite_wiki_base_url_to_page()
+	{
+		// delete_option('isceb_wiki-test');
+		if (get_option('isceb_wiki-test')['en']['wiki_home_1'] === null) {
+			error_log( 'i am here bitch');
+			$page = get_page_by_title('Wiki Homepage');
+			error_log($page->ID);
+			if ($page === null) {
+				$wiki_homepage = array(
+					'ID' => 0,
+					'post_type' => 'page',
+					'post_name' => 'wiki homepage',
+					'post_title' => 'Wiki Homepage',
+					'post_status' => 'publish',
+				);
+				$page_id = wp_insert_post($wiki_homepage);
+			} else {
+				$page_id = $page->ID;
+			}
+
+			add_rewrite_rule(
+				'^wiki$',
+				"index.php?page_id={$page_id}",
+				'top'
+			);
+
+			flush_rewrite_rules();
+		}
 	}
 }

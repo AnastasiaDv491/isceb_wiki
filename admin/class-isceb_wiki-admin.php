@@ -185,7 +185,7 @@ class Isceb_wiki_Admin
 									update_field('course', $_POST["file_course_{$i}"], $post_id);
 									update_post_meta($post_id, 'file_attachment', $attachment_id);
 
-									// If upload was succesful TODO
+									// If upload was succesful 
 									wp_redirect(site_url() . '/thank-you/');
 								}
 							}
@@ -233,5 +233,86 @@ class Isceb_wiki_Admin
 				}
 				break;
 		}
+	}
+
+	public function create_menu()
+	{
+
+		/*
+		* Create a submenu page under Plugins.
+		* Framework also add "Settings" to your plugin in plugins list.
+		*/
+		$config_submenu = array(
+
+			'type'              => 'menu',                          // Required, menu or metabox
+			'id'                => $this->plugin_name . '-test',    // Required, meta box id, unique per page, to save: get_option( id )
+			'parent'            => 'plugins.php',                   // Required, sub page to your options page
+			// 'parent'            => 'edit.php?post_type=your_post_type',
+			'submenu'           => true,                            // Required for submenu
+			'title'             => esc_html__('ISCEB Wiki Homepage setup', 'plugin-name'),    //The name of this page
+			'capability'        => 'manage_options',                // The capability needed to view the page
+			'plugin_basename'   => plugin_basename(plugin_dir_path(__DIR__) . $this->plugin_name . '.php'),
+			// 'tabbed'            => false,
+
+		);
+
+		$fields[] = array(
+			'name'   => 'first',
+			'title'  => 'First',
+			'icon'   => 'dashicons-admin-generic',
+			'fields' => array(
+
+				array(
+					'id' => 'wiki_home_1',
+					'type' => 'select',
+					'title' => 'Wiki Homepage',
+					'query'          => array(
+                        'type'           => 'pages',
+                        'args'           => array(
+                            'orderby'      => 'post_date',
+                            'order'        => 'DESC',
+                        ),
+                    ),
+                    'default_option' => '',
+                    'class'       => 'chosen',
+				),
+			),
+		);
+
+		$options_panel = new Exopite_Simple_Options_Framework($config_submenu, $fields);
+	}
+
+
+	// Called when Wiki settings are changed
+	// $valid - 
+		// (
+		// [en] => Array
+		// (
+		// 	[wiki_home_1] => 2
+		// )
+
+		// )
+	// Unique - ID of config submenu
+	public function save_isceb_wiki_settings($valid, $unique) {
+		
+		$page_id = $valid['en']['wiki_home_1']; 
+		$page_data = get_post( $page_id );
+	 
+		// post not there
+		if( ! is_object($page_data) ) { 
+			return;
+		}
+	 
+		add_rewrite_rule(
+			 '^wiki$',
+			"index.php?page_id={$page_id}",
+			'top'
+		);
+
+		flush_rewrite_rules();
+		
+		// error_log(print_r($valid, TRUE));
+		// error_log(print_r($unique, TRUE));
+
 	}
 }

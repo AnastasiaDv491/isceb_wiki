@@ -172,14 +172,25 @@ class Isceb_wiki
 			return $paths;
 		}
 
-		add_filter( 'manage_wiki-file_posts_columns', 'set_custom_wiki_file_posts_custom_column' );
+		add_filter('manage_wiki-file_posts_columns', 'set_custom_wiki_file_posts_custom_column');
 
-		function set_custom_wiki_file_posts_custom_column($columns) {
-			$columns['course'] = __( 'Course', 'isceb_wiki' );
-		
+		function set_custom_wiki_file_posts_custom_column($columns)
+		{
+			$columns['course'] = __('Course', 'isceb_wiki');
+
 			return $columns;
 		}
-		
+
+
+		// ...
+
+		/**
+		 * Exopite Simple Options Framework
+		 *
+		 * @link https://github.com/JoeSz/Exopite-Simple-Options-Framework
+		 * @author Joe Szalai
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/exopite-simple-options/exopite-simple-options-framework-class.php';
 
 		$this->loader = new Isceb_wiki_Loader();
 	}
@@ -220,14 +231,17 @@ class Isceb_wiki
      * Handle POST
      */
 		$this->loader->add_action('admin_post_post_first', $plugin_admin, 'post_first');
-		
+
 
 		//Turn this on if you also want it for non authenticated users
 		// $this->loader->add_action('admin_post_nopriv_post_first', $plugin_admin, 'post_first');
 
-		$this->loader-> add_action( 'manage_wiki-file_posts_custom_column' ,$plugin_admin, 'custom_wiki_file_column', 10, 2 );
+		$this->loader->add_action('manage_wiki-file_posts_custom_column', $plugin_admin, 'custom_wiki_file_column', 10, 2);
 
+		// Save/Update our plugin options
+		$this->loader->add_action('init', $plugin_admin, 'create_menu', 999);
 
+		$this->loader->add_action('exopite_sof_do_save_options', $plugin_admin, 'save_isceb_wiki_settings', 10, 2);
 	}
 
 	/**
@@ -275,7 +289,11 @@ class Isceb_wiki
 		 */
 		$this->loader->add_action('wp_ajax_get_wiki_courses_ajax', $plugin_public, 'get_wiki_courses_ajax');
 		$this->loader->add_action('wp_ajax_nopriv_get_wiki_courses_ajax', $plugin_public, 'get_wiki_courses_ajax');
+
+		$this->loader->add_action('init', $plugin_public, 'rewrite_wiki_base_url_to_page');
 	}
+
+
 
 
 	/**

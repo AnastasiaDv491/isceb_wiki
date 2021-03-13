@@ -44,7 +44,7 @@ if (!defined('WPINC')) die;
 		'taxonomy' => $taxonomy,
 		'hide_empty' => false,
 	));
-
+	var_dump(get_option('isceb_wiki-test')['en']['wiki_home_1']);
 	?>
 
 	<script type="text/javascript">
