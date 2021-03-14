@@ -263,7 +263,10 @@ class Isceb_wiki_Public
 	public function rewrite_wiki_base_url_to_page()
 	{
 		// delete_option('isceb_wiki-test');
-		if (get_option('isceb_wiki-test')['en']['wiki_home_1'] === null) {
+
+		//get_option returns false by default if option doesn't exist
+		$options = get_option('isceb_wiki-test');
+		if ($options && $options['en']['wiki_home_1'] === null && $options['en']['wiki_home_1'] == '') {
 			error_log( 'i am here bitch');
 			$page = get_page_by_title('Wiki Homepage');
 			error_log($page->ID);
