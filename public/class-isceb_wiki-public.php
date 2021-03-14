@@ -135,12 +135,23 @@ class Isceb_wiki_Public
 
 		$var = (strtolower($args['arg1']) != "") ? strtolower($args['arg1']) : 'default';
 
-		ob_start();
-		//TODO check if text of page where shortcode is included is shown
-		include plugin_dir_path(__FILE__) . 'partials/isceb-wiki-public-form.php';
+		if (is_user_logged_in()) {
+			ob_start();
+			//TODO check if text of page where shortcode is included is shown
+			include plugin_dir_path(__FILE__) . 'partials/isceb-wiki-public-form.php';
 
 
-		return ob_get_clean();
+			return ob_get_clean();
+		} else {
+			ob_start();
+				echo (get_permalink());
+				echo ('You need to be logged in to upload something to the wiki');
+				$args = array(
+					'redirect' => get_permalink()
+				);
+				wp_login_form($args);
+			return ob_get_clean();
+		}
 	}
 
 	function locate_template($template, $settings, $page_type)
@@ -265,7 +276,7 @@ class Isceb_wiki_Public
 		//get_option returns false by default if option doesn't exist
 		$options = get_option('isceb_wiki-test');
 		if ($options && $options['en']['wiki_home_1'] === null && $options['en']['wiki_home_1'] == '') {
-			error_log( 'i am here bitch');
+			error_log('i am here bitch');
 			$page = get_page_by_title('Wiki Homepage');
 			error_log($page->ID);
 			if ($page === null) {
