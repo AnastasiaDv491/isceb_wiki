@@ -138,8 +138,6 @@ class Isceb_wiki_Public
 		ob_start();
 		//TODO check if text of page where shortcode is included is shown
 		include plugin_dir_path(__FILE__) . 'partials/isceb-wiki-public-form.php';
-		echo ("hello");
-		// return $var;
 
 
 		return ob_get_clean();
