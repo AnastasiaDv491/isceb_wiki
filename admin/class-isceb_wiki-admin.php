@@ -105,7 +105,7 @@ class Isceb_wiki_Admin
 
 	function post_first()
 	{
-		// var_dump($_POST);
+		//Needed becaue media_handle_upload can only process one file at a time
 		function handle_wiki_form_attachment($file_handler, $post_id)
 		{
 			// check to make sure its a successful upload
@@ -120,21 +120,8 @@ class Isceb_wiki_Admin
 			return $attach_id;
 		}
 
-		/**
-		 * Do not forget to check your nonce for security!
-		 *
-		 * @link https://codex.wordpress.org/Function_Reference/wp_verify_nonce
-		 */
 
-		// var_dump($_POST);
-
-		// $files = array_filter($_FILES['wiki_file']['name']);
-		// var_dump($files);
-		// $total = count($files);
-		// var_dump($total);
 		$i = 0;
-
-
 		if ($_FILES) {
 			$files = $_FILES["wiki_file"];
 			foreach ($files['name'] as $key => $value) {
@@ -310,9 +297,6 @@ class Isceb_wiki_Admin
 		);
 
 		flush_rewrite_rules();
-		
-		// error_log(print_r($valid, TRUE));
-		// error_log(print_r($unique, TRUE));
 
 	}
 }
