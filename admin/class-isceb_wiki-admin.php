@@ -105,7 +105,7 @@ class Isceb_wiki_Admin
 
 	function post_first()
 	{
-		// var_dump($_POST);
+		//Needed becaue media_handle_upload can only process one file at a time
 		function handle_wiki_form_attachment($file_handler, $post_id)
 		{
 			// check to make sure its a successful upload
@@ -120,21 +120,8 @@ class Isceb_wiki_Admin
 			return $attach_id;
 		}
 
-		/**
-		 * Do not forget to check your nonce for security!
-		 *
-		 * @link https://codex.wordpress.org/Function_Reference/wp_verify_nonce
-		 */
 
-		// var_dump($_POST);
-
-		// $files = array_filter($_FILES['wiki_file']['name']);
-		// var_dump($files);
-		// $total = count($files);
-		// var_dump($total);
 		$i = 0;
-
-
 		if ($_FILES) {
 			$files = $_FILES["wiki_file"];
 			foreach ($files['name'] as $key => $value) {
@@ -166,7 +153,6 @@ class Isceb_wiki_Admin
 								// check if upload was succesfull
 								if (is_wp_error($attachment_id)) {
 									wp_redirect(site_url() . 'oops-something-went-wrong');
-									echo ('no upload');
 								} else {
 									//upload succesfull
 									$post_data = array();
@@ -178,15 +164,29 @@ class Isceb_wiki_Admin
 									);
 
 									$post_id = wp_insert_post($post_data);
-
-									var_dump($_POST);
-									wp_set_object_terms($post_id, $_POST["file_category_{$i}"], 'wiki_file_category');
-
-									update_field('course', $_POST["file_course_{$i}"], $post_id);
-									update_post_meta($post_id, 'file_attachment', $attachment_id);
-
-									// If upload was succesful 
-									wp_redirect(site_url() . '/thank-you/');
+									if ($post_id != 0) {
+										var_dump($_POST);
+										$terms_return = wp_set_object_terms($post_id, $_POST["file_category_{$i}"], 'wiki_file_category');
+										if(!is_wp_error($terms_return)){
+											update_field('course', $_POST["file_course_{$i}"], $post_id);
+											$meta_return = update_post_meta($post_id, 'file_attachment', $attachment_id);
+											if($meta_return){
+												// If upload was succesful 
+											wp_redirect(site_url() . '/thank-you/');
+											}
+											else{
+												wp_redirect(site_url() . 'oops-something-went-wrong');
+											}
+											
+										}
+										else{
+											wp_redirect(site_url() . 'oops-something-went-wrong');
+										}
+										
+									}
+									else{
+										wp_redirect(site_url() . 'oops-something-went-wrong');
+									}
 								}
 							}
 
@@ -267,14 +267,14 @@ class Isceb_wiki_Admin
 					'type' => 'select',
 					'title' => 'Wiki Homepage',
 					'query'          => array(
-                        'type'           => 'pages',
-                        'args'           => array(
-                            'orderby'      => 'post_date',
-                            'order'        => 'DESC',
-                        ),
-                    ),
-                    'default_option' => '',
-                    'class'       => 'chosen',
+						'type'           => 'pages',
+						'args'           => array(
+							'orderby'      => 'post_date',
+							'order'        => 'DESC',
+						),
+					),
+					'default_option' => '',
+					'class'       => 'chosen',
 				),
 			),
 		);
@@ -285,34 +285,31 @@ class Isceb_wiki_Admin
 
 	// Called when Wiki settings are changed
 	// $valid - 
-		// (
-		// [en] => Array
-		// (
-		// 	[wiki_home_1] => 2
-		// )
+	// (
+	// [en] => Array
+	// (
+	// 	[wiki_home_1] => 2
+	// )
 
-		// )
+	// )
 	// Unique - ID of config submenu
-	public function save_isceb_wiki_settings($valid, $unique) {
-		
-		$page_id = $valid['en']['wiki_home_1']; 
-		$page_data = get_post( $page_id );
-	 
+	public function save_isceb_wiki_settings($valid, $unique)
+	{
+
+		$page_id = $valid['en']['wiki_home_1'];
+		$page_data = get_post($page_id);
+
 		// post not there
-		if( ! is_object($page_data) ) { 
+		if (!is_object($page_data)) {
 			return;
 		}
-	 
+
 		add_rewrite_rule(
-			 '^wiki$',
+			'^wiki$',
 			"index.php?page_id={$page_id}",
 			'top'
 		);
 
 		flush_rewrite_rules();
-		
-		// error_log(print_r($valid, TRUE));
-		// error_log(print_r($unique, TRUE));
-
 	}
 }
