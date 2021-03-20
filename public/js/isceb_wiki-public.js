@@ -35,19 +35,14 @@ var courses = [];
 		type: 'POST',
 		url: wp_ajax.ajax_url,
 		dataType: "json", // add data type
-		data: { action : 'get_wiki_courses_ajax' },
-		success: function( response ) {
-			$.each( response["data"], function( key, value ) {
-				courses.push( [value["post_title"], value["ID"]] ); // that's the posts data.
-			} );
+		data: { action: 'get_wiki_courses_ajax' },
+		success: function (response) {
+			$.each(response["data"], function (key, value) {
+				courses.push([value["post_title"], value["ID"]]); // that's the posts data.
+			});
 			// console.log(response["data"][0]["post_title"]);
 		}
 	});
-	
-		
-	
-	
-
 
 })(jQuery);
 
@@ -61,61 +56,94 @@ function updateList() {
 		// Check the file size
 		for (var x in input.files) {
 
-			var filesize = ((input.files[x].size/1024)/1024).toFixed(4); // MB
-	
-			if (input.files[x].name != "item" 
-			&& typeof input.files[x].name != "undefined" 
-			&& filesize > maxFileSize) { 
+			var filesize = ((input.files[x].size / 1024) / 1024).toFixed(4); // MB
+
+			if (input.files[x].name != "item"
+				&& typeof input.files[x].name != "undefined"
+				&& filesize > maxFileSize) {
 				error_message += `<li><b>${input.files[x].name} </b> is too big. Max size is ${maxFileSize} MB </li>`;
-				console.log(error_message);  
+				console.log(error_message);
 			}
 		}
-		
+
 		if (error_message === "") {
 
 			var fileCategoryOptions = "";
 			var fileCourseOptions = "";
-		
+			var fileAcademicYearOptions = "";
+			var currentAcademicYear = getCurrentAcademicYear();
 			for (var j = 0; j < tempArray.length; ++j) {
-		
+
 				fileCategoryOptions += '<option>' + tempArray[j].name + '</option>';
 			}
-			
+
 			for (let j = 0; j < courses.length; j++) {
-				fileCourseOptions += '<option value="'+courses[j][1] + '">' + courses[j][0] + '</option>';
-		
+				fileCourseOptions += '<option value="' + courses[j][1] + '">' + courses[j][0] + '</option>';
+
 			}
-		
+
+			for (const [key, value] of Object.entries(academic_years["choices"])) {
+				if (value == currentAcademicYear) {
+					fileAcademicYearOptions += '<option value="' + key + '" selected>' + value + '</option>';
+				}
+				else {
+					fileAcademicYearOptions += '<option value="' + key + '">' + value + '</option>';
+				}
+
+			}
+
+
 			var children = "";
 			for (var i = 0; i < input.files.length; ++i) {
-				children += '<li>' + '<input class="inputFileName"  name="fileName_'+i+'" type="text" value="'
-						+input.files[i].name +'">' + '<select name="file_category_' + i 
-						+ '" class="js-example-basic-single">' + fileCategoryOptions 
-						+ '</select><select class="js-example-basic-single" name=file_course_'+i+'>'
-						+fileCourseOptions+'</select> </li>';
-		
+				children += '<li>' + '<input class="inputFileName"  name="fileName_' + i + '" type="text" value="'
+					+ input.files[i].name + '">' + '<select name="file_category_' + i
+					+ '" class="js-example-basic-single">' + fileCategoryOptions
+					+ '</select><select class="js-example-basic-single" name=file_course_' + i + '>'
+					+ fileCourseOptions + '</select>'
+					+ '<select class="js-example-basic-single" name=file_academic_year_' + i + '>'
+					+ fileAcademicYearOptions + '</select></li>';
+
 			}
 			output.innerHTML = '<ul>' + children + '</ul>';
-		
+
 			(function ($) {
-				$('.js-example-basic-single').select2({theme: "classic",width: 'resolve'});
+				$('.js-example-basic-single').select2({ theme: "classic", width: 'resolve' });
 				$("#button_wiki_file_submit").removeAttr("disabled");
-				
+
 			})(jQuery);
-		} 	
-		else {
-			output.innerHTML = '<ul style="color: red">'+ error_message+ '</ul>';
 		}
-	} 
+		else {
+			output.innerHTML = '<ul style="color: red">' + error_message + '</ul>';
+		}
+	}
 	else {
-		output.innerHTML ="";
+		output.innerHTML = "";
 
 		(function ($) {
 			$('#button_wiki_file_submit').prop("disabled", true);
 		})(jQuery);
 	}
-	
+
 }
 
+function countProperties(obj) {
+	var count = 0;
 
+	for (var prop in obj) {
+		if (obj.hasOwnProperty(prop))
+			++count;
+	}
 
+	return count;
+}
+
+function getCurrentAcademicYear() {
+	var now = new Date();
+	if (now.getMonth() >= 8) {
+		return `${now.getFullYear()} - ${now.getFullYear() + 1}`;
+	}
+	else {
+		return `${now.getFullYear() - 1} - ${now.getFullYear()}`;
+	}
+
+}

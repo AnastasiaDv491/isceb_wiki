@@ -181,6 +181,31 @@ class Isceb_wiki
 			return $columns;
 		}
 
+		add_filter('acf/load_field/name=academic_year', 'WikiFileAcademicYearSelect');
+
+		function WikiFileAcademicYearSelect($field) {
+			
+			$currentYear = date('Y');
+			
+			// Create choices array
+			$field['choices'] = array();
+			// Add blank first selection; remove if unnecessary
+			
+			// Loop through a range of years and add to field 'choices'. Change range as needed.
+			foreach(range($currentYear-5, $currentYear+1) as $year) {
+				$yearPlusOne = (int)$year+1;
+				$field['choices'][] ="{$year} - {$yearPlusOne}";
+					
+			}
+
+			$field['choices'][''] = 'Unknown';
+		
+			// Return the field
+			return $field;
+			
+		}
+
+
 
 		// ...
 

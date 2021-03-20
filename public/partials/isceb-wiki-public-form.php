@@ -17,6 +17,11 @@
 <?php
 // If this file is called directly, abort.
 if (!defined('WPINC')) die;
+wp_enqueue_script($this->plugin_name);
+wp_enqueue_script('select2');
+$academicYears = get_field_object('field_605619386bc68');
+wp_localize_script($this->plugin_name, 'academic_years', $academicYears);
+
 ?>
 
 <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>?action=post_first" method="post" enctype="multipart/form-data" id="file_form">
@@ -38,19 +43,22 @@ if (!defined('WPINC')) die;
 	</p>
 	<div id="fileList"></div>
 
+
 	<?php
 	$taxonomy = 'wiki_file_category';
 	$terms = get_terms(array(
 		'taxonomy' => $taxonomy,
 		'hide_empty' => false,
 	));
-	var_dump(get_option('isceb_wiki-test')['en']['wiki_home_1']);
+
+	
 	?>
 
 	<script type="text/javascript">
 		//Assign php generated json to JavaScript variable
 		var tempArray = <?php echo json_encode($terms); ?>;
 		console.log(tempArray);
+		
 	</script>
 
 

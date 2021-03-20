@@ -99,8 +99,8 @@ class Isceb_wiki_Public
 		 * class.
 		 */
 
-		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/isceb_wiki-public.js', array('jquery'), $this->version, false);
-		wp_enqueue_script('select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', array('jquery'), $this->version, false);
+		wp_register_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/isceb_wiki-public.js', array('jquery'), $this->version, false);
+		wp_register_script('select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', array('jquery'), $this->version, false);
 
 		/**
 		 *  In backend there is global ajaxurl variable defined by WordPress itself.
@@ -131,16 +131,11 @@ class Isceb_wiki_Public
 			$atts
 		);
 
-		// code...
-
 		$var = (strtolower($args['arg1']) != "") ? strtolower($args['arg1']) : 'default';
 
 		ob_start();
 		//TODO check if text of page where shortcode is included is shown
 		include plugin_dir_path(__FILE__) . 'partials/isceb-wiki-public-form.php';
-		echo ("hello");
-		// return $var;
-
 
 		return ob_get_clean();
 	}

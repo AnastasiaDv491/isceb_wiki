@@ -165,27 +165,23 @@ class Isceb_wiki_Admin
 
 									$post_id = wp_insert_post($post_data);
 									if ($post_id != 0) {
-										var_dump($_POST);
+										error_log(print_r($_POST));
 										$terms_return = wp_set_object_terms($post_id, $_POST["file_category_{$i}"], 'wiki_file_category');
-										if(!is_wp_error($terms_return)){
+										if (!is_wp_error($terms_return)) {
 											update_field('course', $_POST["file_course_{$i}"], $post_id);
+											update_field('academic_year', $_POST["file_academic_year_{$i}"], $post_id);
 											$meta_return = update_post_meta($post_id, 'file_attachment', $attachment_id);
-											if($meta_return){
+											if ($meta_return) {
 												// If upload was succesful 
-											wp_redirect(site_url() . '/thank-you/');
+												wp_redirect(site_url() . '/thank-you/');
+											} else {
+												wp_redirect(site_url() . '/oops-something-went-wrong');
 											}
-											else{
-												wp_redirect(site_url() . 'oops-something-went-wrong');
-											}
-											
+										} else {
+											wp_redirect(site_url() . '/oops-something-went-wrong');
 										}
-										else{
-											wp_redirect(site_url() . 'oops-something-went-wrong');
-										}
-										
-									}
-									else{
-										wp_redirect(site_url() . 'oops-something-went-wrong');
+									} else {
+										wp_redirect(site_url() . '/oops-something-went-wrong');
 									}
 								}
 							}
