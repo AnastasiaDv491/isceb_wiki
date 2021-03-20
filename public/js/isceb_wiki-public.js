@@ -67,7 +67,6 @@ function updateList() {
 		}
 
 		if (error_message === "") {
-
 			var fileCategoryOptions = "";
 			var fileCourseOptions = "";
 			var fileAcademicYearOptions = "";
@@ -96,18 +95,18 @@ function updateList() {
 			var children = "";
 			for (var i = 0; i < input.files.length; ++i) {
 				children += '<li>' + '<input class="inputFileName"  name="fileName_' + i + '" type="text" value="'
-					+ input.files[i].name + '">' + '<select name="file_category_' + i
+					+ input.files[i].name + '">' + '<ul><li style="display:flex;"><p>Type:</p> <select style="width:100%;" name="file_category_' + i
 					+ '" class="js-example-basic-single">' + fileCategoryOptions
-					+ '</select><select class="js-example-basic-single" name=file_course_' + i + '>'
-					+ fileCourseOptions + '</select>'
-					+ '<select class="js-example-basic-single" name=file_academic_year_' + i + '>'
-					+ fileAcademicYearOptions + '</select></li>';
+					+ '</select></li><li style="display:flex;"><p>Course:</p> <select style="width:100%;" class="js-example-basic-single" name=file_course_' + i + '>'
+					+ fileCourseOptions + '</select></li>'
+					+ '<li style="display:flex;"><p>Year:</p> <select style="width:100%;" class="js-example-basic-single" name=file_academic_year_' + i + '>'
+					+ fileAcademicYearOptions + '</select></li></ul></li>';
 
 			}
 			output.innerHTML = '<ul>' + children + '</ul>';
 
 			(function ($) {
-				$('.js-example-basic-single').select2({ theme: "classic", width: 'resolve' });
+				$('.js-example-basic-single').select2({ theme: "classic"});
 				$("#button_wiki_file_submit").removeAttr("disabled");
 
 			})(jQuery);
