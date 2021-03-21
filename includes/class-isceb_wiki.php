@@ -293,6 +293,7 @@ class Isceb_wiki
 		 */
 
 		$this->loader->add_shortcode("wiki-form", $plugin_public, "shortcode_wiki_submit", $priority = 10, $accepted_args = 2);
+		$this->loader->add_shortcode("wiki-programs", $plugin_public, "shortcode_wiki_programs", $priority = 10, $accepted_args = 2);
 
 		// Template page courses
 		//Uncomment to register custom post type course
