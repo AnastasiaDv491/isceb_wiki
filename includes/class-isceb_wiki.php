@@ -263,8 +263,11 @@ class Isceb_wiki
 
 		$this->loader->add_action('manage_wiki-file_posts_custom_column', $plugin_admin, 'custom_wiki_file_column', 10, 2);
 
+		//Create general menu
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'isceb_wiki_add_admin_menu' );
+
 		// Save/Update our plugin options
-		$this->loader->add_action('init', $plugin_admin, 'create_menu', 999);
+		$this->loader->add_action('init', $plugin_admin, 'isceb_wiki_create_options_menu', 999);
 
 		$this->loader->add_action('exopite_sof_do_save_options', $plugin_admin, 'save_isceb_wiki_settings', 10, 2);
 	}

@@ -232,7 +232,7 @@ class Isceb_wiki_Admin
 		}
 	}
 
-	public function create_menu()
+	public function isceb_wiki_create_options_menu()
 	{
 
 		/*
@@ -243,14 +243,16 @@ class Isceb_wiki_Admin
 
 			'type'              => 'menu',                          // Required, menu or metabox
 			'id'                => $this->plugin_name . '-test',    // Required, meta box id, unique per page, to save: get_option( id )
-			'parent'            => 'plugins.php',                   // Required, sub page to your options page
-			// 'parent'            => 'edit.php?post_type=your_post_type',
+			// 'parent'            => 'plugins.php',                   // Required, sub page to your options page
+			'parent'            => 'isceb_wiki_admin_menu',
 			'submenu'           => true,                            // Required for submenu
-			'title'             => esc_html__('ISCEB Wiki Homepage setup', 'plugin-name'),    //The name of this page
+			'title'             => esc_html__('Settings', 'plugin-name'),    //The name of this page
 			'capability'        => 'manage_options',                // The capability needed to view the page
 			'plugin_basename'   => plugin_basename(plugin_dir_path(__DIR__) . $this->plugin_name . '.php'),
 			// 'tabbed'            => false,
-
+			'menu_title'		=> 'ISCEB WIKI',
+			// 'menu_slug'			=> 'isceb_wiki_menu',
+			'position'			=> 	25
 		);
 
 		$fields[] = array(
@@ -309,4 +311,17 @@ class Isceb_wiki_Admin
 
 		flush_rewrite_rules();
 	}
+
+	public function isceb_wiki_add_admin_menu(){
+		add_menu_page( "ISCEB WIKI", "ISCEB WIKI", 'manage_options', $this->plugin_name . '_admin_menu', array( $this, 'page_signups' ));
+	}
+
+	public function page_signups() {
+        include( plugin_dir_path( __FILE__ ) . 'partials/isceb_wiki-main-menu.php' );
+    }
+
+	
+
+
+
 }
