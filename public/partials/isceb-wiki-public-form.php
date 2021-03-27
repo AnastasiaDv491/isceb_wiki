@@ -67,6 +67,7 @@ wp_localize_script($this->plugin_name, 'academic_years', $academicYears);
 
 	<p>
 		<input type='hidden' name='action' value='post_first'>
+		<input type='hidden' name='userID' value='<?php echo get_current_user_id();?>'>
 		<input id="button_wiki_file_submit" type='submit' value='Submit Content' disabled="disabled">
 	</p>
 
