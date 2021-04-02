@@ -119,7 +119,7 @@ class Isceb_wiki_Admin
 
 			return $attach_id;
 		}
-		
+
 		$i = 0;
 		if ($_FILES) {
 			$files = $_FILES["wiki_file"];
@@ -151,7 +151,7 @@ class Isceb_wiki_Admin
 
 								// check if upload was succesfull
 								if (is_wp_error($attachment_id)) {
-									wp_redirect(site_url().remove_query_arg('message',$_POST['_wp_http_referer']).'?message=failed');
+									wp_redirect(site_url() . remove_query_arg('message', $_POST['_wp_http_referer']) . '?message=failed');
 								} else {
 									//upload succesfull
 									$post_data = array();
@@ -173,29 +173,29 @@ class Isceb_wiki_Admin
 											$meta_return = update_post_meta($post_id, 'file_attachment', $attachment_id);
 											if ($meta_return) {
 												// If upload was succesful 
-												wp_redirect(site_url().remove_query_arg('message',$_POST['_wp_http_referer']).'?message=success');
+												wp_redirect(site_url() . remove_query_arg('message', $_POST['_wp_http_referer']) . '?message=success');
 											} else {
-												wp_redirect(site_url().remove_query_arg('message',$_POST['_wp_http_referer']).'?message=failed');
+												wp_redirect(site_url() . remove_query_arg('message', $_POST['_wp_http_referer']) . '?message=failed');
 											}
 										} else {
-											wp_redirect(site_url().remove_query_arg('message',$_POST['_wp_http_referer']).'?message=failed');
+											wp_redirect(site_url() . remove_query_arg('message', $_POST['_wp_http_referer']) . '?message=failed');
 										}
 									} else {
-										wp_redirect(site_url().remove_query_arg('message',$_POST['_wp_http_referer']).'?message=failed');
+										wp_redirect(site_url() . remove_query_arg('message', $_POST['_wp_http_referer']) . '?message=failed');
 									}
 								}
 							}
 
 							// Returns error if nonce is not set or invalid
 							else {
-								wp_redirect(site_url().remove_query_arg('message',$_POST['_wp_http_referer']).'?message=failed');
+								wp_redirect(site_url() . remove_query_arg('message', $_POST['_wp_http_referer']) . '?message=failed');
 								die();
 							}
 						}
 						++$i;
 					}
 				} else {
-					wp_redirect(site_url().remove_query_arg('message',$_POST['_wp_http_referer']).'?message=failed');
+					wp_redirect(site_url() . remove_query_arg('message', $_POST['_wp_http_referer']) . '?message=failed');
 				}
 			}
 		}
@@ -275,18 +275,22 @@ class Isceb_wiki_Admin
 					'class'       => 'chosen',
 				),
 				array(
-					'id' => 'isceb_wiki_something_went_wrong_page',
-					'type' => 'select',
-					'title' => 'Wiki something went wrong page',
-					'query'          => array(
-						'type'           => 'pages',
-						'args'           => array(
-							'orderby'      => 'post_date',
-							'order'        => 'DESC',
-						),
+					'id' => 'isceb_wiki_file_upload_went_wrong_text',
+					'type' => 'text',
+					'title' => 'Wiki file upload went wrong message',
+					'attributes' => array(
+						'placeholder' => 'Error message for upload file',
+
 					),
-					'default_option' => '',
-					'class'       => 'chosen',
+				),
+				array(
+					'id' => 'isceb_wiki_file_upload_ok_text',
+					'type' => 'text',
+					'title' => 'Wiki file upload success message',
+					'attributes' => array(
+						'placeholder' => 'Success message for upload file',
+
+					),
 				),
 			),
 		);

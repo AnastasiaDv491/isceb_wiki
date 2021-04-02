@@ -23,13 +23,30 @@ $academicYears = get_field_object('field_605619386bc68');
 wp_localize_script($this->plugin_name, 'academic_years', $academicYears);
 
 //Feedback message after upload
-if( isset($_GET['message']) ){
+if (isset($_GET['message'])) {
+	$my_options = get_exopite_sof_option('isceb_wiki-test');
+	$message = '';
 	switch ($_GET['message']) {
 		case 'success':
-			echo "<h3 id='isceb-wiki-error-message' style='color:green'>Your upload was succesfull, thank you for helping your fellow students</h3>";
+			if (isset($my_options['isceb_wiki_file_upload_ok_text']) && $my_options['isceb_wiki_file_upload_ok_text'] != '') {
+				$message = $my_options['isceb_wiki_file_upload_ok_text'];
+			} else {
+				//Success message doesn't exist
+
+				$message = 'Your upload was succesfull, thank you for helping your fellow students';
+			}
+			echo ("<h3 id='isceb-wiki-error-message' style='color:green'>$message</h3>");
 			break;
 		case 'failed':
-			echo "<h3 id='isceb-wiki-error-message' style='color:red'>Your upload failed, try again or contact someone at ISCEB</h3>";
+			//Check if null or empty
+			if (isset($my_options['isceb_wiki_file_upload_went_wrong_text']) && $my_options['isceb_wiki_file_upload_went_wrong_text'] != '') {
+				$message = $my_options['isceb_wiki_file_upload_went_wrong_text'];
+			} else {
+				//Error message doesn't exist
+				$message = 'Something went wrong while uploading the file, please try again or contact someone from ISCEB';
+			}
+			echo ("<h3 id='isceb-wiki-error-message' style='color:red'>$message</h3>");
+
 		default:
 			# code...
 			break;
@@ -65,30 +82,18 @@ if( isset($_GET['message']) ){
 		'taxonomy' => $taxonomy,
 		'hide_empty' => false,
 	));
-
-	
 	?>
 
 	<script type="text/javascript">
 		//Assign php generated json to JavaScript variable
 		var tempArray = <?php echo json_encode($terms); ?>;
 		console.log(tempArray);
-		
 	</script>
-
-
-
-
 
 	<p>
 		<input type='hidden' name='action' value='post_first'>
-		<input type='hidden' name='userID' value='<?php echo get_current_user_id();?>'>
+		<input type='hidden' name='userID' value='<?php echo get_current_user_id(); ?>'>
 		<input id="button_wiki_file_submit" type='submit' value='Submit Content' disabled="disabled">
 	</p>
-
-
-
-
-
 
 </form>
