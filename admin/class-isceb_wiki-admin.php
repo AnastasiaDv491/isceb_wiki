@@ -203,23 +203,6 @@ class Isceb_wiki_Admin
 		die();
 	}
 
-
-
-	function isceb_wiki_redirect_to_something_went_wrong()
-	{
-		$page_id = $valid['en']['isceb_wiki_something_went_wrong_page'];
-		$page_data = get_post($page_id);
-
-		// post not there
-		if (!is_object($page_data)) {
-			return site_url().'404';
-		}
-
-		return site_url().`index.php?page_id={$page_data->ID}`;
-
-
-	}
-
 	function custom_wiki_file_column($column, $post_id)
 	{
 		switch ($column) {
