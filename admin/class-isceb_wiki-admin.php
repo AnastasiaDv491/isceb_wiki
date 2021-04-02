@@ -119,8 +119,7 @@ class Isceb_wiki_Admin
 
 			return $attach_id;
 		}
-
-
+		
 		$i = 0;
 		if ($_FILES) {
 			$files = $_FILES["wiki_file"];
@@ -152,7 +151,7 @@ class Isceb_wiki_Admin
 
 								// check if upload was succesfull
 								if (is_wp_error($attachment_id)) {
-									wp_redirect(site_url() . 'oops-something-went-wrong');
+									wp_redirect(site_url().remove_query_arg('message',$_POST['_wp_http_referer']).'?message=failed');
 								} else {
 									//upload succesfull
 									$post_data = array();
@@ -174,34 +173,51 @@ class Isceb_wiki_Admin
 											$meta_return = update_post_meta($post_id, 'file_attachment', $attachment_id);
 											if ($meta_return) {
 												// If upload was succesful 
-												wp_redirect(site_url() . '/thank-you/');
+												wp_redirect(site_url().remove_query_arg('message',$_POST['_wp_http_referer']).'?message=success');
 											} else {
-												wp_redirect(site_url() . '/oops-something-went-wrong');
+												wp_redirect(site_url().remove_query_arg('message',$_POST['_wp_http_referer']).'?message=failed');
 											}
 										} else {
-											wp_redirect(site_url() . '/oops-something-went-wrong');
+											wp_redirect(site_url().remove_query_arg('message',$_POST['_wp_http_referer']).'?message=failed');
 										}
 									} else {
-										wp_redirect(site_url() . '/oops-something-went-wrong');
+										wp_redirect(site_url().remove_query_arg('message',$_POST['_wp_http_referer']).'?message=failed');
 									}
 								}
 							}
 
 							// Returns error if nonce is not set or invalid
 							else {
-								wp_send_json_error();
+								wp_redirect(site_url().remove_query_arg('message',$_POST['_wp_http_referer']).'?message=failed');
 								die();
 							}
 						}
 						++$i;
 					}
 				} else {
-					//errorS
+					wp_redirect(site_url().remove_query_arg('message',$_POST['_wp_http_referer']).'?message=failed');
 				}
 			}
 		}
 		//There are no files
 		die();
+	}
+
+
+
+	function isceb_wiki_redirect_to_something_went_wrong()
+	{
+		$page_id = $valid['en']['isceb_wiki_something_went_wrong_page'];
+		$page_data = get_post($page_id);
+
+		// post not there
+		if (!is_object($page_data)) {
+			return site_url().'404';
+		}
+
+		return site_url().`index.php?page_id={$page_data->ID}`;
+
+
 	}
 
 	function custom_wiki_file_column($column, $post_id)
@@ -275,6 +291,20 @@ class Isceb_wiki_Admin
 					'default_option' => '',
 					'class'       => 'chosen',
 				),
+				array(
+					'id' => 'isceb_wiki_something_went_wrong_page',
+					'type' => 'select',
+					'title' => 'Wiki something went wrong page',
+					'query'          => array(
+						'type'           => 'pages',
+						'args'           => array(
+							'orderby'      => 'post_date',
+							'order'        => 'DESC',
+						),
+					),
+					'default_option' => '',
+					'class'       => 'chosen',
+				),
 			),
 		);
 
@@ -312,16 +342,13 @@ class Isceb_wiki_Admin
 		flush_rewrite_rules();
 	}
 
-	public function isceb_wiki_add_admin_menu(){
-		add_menu_page( "ISCEB WIKI", "ISCEB WIKI", 'manage_options', $this->plugin_name . '_admin_menu', array( $this, 'page_signups' ));
+	public function isceb_wiki_add_admin_menu()
+	{
+		add_menu_page("ISCEB WIKI", "ISCEB WIKI", 'manage_options', $this->plugin_name . '_admin_menu', array($this, 'page_signups'));
 	}
 
-	public function page_signups() {
-        include( plugin_dir_path( __FILE__ ) . 'partials/isceb_wiki-main-menu.php' );
-    }
-
-	
-
-
-
+	public function page_signups()
+	{
+		include(plugin_dir_path(__FILE__) . 'partials/isceb_wiki-main-menu.php');
+	}
 }

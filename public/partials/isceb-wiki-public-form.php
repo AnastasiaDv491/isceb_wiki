@@ -22,12 +22,27 @@ wp_enqueue_script('select2');
 $academicYears = get_field_object('field_605619386bc68');
 wp_localize_script($this->plugin_name, 'academic_years', $academicYears);
 
+//Feedback message after upload
+if( isset($_GET['message']) ){
+	switch ($_GET['message']) {
+		case 'success':
+			echo "<h3 id='isceb-wiki-error-message' style='color:green'>Your upload was succesfull, thank you for helping your fellow students</h3>";
+			break;
+		case 'failed':
+			echo "<h3 id='isceb-wiki-error-message' style='color:red'>Your upload failed, try again or contact someone at ISCEB</h3>";
+		default:
+			# code...
+			break;
+	}
+}
+
+
+
 ?>
 
 <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>?action=post_first" method="post" enctype="multipart/form-data" id="file_form">
 
 	<?php wp_nonce_field('submit_content', 'my_nonce_field'); ?>
-
 	<h2> Here you can upload your files to WikiISCEB ! </h2>
 	<br>
 	<p> Only <b>PDF</b> files are allowed!</p>
