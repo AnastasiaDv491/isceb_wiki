@@ -101,26 +101,51 @@ class Isceb_wiki_Admin
 		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/isceb_wiki-admin.js', array('jquery'), $this->version, false);
 	}
 
+	//Custom directory for the wiki files upload
+	static function isceb_wiki_custom_upload_dir($dir_data)
+	{
+		// $dir_data already you might want to use
+		$custom_dir = 'wiki';
+		return [
+			'path' => $dir_data['basedir'] . '/' . $custom_dir,
+			'url' => $dir_data['url'] . '/' . $custom_dir,
+			'subdir' => '/' . $custom_dir,
+			'basedir' => $dir_data['error'],
+			'error' => $dir_data['error'],
+		];
+	}
 
+	//Needed becaue media_handle_upload can only process one file at a time
+	function handle_wiki_form_attachment($file_handler, $post_id)
+	{
+		// check to make sure its a successful upload
+		if ($_FILES[$file_handler]['error'] !== UPLOAD_ERR_OK) __return_false();
+
+		// require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+		require_once(ABSPATH . "wp-admin" . '/includes/file.php');
+		// require_once(ABSPATH . "wp-admin" . '/includes/media.php');
+
+		// changing the directory
+		add_filter('upload_dir', array($this, 'isceb_wiki_custom_upload_dir'));
+
+		//Get term to put on wiki file, is a workaround to filter the media library
+		$term = get_term_by('name', 'wiki_file_attachement_tag', 'wiki_file_tags');
+		error_log(print_r($term, true));
+		$post_data = array(
+			// 'post_author' => 1,
+			'tax_input'     => array(
+				'wiki_file_tags' => array($term->term_id)
+			)
+		);
+
+		$attach_id = media_handle_upload($file_handler, $post_id, $post_data);
+		remove_filter('upload_dir', array($this, 'isceb_wiki_custom_upload_dir'));
+
+		return $attach_id;
+	}
 
 	function post_first()
 	{
-		//Needed becaue media_handle_upload can only process one file at a time
-		function handle_wiki_form_attachment($file_handler, $post_id)
-		{
-			// check to make sure its a successful upload
-			if ($_FILES[$file_handler]['error'] !== UPLOAD_ERR_OK) __return_false();
-
-			// require_once(ABSPATH . "wp-admin" . '/includes/image.php');
-			require_once(ABSPATH . "wp-admin" . '/includes/file.php');
-			// require_once(ABSPATH . "wp-admin" . '/includes/media.php');
-
-			$attach_id = media_handle_upload($file_handler, $post_id);
-
-			return $attach_id;
-		}
-
-
 		$i = 0;
 		if ($_FILES) {
 			$files = $_FILES["wiki_file"];
@@ -148,7 +173,8 @@ class Isceb_wiki_Admin
 								&& wp_verify_nonce($_POST['my_nonce_field'], 'submit_content')
 
 							) {
-								$attachment_id = handle_wiki_form_attachment($file, 0);
+
+								$attachment_id = $this->handle_wiki_form_attachment($file, 0);
 
 								// check if upload was succesfull
 								if (is_wp_error($attachment_id)) {
@@ -312,16 +338,72 @@ class Isceb_wiki_Admin
 		flush_rewrite_rules();
 	}
 
-	public function isceb_wiki_add_admin_menu(){
-		add_menu_page( "ISCEB WIKI", "ISCEB WIKI", 'manage_options', $this->plugin_name . '_admin_menu', array( $this, 'page_signups' ));
+	public function isceb_wiki_add_admin_menu()
+	{
+		add_menu_page("ISCEB WIKI", "ISCEB WIKI", 'manage_options', $this->plugin_name . '_admin_menu', array($this, 'page_signups'));
 	}
 
-	public function page_signups() {
-        include( plugin_dir_path( __FILE__ ) . 'partials/isceb_wiki-main-menu.php' );
-    }
+	public function page_signups()
+	{
+		include(plugin_dir_path(__FILE__) . 'partials/isceb_wiki-main-menu.php');
+	}
 
-	
+	public function isceb_wiki_exclude_admin_uploads_media_library($wp_query_obj = array())
+	{
+		$wp_query_obj['tax_query'] =
+			array(
+				array(
+					'taxonomy' => 'wiki_file_tags',
+					'operator' => 'NOT EXISTS'
+				)
+			);
+
+		return $wp_query_obj;
+	}
+
+	//This is a workaround to add a tag to attachements so that we can filter them in the media library
+	function isceb_wiki_add_categories_to_attachments()
+	{
+
+		// Add new taxonomy, NOT hierarchical (like tags)
+		$labels = array(
+			'name'                       => _x('Wike_file_tags', 'taxonomy general name', 'textdomain'),
+			'singular_name'              => _x('Wike_file_tag', 'taxonomy singular name', 'textdomain'),
+			'search_items'               => __('Search Wike_file_tags', 'textdomain'),
+			'popular_items'              => __('Popular Wike_file_tags', 'textdomain'),
+			'all_items'                  => __('All Wike_file_tags', 'textdomain'),
+			'parent_item'                => null,
+			'parent_item_colon'          => null,
+			'edit_item'                  => __('Edit Wike_file_tag', 'textdomain'),
+			'update_item'                => __('Update Wike_file_tag', 'textdomain'),
+			'add_new_item'               => __('Add New Wike_file_tag', 'textdomain'),
+			'new_item_name'              => __('New Wike_file_tag Name', 'textdomain'),
+			'separate_items_with_commas' => __('Separate Wike_file_tags with commas', 'textdomain'),
+			'add_or_remove_items'        => __('Add or remove Wike_file_tags', 'textdomain'),
+			'choose_from_most_used'      => __('Choose from the most used Wike_file_tags', 'textdomain'),
+			'not_found'                  => __('No Wike_file_tags found.', 'textdomain'),
+			'menu_name'                  => __('Wike_file_tags', 'textdomain'),
+		);
+
+		$args = array(
+			'hierarchical'          => false,
+			'labels'                => $labels,
+			//Turn on to show in media menu and on attachemnt post
+			'show_ui'               => false,
+			'show_admin_column'     => true,
+			'update_count_callback' => '_update_post_term_count',
+			'query_var'             => true,
+		);
 
 
+		register_taxonomy(
+			'wiki_file_tags',
+			'attachement',
+			$args
+		);
 
+		wp_insert_term('wiki_file_attachement_tag', 'wiki_file_tags');
+
+		register_taxonomy_for_object_type('wiki_file_tags', 'attachment');
+	}
 }
