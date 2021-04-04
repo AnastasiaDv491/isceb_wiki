@@ -51,7 +51,6 @@ if (is_user_logged_in()) {
                 ?>
                 <li>
                     <a href=" <?php echo $file_content['url'] ?>"> <?php echo $file_content['title']; ?></a>
-                    <p> <?php echo($file_category); ?> </p>
                     
                 </li>
             <?php endforeach; ?>
