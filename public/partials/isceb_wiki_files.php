@@ -7,25 +7,29 @@
 
 if (is_user_logged_in()) {
 
-    
-    $wiki_file_terms = get_terms( 'wiki_file_category' );
+
+    $wiki_file_terms = get_terms('wiki_file_category');
 
     foreach ($wiki_file_terms as $wiki_file_term) {
-       
+
         $get_wiki_files = get_posts(array(
             'post_type' => 'wiki-file',
             'post_status' => 'publish',
+            'meta_key' => 'academic_year',
+            'orderby' => 'meta_value',
+            'order' => 'DESC',
             'tax_query' => array(
                 array(
-                'taxonomy' => 'wiki_file_category',
-                'field'=> 'name',
-                'terms' => $wiki_file_term->name,
-                'operator' =>'AND'
+                    'taxonomy' => 'wiki_file_category',
+                    'field' => 'name',
+                    'terms' => $wiki_file_term->name,
+                    'operator' => 'AND'
 
-            )),
+                )
+            ),
             'meta_query' => array(
                 'relation' => 'AND',
-                array (
+                array(
                     'key' => 'approved',
                     'value' => 'Yes',
                     'compare' => '=',
@@ -37,31 +41,36 @@ if (is_user_logged_in()) {
                 )
             )
         ));
-      
 
-        if( $get_wiki_files ): ?>
-            <h2> <?php echo($wiki_file_term->name); ?> </h2>
+
+        if ($get_wiki_files) : ?>
+            <h2> <?php echo ($wiki_file_term->name); ?> </h2>
             <ul>
-            <?php foreach( $get_wiki_files as $get_wiki_file ): ?>
-                <?php 
-        
-                
-                $file_content = get_field('file_attachment', $get_wiki_file->ID);
-                
-                ?>
-                <li>
-                    <a href=" <?php echo $file_content['url'] ?>"> <?php echo $file_content['title']; ?></a>
+            <?php $previous_academic_year = "";?>
+
+                <?php foreach ($get_wiki_files as $get_wiki_file) : ?>
+                    <?php
+
+                    $current_academic_year = get_field('academic_year', $get_wiki_file->ID);
                     
-                </li>
-            <?php endforeach; ?>
+                    if ($current_academic_year != $previous_academic_year) {
+                        echo("<h3>$current_academic_year</h3>");
+                    }
+                    $previous_academic_year = $current_academic_year;
+                    
+                    $file_content = get_field('file_attachment', $get_wiki_file->ID);
+
+                    ?>
+                    <li>
+                        <a href=" <?php echo $file_content['url'] ?>"> <?php echo $get_wiki_file->post_title; ?></a>
+
+                    </li>
+                <?php endforeach; ?>
             </ul>
-        <?php endif;?>
-        <?php
+        <?php endif; ?>
+<?php
         $get_wiki_files = array();
-
     }
-
-
 }
 // else { 
 //     echo 'Please, log in';
