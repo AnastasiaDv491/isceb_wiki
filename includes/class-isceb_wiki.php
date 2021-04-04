@@ -270,6 +270,10 @@ class Isceb_wiki
 		$this->loader->add_action('init', $plugin_admin, 'isceb_wiki_create_options_menu', 999);
 
 		$this->loader->add_action('exopite_sof_do_save_options', $plugin_admin, 'save_isceb_wiki_settings', 10, 2);
+	
+		//Add custom tags to attachemnts to be used later to filter in media library
+		$this->loader->add_filter('ajax_query_attachments_args', $plugin_admin, 'isceb_wiki_exclude_admin_uploads_media_library' );
+		$this->loader->add_action( 'init' ,$plugin_admin, 'isceb_wiki_add_categories_to_attachments' );
 	}
 
 	/**
