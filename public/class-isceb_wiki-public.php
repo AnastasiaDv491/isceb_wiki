@@ -102,6 +102,8 @@ class Isceb_wiki_Public
 		wp_register_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/isceb_wiki-public.js', array('jquery'), $this->version, false);
 		wp_register_script('select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', array('jquery'), $this->version, false);
 
+		wp_register_script('isceb_wiki_files_script        ', plugin_dir_url(__FILE__) . 'js/isceb_wiki_files.js', array('jquery'), $this->version, false);
+
 		/**
 		 *  In backend there is global ajaxurl variable defined by WordPress itself.
 		 *
@@ -138,15 +140,14 @@ class Isceb_wiki_Public
 			include plugin_dir_path(__FILE__) . 'partials/isceb-wiki-public-form.php';
 
 			return ob_get_clean();
-		}
-		else {
+		} else {
 			ob_start();
-				echo (get_permalink());
-				echo ('You need to be logged in to upload something to the wiki');
-				$args = array(
-					'redirect' => get_permalink()
-				);
-				wp_login_form($args);
+			echo (get_permalink());
+			echo ('You need to be logged in to upload something to the wiki');
+			$args = array(
+				'redirect' => get_permalink()
+			);
+			wp_login_form($args);
 			return ob_get_clean();
 		}
 	}
