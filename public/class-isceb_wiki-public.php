@@ -102,7 +102,7 @@ class Isceb_wiki_Public
 		wp_register_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/isceb_wiki-public.js', array('jquery'), $this->version, false);
 		wp_register_script('select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', array('jquery'), $this->version, false);
 
-		wp_register_script('isceb_wiki_files_script        ', plugin_dir_url(__FILE__) . 'js/isceb_wiki_files.js', array('jquery'), $this->version, false);
+		wp_register_script('isceb_wiki_files_script', plugin_dir_url(__FILE__) . 'js/isceb_wiki_files.js', array('jquery'), $this->version, false);
 
 		/**
 		 *  In backend there is global ajaxurl variable defined by WordPress itself.

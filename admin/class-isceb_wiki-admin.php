@@ -441,4 +441,8 @@ class Isceb_wiki_Admin
 
 		register_taxonomy_for_object_type('wiki_file_tags', 'attachment');
 	}
+
+	function isceb_wiki_download_count() {
+		wp_send_json_success("Hello");
+	}
 }
