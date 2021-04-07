@@ -4,6 +4,7 @@
 *  Query posts for a relationship value.
 *  This method uses the meta_query LIKE to match the string "123" to the database value a:1:{i:0;s:3:"123";} (serialized array)
 */
+wp_enqueue_script('isceb_wiki_files_script');
 
 $wiki_file_terms = get_terms('wiki_file_category');
 
@@ -59,7 +60,7 @@ foreach ($wiki_file_terms as $wiki_file_term) {
 
                 ?>
                     <li>
-                        <a id="isceb_wiki_file" href=" <?php echo $file_content['url'] ?>" > <?php echo $get_wiki_file->post_title; ?></a>
+                        <a id="<?php echo $get_wiki_file->ID ?>" class="isceb_wiki_file" href=" <?php echo $file_content['url'] ?>" > <?php echo $get_wiki_file->post_title; ?></a>
                     </li>
 
                 <?php else :

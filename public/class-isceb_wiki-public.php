@@ -118,6 +118,10 @@ class Isceb_wiki_Public
 		wp_localize_script($this->plugin_name, 'wp_ajax', array(
 			'ajax_url' => admin_url('admin-ajax.php'),
 		));
+
+		wp_localize_script('isceb_wiki_files_script', 'wp_ajax', array(
+			'ajax_url' => admin_url('admin-ajax.php'),
+		));
 	}
 
 

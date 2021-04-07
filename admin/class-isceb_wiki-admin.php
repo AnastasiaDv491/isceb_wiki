@@ -443,6 +443,17 @@ class Isceb_wiki_Admin
 	}
 
 	function isceb_wiki_download_count() {
-		wp_send_json_success("Hello");
+
+				
+		//TODO: can be null, put in count
+		$current_count = get_field('download_count',$_REQUEST['isceb_wiki_file']);
+		update_field('download_count',$current_count+1,$_REQUEST['isceb_wiki_file']);
+		$return = array(
+			'message'   => 'Saved',
+			'ID'        => $_REQUEST['isceb_wiki_file'],
+			'current_count' =>$current_count
+		);
+		
+		wp_send_json_success($return);
 	}
 }
