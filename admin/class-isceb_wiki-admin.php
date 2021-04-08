@@ -469,4 +469,17 @@ class Isceb_wiki_Admin
 		wp_send_json_success($return);
 	
 	}
+
+	function isceb_wiki_delete_attachment($post_id) {
+		if('wiki-file' == get_post_type( $post_id )) {
+			error_log('hello im here');
+			error_log($post_id);
+			
+			$attachment =  get_field('file_attachment', $post_id);
+			error_log(print_r($attachment,true));
+			wp_delete_attachment($attachment['ID']);
+			return;
+		}
+		
+	}
 }
