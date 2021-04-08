@@ -444,16 +444,29 @@ class Isceb_wiki_Admin
 
 	function isceb_wiki_download_count() {
 
-				
+		$user = get_current_user_id();
+		$downloads = get_field('isceb_wiki_user_files','user_'.$user);
+
 		//TODO: can be null, put in count
 		$current_count = get_field('download_count',$_REQUEST['isceb_wiki_file']);
-		update_field('download_count',$current_count+1,$_REQUEST['isceb_wiki_file']);
+
+		if( !in_array($_REQUEST['isceb_wiki_file'],$downloads)) {
+			update_field('download_count',$current_count+1, $_REQUEST['isceb_wiki_file']);
+		}	
+
+		array_push($downloads, $_REQUEST['isceb_wiki_file']);
+		update_field('isceb_wiki_user_files', $downloads, 'user_'.$user);
+
 		$return = array(
 			'message'   => 'Saved',
 			'ID'        => $_REQUEST['isceb_wiki_file'],
-			'current_count' =>$current_count
+			'current_count' =>$current_count,
+			'user' => $user,
+			'userDownloads' => $downloads,
+			'current_post' => $current_post
 		);
-		
+
 		wp_send_json_success($return);
+	
 	}
 }

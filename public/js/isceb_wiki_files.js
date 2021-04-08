@@ -36,7 +36,10 @@ var courses = [];
 			type: 'POST',
 			url: wp_ajax.ajax_url,
 			dataType: "json", // add data type
-			data: { action: 'isceb_wiki_download_count', isceb_wiki_file: event.target.id },
+			data: { 	
+				action: 'isceb_wiki_download_count',
+				isceb_wiki_file: event.target.id 
+			},
 			success: function (response) {
 				console.log(response);
 				console.log(event.target.id);
