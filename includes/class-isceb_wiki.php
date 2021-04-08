@@ -177,6 +177,7 @@ class Isceb_wiki
 		function set_custom_wiki_file_posts_custom_column($columns)
 		{
 			$columns['course'] = __('Course', 'isceb_wiki');
+			$columns['approved'] = __('Approved', 'isceb_wiki');
 
 			return $columns;
 		}

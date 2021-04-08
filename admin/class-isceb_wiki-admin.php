@@ -186,7 +186,7 @@ class Isceb_wiki_Admin
 									$post_id = null;
 									$post_data = array(
 										'post_title' => substr($_POST["fileName_{$i}"], 0, 50),
-										'post_status' => 'draft',
+										'post_status' => 'publish',
 										'post_type' => 'wiki-file',
 										'post_author' => $_POST["userID"]
 									);
@@ -255,7 +255,17 @@ class Isceb_wiki_Admin
 				} else {
 					_e('Unable to get course', 'isceb_wiki');
 				}
-				break;
+			break;
+
+			case 'approved':
+				$approved = get_field('approved');
+				
+				if ($approved != 'Yes') {
+					echo ('<p style="background-color: #8B0000; color: white; position: center,"> Not approved </p>');
+				} else {
+					echo ('<p> Approved </p>');
+				}
+			break;
 		}
 	}
 
@@ -442,44 +452,44 @@ class Isceb_wiki_Admin
 		register_taxonomy_for_object_type('wiki_file_tags', 'attachment');
 	}
 
-	function isceb_wiki_download_count() {
+	function isceb_wiki_download_count()
+	{
 
 		$user = get_current_user_id();
-		$downloads = get_field('isceb_wiki_user_files','user_'.$user);
+		$downloads = get_field('isceb_wiki_user_files', 'user_' . $user);
 
-		$current_count = get_field('download_count',$_REQUEST['isceb_wiki_file']);
-		$current_count = is_null($current_count) ? 0: $current_count;
+		$current_count = get_field('download_count', $_REQUEST['isceb_wiki_file']);
+		$current_count = is_null($current_count) ? 0 : $current_count;
 
-		if( !in_array($_REQUEST['isceb_wiki_file'],$downloads)) {
-			update_field('download_count',$current_count+1, $_REQUEST['isceb_wiki_file']);
-		}	
+		if (!in_array($_REQUEST['isceb_wiki_file'], $downloads)) {
+			update_field('download_count', $current_count + 1, $_REQUEST['isceb_wiki_file']);
+		}
 
 		array_push($downloads, $_REQUEST['isceb_wiki_file']);
-		update_field('isceb_wiki_user_files', $downloads, 'user_'.$user);
+		update_field('isceb_wiki_user_files', $downloads, 'user_' . $user);
 
 		$return = array(
 			'message'   => 'Saved',
 			'ID'        => $_REQUEST['isceb_wiki_file'],
-			'current_count' =>$current_count,
+			'current_count' => $current_count,
 			'user' => $user,
 			'userDownloads' => $downloads,
 			'current_post' => $current_post
 		);
 
 		wp_send_json_success($return);
-	
 	}
 
-	function isceb_wiki_delete_attachment($post_id) {
-		if('wiki-file' == get_post_type( $post_id )) {
+	function isceb_wiki_delete_attachment($post_id)
+	{
+		if ('wiki-file' == get_post_type($post_id)) {
 			error_log('hello im here');
 			error_log($post_id);
-			
+
 			$attachment =  get_field('file_attachment', $post_id);
-			error_log(print_r($attachment,true));
+			error_log(print_r($attachment, true));
 			wp_delete_attachment($attachment['ID']);
 			return;
 		}
-		
 	}
 }
