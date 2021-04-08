@@ -447,8 +447,8 @@ class Isceb_wiki_Admin
 		$user = get_current_user_id();
 		$downloads = get_field('isceb_wiki_user_files','user_'.$user);
 
-		//TODO: can be null, put in count
 		$current_count = get_field('download_count',$_REQUEST['isceb_wiki_file']);
+		$current_count = is_null($current_count) ? 0: $current_count;
 
 		if( !in_array($_REQUEST['isceb_wiki_file'],$downloads)) {
 			update_field('download_count',$current_count+1, $_REQUEST['isceb_wiki_file']);
