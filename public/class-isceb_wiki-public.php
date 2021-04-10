@@ -158,19 +158,8 @@ class Isceb_wiki_Public
 
 	function shortcode_wiki_programs($atts)
 	{
-		$args = shortcode_atts(
-			array(
-				'arg1'   => 'arg1',
-				'arg2'   => 'arg2',
-			),
-			$atts
-		);
-
-		$var = (strtolower($args['arg1']) != "") ? strtolower($args['arg1']) : 'default';
 		ob_start();
 		include plugin_dir_path(__FILE__) . 'partials/isceb_wiki_programs_shortcode.php';
-		// $my_content = ob_get_contents();
-		// var_dump(file_exists(plugin_dir_path(__FILE__) . 'partials/isceb_wiki_programs.php'));
 		return ob_get_clean();
 	}
 
