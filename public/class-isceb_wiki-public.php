@@ -102,6 +102,8 @@ class Isceb_wiki_Public
 		wp_register_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/isceb_wiki-public.js', array('jquery'), $this->version, false);
 		wp_register_script('select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', array('jquery'), $this->version, false);
 
+		wp_register_script('isceb_wiki_files_script', plugin_dir_url(__FILE__) . 'js/isceb_wiki_files.js', array('jquery'), $this->version, false);
+
 		/**
 		 *  In backend there is global ajaxurl variable defined by WordPress itself.
 		 *
@@ -116,28 +118,42 @@ class Isceb_wiki_Public
 		wp_localize_script($this->plugin_name, 'wp_ajax', array(
 			'ajax_url' => admin_url('admin-ajax.php'),
 		));
+
+		wp_localize_script('isceb_wiki_files_script', 'wp_ajax', array(
+			'ajax_url' => admin_url('admin-ajax.php'),
+		));
 	}
 
 
 
 	function shortcode_wiki_submit($atts)
 	{
+		if (is_user_logged_in()) {
+			$args = shortcode_atts(
+				array(
+					'arg1'   => 'arg1',
+					'arg2'   => 'arg2',
+				),
+				$atts
+			);
 
-		$args = shortcode_atts(
-			array(
-				'arg1'   => 'arg1',
-				'arg2'   => 'arg2',
-			),
-			$atts
-		);
+			$var = (strtolower($args['arg1']) != "") ? strtolower($args['arg1']) : 'default';
 
-		$var = (strtolower($args['arg1']) != "") ? strtolower($args['arg1']) : 'default';
+			ob_start();
+			//TODO check if text of page where shortcode is included is shown
+			include plugin_dir_path(__FILE__) . 'partials/isceb-wiki-public-form.php';
 
-		ob_start();
-		//TODO check if text of page where shortcode is included is shown
-		include plugin_dir_path(__FILE__) . 'partials/isceb-wiki-public-form.php';
-
-		return ob_get_clean();
+			return ob_get_clean();
+		} else {
+			ob_start();
+			echo (get_permalink());
+			echo ('You need to be logged in to upload something to the wiki');
+			$args = array(
+				'redirect' => get_permalink()
+			);
+			wp_login_form($args);
+			return ob_get_clean();
+		}
 	}
 
 	function shortcode_wiki_programs($atts)
@@ -269,9 +285,7 @@ class Isceb_wiki_Public
 		//get_option returns false by default if option doesn't exist
 		$options = get_option('isceb_wiki-test');
 		if ($options && $options['en']['wiki_home_1'] === null && $options['en']['wiki_home_1'] == '') {
-			error_log('i am here bitch');
 			$page = get_page_by_title('Wiki Homepage');
-			error_log($page->ID);
 			if ($page === null) {
 				$wiki_homepage = array(
 					'ID' => 0,

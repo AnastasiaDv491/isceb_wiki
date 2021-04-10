@@ -263,10 +263,25 @@ class Isceb_wiki
 
 		$this->loader->add_action('manage_wiki-file_posts_custom_column', $plugin_admin, 'custom_wiki_file_column', 10, 2);
 
+		//Create general menu
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'isceb_wiki_add_admin_menu' );
+
 		// Save/Update our plugin options
-		$this->loader->add_action('init', $plugin_admin, 'create_menu', 999);
+		$this->loader->add_action('init', $plugin_admin, 'isceb_wiki_create_options_menu', 999);
 
 		$this->loader->add_action('exopite_sof_do_save_options', $plugin_admin, 'save_isceb_wiki_settings', 10, 2);
+	
+		//Add custom tags to attachemnts to be used later to filter in media library
+		$this->loader->add_filter('ajax_query_attachments_args', $plugin_admin, 'isceb_wiki_exclude_admin_uploads_media_library' );
+		$this->loader->add_action( 'init' ,$plugin_admin, 'isceb_wiki_add_categories_to_attachments' );
+
+		$this->loader->add_action('wp_ajax_isceb_wiki_download_count', $plugin_admin, 'isceb_wiki_download_count');
+		// No need to access the count for public users. Used only for logged in users who can download files
+		// $this->loader->add_action('wp_ajax_nopriv_get_wiki_courses_ajax', $plugin_public, 'isceb_wiki_download_count');
+
+		// Action to delete attachement of the wiki_file
+		$this->loader->add_action('before_delete_post', $plugin_admin, 'isceb_wiki_delete_attachment');
+
 	}
 
 	/**
@@ -315,6 +330,8 @@ class Isceb_wiki
 		 */
 		$this->loader->add_action('wp_ajax_get_wiki_courses_ajax', $plugin_public, 'get_wiki_courses_ajax');
 		$this->loader->add_action('wp_ajax_nopriv_get_wiki_courses_ajax', $plugin_public, 'get_wiki_courses_ajax');
+
+		
 
 		$this->loader->add_action('init', $plugin_public, 'rewrite_wiki_base_url_to_page');
 	}
