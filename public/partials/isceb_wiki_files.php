@@ -4,6 +4,7 @@
 *  Query posts for a relationship value.
 *  This method uses the meta_query LIKE to match the string "123" to the database value a:1:{i:0;s:3:"123";} (serialized array)
 */
+wp_enqueue_script('isceb_wiki_files_script');
 
 $wiki_file_terms = get_terms('wiki_file_category');
 
@@ -59,13 +60,13 @@ foreach ($wiki_file_terms as $wiki_file_term) {
 
                 ?>
                     <li>
-                        <a href=" <?php echo $file_content['url'] ?>"> <?php echo $get_wiki_file->post_title; ?></a>
+                        <a id="<?php echo $get_wiki_file->ID ?>" class="isceb_wiki_file" href=" <?php echo $file_content['url'] ?>" > <?php echo $get_wiki_file->post_title; ?></a>
                     </li>
 
                 <?php else :
                     $isceb_wiki_login_page = get_exopite_sof_option('isceb_wiki-test');
                     if (isset($isceb_wiki_login_page['isceb_wiki_login_page'])) {
-                        echo ("<li>$get_wiki_file->post_title<a href=" . get_page_link($isceb_wiki_login_page['isceb_wiki_login_page']) . "> Login to download file </a></li>");
+                        echo ("<li>$get_wiki_file->post_title<a href=" . get_page_link($isceb_wiki_login_page['isceb_wiki_login_page']) . " > Login to download file </a></li>");
                     } else {
                         global $wp;
                         echo ("<li>$get_wiki_file->post_title<a href=" . wp_login_url(home_url($wp->request)) . "> Login to download file</a></li>");
