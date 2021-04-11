@@ -281,7 +281,7 @@ class Isceb_wiki
 		// $this->loader->add_action('wp_ajax_nopriv_get_wiki_courses_ajax', $plugin_public, 'isceb_wiki_download_count');
 
 		// Action to delete attachement of the wiki_file
-		$this->loader->add_action('trashed_post', $plugin_admin, 'isceb_wiki_delete_attachment');
+		$this->loader->add_action('before_delete_post', $plugin_admin, 'isceb_wiki_delete_attachment');
 
 	}
 
