@@ -40,14 +40,16 @@ class Isceb_wiki_Activator
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-isceb_wiki-post_types.php';
 		$plugin_post_types = new Isceb_Wiki_Post_Types();
-		error_log("test");
-		error_log(print_r(plugin_dir_path(dirname(__FILE__)),true));
-
-		
+	
 		$lines= array(
 			'RewriteCond %{REQUEST_URI} ^.*wp-content/uploads/isceb_wiki/.*',
 			'RewriteRule ^(.*)$ ../../plugins/isceb_wiki/public/dl-file.php?file=$1 [QSA,L]',
-			'Options -Indexes'
+			//Disable indexing
+			'Options -Indexes',
+			//Kill PHP Execution
+			'<Files *.php>',
+			'deny from all',
+			'</Files>'
 		);
 		//Add lines into .htaccess for file downloads reroute
 		insert_with_markers(get_home_path().'/wp-content/uploads/isceb_wiki/'.'.htaccess', 'isceb_wiki',$lines);
