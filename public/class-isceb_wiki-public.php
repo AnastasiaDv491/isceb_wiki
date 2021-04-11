@@ -146,7 +146,6 @@ class Isceb_wiki_Public
 			return ob_get_clean();
 		} else {
 			ob_start();
-			echo (get_permalink());
 			echo ('You need to be logged in to upload something to the wiki');
 			$args = array(
 				'redirect' => get_permalink()
