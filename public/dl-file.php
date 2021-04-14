@@ -22,16 +22,13 @@ require_once ABSPATH . WPINC . '/pluggable.php';
 wp_cookie_constants();
 
 is_user_logged_in() ||  auth_redirect();
+
 $custom_dir = '/isceb_wiki';
 list($basedir) = array_values(array_intersect_key(wp_upload_dir(), array('basedir' => 1)))+array(NULL);
 $basedir = $basedir.$custom_dir;
 $file = rtrim($basedir, '/') . '/' . (isset($_GET['file']) ? $_GET['file'] : '');
 
 $file = realpath($file);
-var_dump($file);
-var_dump(realpath($basedir));
-
-
 
 if ($file === FALSE || !$basedir || !is_file($file)) {
     status_header(404);
