@@ -106,13 +106,16 @@ class Isceb_wiki_Admin
 	{
 		// $dir_data already you might want to use
 		$custom_dir = 'isceb_wiki';
-		return [
-			'path' => $dir_data['basedir'] . '/' . $custom_dir,
+
+		$new_dir_data = [
+			'path' => $dir_data['basedir'] . DIRECTORY_SEPARATOR . $custom_dir,
+			//TODO: #24 check if baseurl is needed or url
 			'url' => $dir_data['url'] . '/' . $custom_dir,
-			'subdir' => '/' . $custom_dir,
-			'basedir' => $dir_data['error'],
+			'subdir' => $custom_dir,
+			'basedir' => $dir_data['basedir'],
 			'error' => $dir_data['error'],
 		];
+		return $new_dir_data;
 	}
 
 	//Needed becaue media_handle_upload can only process one file at a time
@@ -482,16 +485,15 @@ class Isceb_wiki_Admin
 
 	function isceb_wiki_delete_attachment($post_id) {
 		if('wiki-file' == get_post_type( $post_id )) {
-
-			$attachment =  get_field('file_attachment', $post_id);
+			$attachment_id =  get_field('file_attachment', $post_id);
 
 			//TODO: Weird acf behaviour, returns ID instead of array
 			//Probably a problem with the test environment
-			if (is_string($attachment)) {
-				wp_delete_attachment($attachment);
+			if (is_string($attachment_id)) {
+				wp_delete_attachment(intval($attachment_id),true);
 			}
 			else{
-				wp_delete_attachment($attachment['ID']);
+				wp_delete_attachment(intval($attachment_id['ID']),true);
 			}
 			return;
 		}
