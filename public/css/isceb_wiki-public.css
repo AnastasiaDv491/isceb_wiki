@@ -21,3 +21,10 @@
    margin-bottom: 0px;
  }
 
+input[type="submit"]:disabled {
+  color: #a0a5aa;
+  background: #f7f7f7;
+  border-color: #ddd;
+}
+
+
