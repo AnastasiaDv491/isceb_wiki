@@ -105,7 +105,7 @@ class Isceb_wiki_Admin
 	static function isceb_wiki_custom_upload_dir($dir_data)
 	{
 		// $dir_data already you might want to use
-		$custom_dir = 'wiki';
+		$custom_dir = 'isceb_wiki';
 		return [
 			'path' => $dir_data['basedir'] . '/' . $custom_dir,
 			'url' => $dir_data['url'] . '/' . $custom_dir,
