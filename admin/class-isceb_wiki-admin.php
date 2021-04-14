@@ -105,8 +105,7 @@ class Isceb_wiki_Admin
 	static function isceb_wiki_custom_upload_dir($dir_data)
 	{
 		// $dir_data already you might want to use
-		error_log('i am hit');
-		$custom_dir = 'wiki';
+		$custom_dir = 'isceb_wiki';
 
 		$new_dir_data = [
 			'path' => $dir_data['basedir'] . DIRECTORY_SEPARATOR . $custom_dir,
@@ -116,7 +115,6 @@ class Isceb_wiki_Admin
 			'basedir' => $dir_data['basedir'],
 			'error' => $dir_data['error'],
 		];
-		error_log(print_r($new_dir_data,true));
 		return $new_dir_data;
 	}
 
