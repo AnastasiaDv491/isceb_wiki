@@ -167,8 +167,6 @@ class Isceb_wiki
 		{
 			unset($paths[0]);
 			$paths[] = plugin_dir_path(dirname(__FILE__)) . '/acf-json';
-			error_log("ddddddddd");
-			error_log(plugin_dir_path(dirname(__FILE__)) . '/acf-json');
 			return $paths;
 		}
 

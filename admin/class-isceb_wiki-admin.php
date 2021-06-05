@@ -133,7 +133,6 @@ class Isceb_wiki_Admin
 
 		//Get term to put on wiki file, is a workaround to filter the media library
 		$term = get_term_by('name', 'wiki_file_attachement_tag', 'wiki_file_tags');
-		error_log(print_r($term, true));
 		$post_data = array(
 			// 'post_author' => 1,
 			'tax_input'     => array(
@@ -196,7 +195,6 @@ class Isceb_wiki_Admin
 
 									$post_id = wp_insert_post($post_data);
 									if ($post_id != 0) {
-										error_log(print_r($_POST));
 										$terms_return = wp_set_object_terms($post_id, $_POST["file_category_{$i}"], 'wiki_file_category');
 										if (!is_wp_error($terms_return)) {
 											update_field('course', $_POST["file_course_{$i}"], $post_id);
