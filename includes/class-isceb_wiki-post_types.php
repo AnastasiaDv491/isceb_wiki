@@ -64,6 +64,7 @@ class Isceb_Wiki_Post_Types
             'capability_type'    => (isset($fields['capability_type'])) ? $fields['capability_type'] : 'post',
             'has_archive'        => (isset($fields['has_archive'])) ? $fields['has_archive'] : true,
             'hierarchical'       => (isset($fields['hierarchical'])) ? $fields['hierarchical'] : true,
+            'show_in_rest'       => (isset($fields['show_in_rest']))          ? $fields['show_in_rest']          : true,
             'supports'           => (isset($fields['supports'])) ? $fields['supports'] : array(
                 'title',
                 'editor',
@@ -280,6 +281,7 @@ class Isceb_Wiki_Post_Types
                     'page-attributes',
                     'post-formats',
                 ),
+                'show_in_rest'          => true,
                 'custom_caps'           => true,
                 'custom_caps_users'     => array(
                     'administrator',
@@ -320,6 +322,7 @@ class Isceb_Wiki_Post_Types
                 'query_var'             => true,
                 'show_in_admin_bar'     => true,
                 'show_in_nav_menus'     => true,
+                'show_in_rest'          => true,
                 'supports'              => array(
                     'title',
                     'editor',
@@ -372,6 +375,7 @@ class Isceb_Wiki_Post_Types
                 'query_var'             => true,
                 'show_in_admin_bar'     => true,
                 'show_in_nav_menus'     => true,
+                'show_in_rest' => true,
                 'supports'              => array(
                     'title',
                     'editor',
@@ -453,11 +457,9 @@ class Isceb_Wiki_Post_Types
         );
 
         foreach ($post_types_fields as $fields) {
-
             $this->register_single_post_type($fields);
         }
 
-        // ...
 
     }
 
