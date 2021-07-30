@@ -8,6 +8,7 @@
 
 $get_wiki_programs = get_posts(array(
     'post_type' => 'phase',
+    'order'     => 'ASC',
     'meta_query' => array(
         array(
             'key' => 'program', // name of custom field
@@ -15,6 +16,7 @@ $get_wiki_programs = get_posts(array(
             'compare' => 'LIKE'
         )
     )
+
 ));
 
 
