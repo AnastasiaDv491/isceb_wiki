@@ -42,7 +42,7 @@ foreach ($wiki_file_terms as $wiki_file_term) {
 
     if ($get_wiki_files) : ?>
         <h2> <?php echo ($wiki_file_term->name); ?> </h2>
-        <ul>
+        <div class="isceb-wiki-container">
             <?php $previous_academic_year = ""; ?>
 
             <?php foreach ($get_wiki_files as $get_wiki_file) : ?>
@@ -50,31 +50,56 @@ foreach ($wiki_file_terms as $wiki_file_term) {
 
                 $current_academic_year = get_field('academic_year', $get_wiki_file->ID);
 
-                if ($current_academic_year != $previous_academic_year) {
-                    echo ("<h3>$current_academic_year</h3>");
-                }
+
                 $previous_academic_year = $current_academic_year;
 
-                if (is_user_logged_in()) :
-                    $file_content = get_field('file_attachment', $get_wiki_file->ID);
-
+                $file_content = get_field('file_attachment', $get_wiki_file->ID);
                 ?>
-                    <li>
-                        <a id="<?php echo $get_wiki_file->ID ?>" class="isceb_wiki_file" href=" <?php echo $file_content['url'] ?>" > <?php echo $get_wiki_file->post_title; ?></a>
-                    </li>
 
-                <?php else :
-                    $isceb_wiki_login_page = get_exopite_sof_option('isceb_wiki-test');
-                    if (isset($isceb_wiki_login_page['isceb_wiki_login_page'])) {
-                        echo ("<li>$get_wiki_file->post_title<a href=" . get_page_link($isceb_wiki_login_page['isceb_wiki_login_page']) . " > Login to download file </a></li>");
-                    } else {
-                        global $wp;
-                        echo ("<li>$get_wiki_file->post_title<a href=" . wp_login_url(home_url($wp->request)) . "> Login to download file</a></li>");
-                    }
-                ?>
-                <?php endif; ?>
+                <div class="isceb-wiki-file">
+
+                    <img src="<?php echo plugin_dir_url(dirname(__FILE__)) . 'img/pdf-icon.svg' ?>" class="isceb-wiki-pdf">
+                    <div class="isceb-wiki-file-meta">
+                        <p id="<?php echo $get_wiki_file->ID ?>" class="isceb-wiki-file-title"> <?php echo $get_wiki_file->post_title; ?></p>
+                        <p class="isceb-wiki-filesize">File size: <?php echo size_format($file_content["filesize"]) ?></p>
+                        <p class="isceb-wiki-ac-year"> Academic Year: <?php echo $current_academic_year; ?></p>
+                    </div>
+
+                    <?php if (is_user_logged_in()) : ?>
+                        <a href=" <?php echo $file_content['url'] ?>" download class="isceb-wiki-download-wrap">
+                            <button class="isceb-wiki-file-download isceb-wiki-button-not-gb">Download</button>
+                        </a>
+                        <?php else :
+                        $isceb_wiki_login_page = get_exopite_sof_option('isceb_wiki-test');
+                        if (isset($isceb_wiki_login_page['isceb_wiki_login_page']) && $isceb_wiki_login_page['isceb_wiki_login_page'] != '') {
+                        ?>
+                            <a href=" <?php echo get_page_link($isceb_wiki_login_page['isceb_wiki_login_page']) ?> " class="isceb-wiki-download-wrap">
+                                <button class="isceb-wiki-file-download isceb-wiki-button-not-gb">Login to download file</button>
+                            </a>
+
+                        <?php
+                        } else {
+                            global $wp;
+                        ?>
+
+                            <a href=" <?php echo (wp_login_url(home_url($wp->request))) ?> " class="isceb-wiki-download-wrap">
+                                <button class="isceb-wiki-file-download isceb-wiki-button-not-gb">Login to download file</button>
+                            </a>
+
+                        <?php
+                        }
+                        ?>
+                    <?php endif; ?>
+
+
+
+
+                </div>
+
+
+
             <?php endforeach; ?>
-        </ul>
+        </div>
     <?php endif; ?>
 <?php
     $get_wiki_files = array();
