@@ -1,0 +1,51 @@
+{
+    "key": "group_603138f164da6",
+    "title": "Phase selection for course",
+    "fields": [
+        {
+            "key": "field_603138f46fc85",
+            "label": "Phases",
+            "name": "phases",
+            "type": "relationship",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "phase"
+            ],
+            "taxonomy": "",
+            "filters": [
+                "search",
+                "post_type",
+                "taxonomy"
+            ],
+            "elements": "",
+            "min": 0,
+            "max": 1,
+            "return_format": "object"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "course"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "modified": 1627727744
+}
