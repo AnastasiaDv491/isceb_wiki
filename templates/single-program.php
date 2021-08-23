@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The template for displaying files of a course
+ * The template for displaying a single course on the wiki
  *
  * @package UnderStrap
  */
@@ -13,7 +13,7 @@ get_header();
 
 
 ?>
-<p>single course from plugin</p>
+<p>single program from plugin</p>
 <div class="wrapper h-100" id="single-wrapper">
 
     <div class="container-fluid" id="content" tabindex="-1">

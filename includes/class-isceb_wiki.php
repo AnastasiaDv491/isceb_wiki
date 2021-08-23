@@ -129,6 +129,8 @@ class Isceb_wiki
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-isceb_wiki-post_types.php';
 
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/isceb_wiki_core.php';
+
 		/**
 		 * Define path and URL to the ACF plugin.
 		 * Include the ACF plugin.
@@ -138,7 +140,8 @@ class Isceb_wiki
 		define('isceb_wiki_ACF_PATH', plugin_dir_path(dirname(__FILE__)) . '/includes/acf/');
 		define('isceb_wiki_ACF_URL', plugin_dir_url(dirname(__FILE__)) . '/includes/acf/');
 
-
+		define('isceb_wiki_template_path', plugin_dir_url(dirname(__FILE__)) . '/templates/');
+		define('isceb_wiki_plugin_path', plugin_dir_url(dirname(__FILE__)));
 
 		include_once(isceb_wiki_ACF_PATH . 'acf.php');
 
@@ -309,15 +312,8 @@ class Isceb_wiki
 		$this->loader->add_shortcode("wiki-form", $plugin_public, "shortcode_wiki_submit", $priority = 10, $accepted_args = 2);
 		$this->loader->add_shortcode("wiki-programs", $plugin_public, "shortcode_wiki_programs", $priority = 10, $accepted_args = 2);
 
-		// Template page courses
-		//Uncomment to register custom post type course
-		// $this->loader->add_filter( 'template_include', $plugin_public, 'get_custom_post_type_templates' );
 
-		$this->loader->add_filter('the_content', $plugin_public, 'add_files_to_single_if_course');
 
-		$this->loader->add_filter('the_content', $plugin_public, 'add_course_to_single_if_phase');
-
-		$this->loader->add_filter('the_content', $plugin_public, 'add_phase_to_single_if_program');
 		/**
 		 * The wp_ajax_ is telling wordpress to use ajax and the prefix_ajax_first is the hook name to use in JavaScript or in URL.
 		 *
