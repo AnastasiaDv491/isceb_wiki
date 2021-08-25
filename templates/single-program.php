@@ -19,9 +19,7 @@ get_header();
     <div class="container-fluid" id="content" tabindex="-1">
 
         <div class="row">
-
-            
-
+            <?php do_action('isceb_wiki_before_main_content', get_the_id()) ?>
             <main class="isceb-wiki-site-main col-md-6" id="main">
 
                 <div id="isceb-wiki-breadcrumb"><?php echo isceb_wiki_get_the_breadcrumb($post) ?></div>
@@ -36,16 +34,16 @@ get_header();
 
                 ?>
 
-            </main><!-- #main -->
+            </main>
 
-            <!-- Do the right sidebar check -->
-            <?php get_template_part('global-templates/right-sidebar-check'); ?>
+            
+            <?php do_action('isceb_wiki_after_main_content',get_the_id())?>
 
-        </div><!-- .row -->
+        </div>
 
-    </div><!-- #content -->
+    </div>
 
-</div><!-- #single-wrapper -->
+</div>
 
 <?php
 get_footer();

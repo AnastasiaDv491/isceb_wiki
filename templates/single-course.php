@@ -11,16 +11,16 @@ defined('ABSPATH') || exit;
 
 get_header();
 
-
+wp_enqueue_script('isceb_wiki_files_script');
 ?>
-<p>single course from plugin</p>
+
 <div class="wrapper h-100" id="single-wrapper">
 
     <div class="container-fluid" id="content" tabindex="-1">
 
         <div class="row">
 
-            
+            <?php do_action('isceb_wiki_before_main_content',get_the_id())?>
 
             <main class="isceb-wiki-site-main col-md-6" id="main">
 
@@ -38,8 +38,8 @@ get_header();
 
             </main><!-- #main -->
 
-            <!-- Do the right sidebar check -->
-            <?php get_template_part('global-templates/right-sidebar-check'); ?>
+            
+            <?php do_action('isceb_wiki_after_main_content',get_the_id())?>
 
         </div><!-- .row -->
 

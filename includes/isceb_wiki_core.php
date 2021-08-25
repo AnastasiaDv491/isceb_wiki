@@ -224,11 +224,66 @@ function isceb_wiki_content_navigation($pageID)
                         )
                     )
                 ));
-                isceb_wiki_get_template('template-parts/isceb-wiki-course-files.php', array("isceb_wiki_course_files" => $get_wiki_files,"isceb_wiki_file_term" => $wiki_file_term));
-
+                isceb_wiki_get_template('template-parts/isceb-wiki-course-files.php', array("isceb_wiki_course_files" => $get_wiki_files, "isceb_wiki_file_term" => $wiki_file_term));
             }
 
             break;
     }
 }
 add_action('isceb_wiki_after_content', 'isceb_wiki_content_navigation', 10);
+
+
+function isceb_wiki_navigation_sidebar($pageID)
+{
+    switch (get_post_type()) {
+        case 'program':
+            $wiki_phases = get_posts(array(
+                'post_type' => 'phase',
+                'order' => 'ASC',
+                'meta_query' => array(
+                    array(
+                        'key' => 'program', // name of custom field
+                        'value' => '"' . get_the_ID() . '"', // matches exactly "123", not just 123. This prevents a match for "1234"
+                        'compare' => 'LIKE'
+                    )
+                )
+            ));
+            $title_of_page = get_the_title();
+            break;
+        case 'phase':
+            $programs_of_phase = get_field('program');
+            $wiki_phases = get_posts(array(
+                'post_type' => 'phase',
+                'order' => 'ASC',
+                'meta_query' => array(
+                    array(
+                        'key' => 'program', // name of custom field
+                        'value' => '"' . $programs_of_phase[0]->ID . '"', // matches exactly "123", not just 123. This prevents a match for "1234"
+                        'compare' => 'LIKE'
+                    )
+                )
+            ));
+            $title_of_page = $programs_of_phase[0]->post_title;
+            break;
+        case 'course':
+            $phases_of_course = get_field('phases', get_the_ID());
+            $programs_of_phase = get_field('program', $phases_of_course[0]->ID);
+
+            $wiki_phases = get_posts(array(
+                'post_type' => 'phase',
+                'order' => 'ASC',
+                'meta_query' => array(
+                    array(
+                        'key' => 'program', // name of custom field
+                        'value' => '"' . $programs_of_phase[0]->ID . '"', // matches exactly "123", not just 123. This prevents a match for "1234"
+                        'compare' => 'LIKE'
+                    )
+                )
+            ));
+            $title_of_page = $programs_of_phase[0]->post_title;
+            break;
+    }
+
+    isceb_wiki_get_template('sidebar-templates/sidebar-isceb-wiki.php',array('wiki_phases'=>$wiki_phases,'title_of_page'=>$title_of_page));
+}
+add_action('isceb_wiki_before_main_content', 'isceb_wiki_navigation_sidebar', 10);
