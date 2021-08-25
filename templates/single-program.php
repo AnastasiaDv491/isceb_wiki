@@ -36,13 +36,10 @@ get_header();
 
             </main>
 
-            
-            <?php do_action('isceb_wiki_after_main_content',get_the_id())?>
 
+            <?php do_action('isceb_wiki_after_main_content', get_the_id()) ?>
         </div>
-
     </div>
-
 </div>
 
 <?php

@@ -20,7 +20,7 @@ get_header();
 
         <div class="row">
 
-            <?php do_action('isceb_wiki_before_main_content',get_the_id())?>
+            <?php do_action('isceb_wiki_before_main_content', get_the_id()) ?>
 
             <main class="isceb-wiki-site-main col-md-6" id="main">
 
@@ -38,13 +38,9 @@ get_header();
 
             </main>
 
-            
-            <?php do_action('isceb_wiki_after_main_content',get_the_id())?>
-
+            <?php do_action('isceb_wiki_after_main_content', get_the_id()) ?>
         </div>
-
     </div>
-
 </div>
 
 <?php

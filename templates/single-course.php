@@ -20,7 +20,7 @@ wp_enqueue_script('isceb_wiki_files_script');
 
         <div class="row">
 
-            <?php do_action('isceb_wiki_before_main_content',get_the_id())?>
+            <?php do_action('isceb_wiki_before_main_content', get_the_id()) ?>
 
             <main class="isceb-wiki-site-main col-md-6" id="main">
 
@@ -36,16 +36,11 @@ wp_enqueue_script('isceb_wiki_files_script');
 
                 ?>
 
-            </main><!-- #main -->
-
-            
-            <?php do_action('isceb_wiki_after_main_content',get_the_id())?>
-
-        </div><!-- .row -->
-
-    </div><!-- #content -->
-
-</div><!-- #single-wrapper -->
+            </main>
+            <?php do_action('isceb_wiki_after_main_content', get_the_id()) ?>
+        </div>
+    </div>
+</div>
 
 <?php
 get_footer();
