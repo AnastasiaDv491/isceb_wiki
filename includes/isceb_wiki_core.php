@@ -92,7 +92,12 @@ function isceb_wiki_template_loader($template)
     $find = array();
     $file = '';
 
-    if (is_singular('course')) :
+
+    global $wp;
+
+    if ($wp->request === 'wiki') :
+        $file = 'isceb-wiki-home.php';
+    elseif (is_singular('course')) :
         $file = 'single-course.php';
     elseif (is_singular('program')) :
         $file = 'single-program.php';
@@ -284,6 +289,6 @@ function isceb_wiki_navigation_sidebar($pageID)
             break;
     }
 
-    isceb_wiki_get_template('sidebar-templates/sidebar-isceb-wiki.php',array('wiki_phases'=>$wiki_phases,'title_of_page'=>$title_of_page));
+    isceb_wiki_get_template('sidebar-templates/sidebar-isceb-wiki.php', array('wiki_phases' => $wiki_phases, 'title_of_page' => $title_of_page));
 }
 add_action('isceb_wiki_before_main_content', 'isceb_wiki_navigation_sidebar', 10);
