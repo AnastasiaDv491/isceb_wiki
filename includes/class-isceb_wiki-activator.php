@@ -40,9 +40,12 @@ class Isceb_wiki_Activator
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-isceb_wiki-post_types.php';
 		$plugin_post_types = new Isceb_Wiki_Post_Types();
+		$plugin_post_types->create_custom_post_type();
 
 		Isceb_wiki_Activator::rewrite_wiki_base_url_to_page();
 
+		flush_rewrite_rules();
+		
 		$lines = array(
 			'RewriteCond %{REQUEST_URI} ^.*wp-content/uploads/isceb_wiki/.*',
 			'RewriteRule ^(.*)$ ../../plugins/isceb_wiki/public/dl-file.php?file=$1 [QSA,L]',
@@ -87,7 +90,7 @@ class Isceb_wiki_Activator
 				'top'
 			);
 
-			flush_rewrite_rules();
+			
 		}
 	}
 }
