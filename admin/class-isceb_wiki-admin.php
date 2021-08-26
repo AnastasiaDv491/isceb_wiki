@@ -256,17 +256,17 @@ class Isceb_wiki_Admin
 				} else {
 					_e('Unable to get course', 'isceb_wiki');
 				}
-			break;
+				break;
 
 			case 'approved':
 				$approved = get_field('approved');
-				
+
 				if ($approved != 'Yes') {
 					echo ('<p style="background-color: #8B0000; color: white; position: center,"> Not approved </p>');
 				} else {
 					echo ('<p> Approved </p>');
 				}
-			break;
+				break;
 		}
 	}
 
@@ -370,7 +370,19 @@ class Isceb_wiki_Admin
 
 		// post not there
 		if (!is_object($page_data)) {
-			return;
+			$page = get_page_by_title('Wiki Homepage');
+			if ($page === null) {
+				$wiki_homepage = array(
+					'ID' => 0,
+					'post_type' => 'page',
+					'post_name' => 'wiki homepage',
+					'post_title' => 'Wiki Homepage',
+					'post_status' => 'publish',
+				);
+				$page_id = wp_insert_post($wiki_homepage);
+			} else {
+				$page_id = $page->ID;
+			}
 		}
 
 		add_rewrite_rule(
@@ -481,17 +493,17 @@ class Isceb_wiki_Admin
 		wp_send_json_success($return);
 	}
 
-	function isceb_wiki_delete_attachment($post_id) {
-		if('wiki-file' == get_post_type( $post_id )) {
+	function isceb_wiki_delete_attachment($post_id)
+	{
+		if ('wiki-file' == get_post_type($post_id)) {
 			$attachment_id =  get_field('file_attachment', $post_id);
 
 			//TODO: Weird acf behaviour, returns ID instead of array
 			//Probably a problem with the test environment
 			if (is_string($attachment_id)) {
-				wp_delete_attachment(intval($attachment_id),true);
-			}
-			else{
-				wp_delete_attachment(intval($attachment_id['ID']),true);
+				wp_delete_attachment(intval($attachment_id), true);
+			} else {
+				wp_delete_attachment(intval($attachment_id['ID']), true);
 			}
 			return;
 		}
