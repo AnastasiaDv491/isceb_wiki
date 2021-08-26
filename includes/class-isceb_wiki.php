@@ -326,10 +326,7 @@ class Isceb_wiki
 		$this->loader->add_action('wp_ajax_get_wiki_courses_ajax', $plugin_public, 'get_wiki_courses_ajax');
 		$this->loader->add_action('wp_ajax_nopriv_get_wiki_courses_ajax', $plugin_public, 'get_wiki_courses_ajax');
 
-		
-
-		$this->loader->add_action('init', $plugin_public, 'rewrite_wiki_base_url_to_page');
-	}
+			}
 
 
 
