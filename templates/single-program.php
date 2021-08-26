@@ -1,19 +1,16 @@
 <?php
-
 /**
  * The template for displaying a single course on the wiki
  *
- * @package UnderStrap
+ * @package ISCEB_WIKI
+ * @version 1.0.0
  */
 
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
 
 get_header();
-
-
 ?>
-<p>single program from plugin</p>
 <div class="wrapper h-100" id="single-wrapper">
 
     <div class="container-fluid" id="content" tabindex="-1">

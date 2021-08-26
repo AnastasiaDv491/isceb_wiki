@@ -3,13 +3,12 @@
 /**
  * The sidebar for the wiki
  *
- * @package UnderStrap
+ * @package ISCEB_WIKI
+ * @version 1.0.0
  */
 
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
-
-
 ?>
 
 <div class="col-md-2 widget-area" id="isceb-wiki-sidebar" role="complementary">

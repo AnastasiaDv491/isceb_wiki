@@ -1,11 +1,10 @@
 <?php
-
-/**
- * Template Name: ISCEB WIKI Home
+ /**
+ * Main template for ISCEB Wiki landing page
+ * 
  *
- * Template for displaying a page without sidebar even if a sidebar widget is published.
- *
- * @package UnderStrap
+ * @package ISCEB_WIKI
+ * @version 1.0.0
  */
 
 // Exit if accessed directly.

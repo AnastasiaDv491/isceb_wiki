@@ -1,9 +1,9 @@
 <?php
-
 /**
  * The template for displaying files of a course
  *
- * @package UnderStrap
+ * @package ISCEB_WIKI
+ * @version 1.0.0
  */
 
 // Exit if accessed directly.

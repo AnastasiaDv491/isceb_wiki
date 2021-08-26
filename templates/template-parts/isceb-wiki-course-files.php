@@ -1,3 +1,21 @@
+<?php
+
+/**
+ * Template for displaying wiki files 
+ * 
+ * Expects: 
+ * $isceb_wiki_file_term: the type of the files
+ * $isceb_wiki_course_files: a collection of wiki-file posts
+ *
+ * @package ISCEB_WIKI
+ * @version 1.0.0
+ */
+
+// Exit if accessed directly.
+defined('ABSPATH') || exit;
+
+?>
+
 <h2> <?php echo ($isceb_wiki_file_term->name); ?> </h2>
 
 

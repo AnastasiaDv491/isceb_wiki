@@ -1,9 +1,18 @@
 <?php
 /**
- * Available variables:
- * Array $isceb_wiki_nav_list contains either course or a phase
+ * Template for displaying nav items
+ * 
+ * Expects: 
+ * $isceb_wiki_nav_list: a collection of posts
+ *
+ * @package ISCEB_WIKI
+ * @version 1.0.0
  */
+
+// Exit if accessed directly.
+defined('ABSPATH') || exit;
 ?>
+
 <ul>
 <?php foreach( $isceb_wiki_nav_list as $isceb_wiki_nav_item ): ?>
 <li>
