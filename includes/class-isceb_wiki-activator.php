@@ -41,10 +41,6 @@ class Isceb_wiki_Activator
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-isceb_wiki-post_types.php';
 		$plugin_post_types = new Isceb_Wiki_Post_Types();
 		$plugin_post_types->create_custom_post_type();
-
-		Isceb_wiki_Activator::rewrite_wiki_base_url_to_page();
-
-		flush_rewrite_rules();
 		
 		$lines = array(
 			'RewriteCond %{REQUEST_URI} ^.*wp-content/uploads/isceb_wiki/.*',
@@ -60,37 +56,6 @@ class Isceb_wiki_Activator
 		insert_with_markers(get_home_path() . '/wp-content/uploads/isceb_wiki/' . '.htaccess', 'isceb_wiki', $lines);
 	}
 
-	//Only called when initalising
-	private static function rewrite_wiki_base_url_to_page()
-	{
-		// delete_option('isceb_wiki-test');
-
-
-		//get_option returns false by default if option doesn't exist
-		$options = get_option('isceb_wiki-test');
-		
-		if ($options && ($options['en']['wiki_home_1'] === null || $options['en']['wiki_home_1'] == '')) {
-			$page = get_page_by_title('Wiki Homepage');
-			if ($page === null) {
-				$wiki_homepage = array(
-					'ID' => 0,
-					'post_type' => 'page',
-					'post_name' => 'wiki homepage',
-					'post_title' => 'Wiki Homepage',
-					'post_status' => 'publish',
-				);
-				$page_id = wp_insert_post($wiki_homepage);
-			} else {
-				$page_id = $page->ID;
-			}
-
-			add_rewrite_rule(
-				'^wiki$',
-				"index.php?page_id={$page_id}",
-				'top'
-			);
-
-			
-		}
-	}
+	
+	
 }
