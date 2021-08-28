@@ -208,6 +208,8 @@ class Isceb_wiki
 
 
 
+
+
 		// ...
 
 		/**
@@ -217,6 +219,67 @@ class Isceb_wiki
 		 * @author Joe Szalai
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/exopite-simple-options/exopite-simple-options-framework-class.php';
+
+		/* Parent Menu Fix */
+		add_filter('parent_file', 'isceb_wiki_cpt_parent_menu_selection');
+
+		/**
+		 * Fix Parent Admin Menu Item f
+		 */
+		function isceb_wiki_cpt_parent_menu_selection($parent_file)
+		{
+
+			/* Get current screen */
+			global $current_screen, $self;
+
+			/**
+			 * Add categories of cpt as parent file/menu if
+			 * it's Post Type list Screen or Edit screen of our post type.
+			 */
+
+			if (in_array($current_screen->base, array('post', 'edit', 'edit-tags')) && in_array($current_screen->post_type, array('phase', 'course', 'program', 'wiki-file'))) {
+				$parent_file = 'isceb_wiki_admin_menu';
+			}
+
+			return $parent_file;
+		}
+
+		/* Parent Menu Fix */
+		add_filter('submenu_file', 'isceb_wiki_cpt_submenu_selection');
+
+		/**
+		 * Fix Sub Menu Item Highlights
+		 */
+		function isceb_wiki_cpt_submenu_selection($submenu_file)
+		{
+
+			/* Get current screen */
+			global $current_screen, $self;
+
+			if (in_array($current_screen->base, array('post', 'edit', 'edit-tags'))) {
+				switch ($current_screen->post_type) {
+					case 'phase':
+						$submenu_file = 'edit-tags.php?taxonomy=phase_category&post_type=phase';
+						break;
+					case 'program':
+						$submenu_file = 'edit-tags.php?taxonomy=program_category&post_type=program';
+						break;
+					case 'course':
+						$submenu_file = 'edit-tags.php?taxonomy=course_category&post_type=course';
+						break;
+					case 'wiki-file':
+						$submenu_file = 'edit-tags.php?taxonomy=wiki_file_category&post_type=wiki-file';
+						break;
+
+					default:
+						# code...
+						break;
+				}
+			}
+
+			return $submenu_file;
+		}
+
 
 		$this->loader = new Isceb_wiki_Loader();
 	}

@@ -290,7 +290,7 @@ class Isceb_wiki_Admin
 			// 'tabbed'            => false,
 			'menu_title'		=> 'ISCEB WIKI',
 			// 'menu_slug'			=> 'isceb_wiki_menu',
-			'position'			=> 	25
+			'position'			=> 	0
 		);
 
 		$fields[] = array(
@@ -396,8 +396,16 @@ class Isceb_wiki_Admin
 
 	public function isceb_wiki_add_admin_menu()
 	{
+		// add_menu_page("ISCEB WIKI", "ISCEB WIKI", 'manage_options', $this->plugin_name . '-test');
 		add_menu_page("ISCEB WIKI", "ISCEB WIKI", 'manage_options', $this->plugin_name . '_admin_menu', array($this, 'page_signups'));
+
+		add_submenu_page($this->plugin_name . '_admin_menu','Program categories','Program categories','manage_options','edit-tags.php?taxonomy=program_category&post_type=program');
+		add_submenu_page($this->plugin_name . '_admin_menu','Phase categories','Phase categories','manage_options','edit-tags.php?taxonomy=phase_category&post_type=phase');
+		add_submenu_page($this->plugin_name . '_admin_menu','Course categories','Course categories','manage_options','edit-tags.php?taxonomy=course_category&post_type=course');
+		add_submenu_page($this->plugin_name . '_admin_menu','Wiki-files categories','Wiki-files categories','manage_options','edit-tags.php?taxonomy=wiki_file_category&post_type=wiki-file');
 	}
+
+	
 
 
 
