@@ -31,7 +31,7 @@ var courses = [];
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
-	$('.isceb_wiki_file').click(function(event) {
+	$('.isceb-wiki-download-wrap').click(function(event) {
 		$.ajax({
 			type: 'POST',
 			url: wp_ajax.ajax_url,
