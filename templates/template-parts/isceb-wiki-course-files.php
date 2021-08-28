@@ -24,13 +24,13 @@ defined('ABSPATH') || exit;
     <button class="isceb-wiki-button-not-gb"> Upload files </button>
 <?php endif; ?>
 
+<div class="isceb-wiki-container">
+    <?php foreach ($isceb_wiki_course_files as  $isceb_wiki_course_file) :
+        $file_content = get_field('file_attachment', $isceb_wiki_course_file->ID);
+        $current_academic_year = get_field('academic_year', $isceb_wiki_course_file->ID);
+    ?>
 
-<?php foreach ($isceb_wiki_course_files as  $isceb_wiki_course_file) :
-    $file_content = get_field('file_attachment', $isceb_wiki_course_file->ID);
-    $current_academic_year = get_field('academic_year', $isceb_wiki_course_file->ID);
-?>
 
-    <div class="isceb-wiki-container">
         <div class="isceb-wiki-file">
             <img src="<?php echo plugin_dir_url(dirname(dirname((__FILE__)))) . 'public/img/pdf-icon.svg' ?>" class="isceb-wiki-pdf">
 
@@ -69,7 +69,8 @@ defined('ABSPATH') || exit;
                 ?>
             <?php endif; ?>
         </div>
-    </div>
 
 
-<?php endforeach; ?>
+
+    <?php endforeach; ?>
+</div>
