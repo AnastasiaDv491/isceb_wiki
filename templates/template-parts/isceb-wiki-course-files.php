@@ -46,9 +46,10 @@ defined('ABSPATH') || exit;
 
             <div class="isceb-wiki-file-right-part">
                 <?php if (is_user_logged_in()) : ?>
-                    <a href=" <?php echo $file_content['url'] ?>" download class="isceb-wiki-download-wrap">
+                    
+                    <a href=" <?php echo $file_content['url'] ?>" download class="isceb-wiki-download-wrap" id="<?php echo $isceb_wiki_course_file->ID ?>">
                         <!-- <button class="isceb-wiki-file-download isceb-wiki-button-not-gb">Download</button> -->
-                        <i class="fas fa-download fa-2x"></i>
+                        <i class="fas fa-download fa-2x" id="<?php echo $isceb_wiki_course_file->ID ?>"></i>
                     </a>
                     
                     <?php else :
