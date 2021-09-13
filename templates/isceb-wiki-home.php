@@ -62,7 +62,7 @@ get_header();
 
                 ?>
 
-                <div class="isceb-grid-item" style="grid-column:2">
+                <div class="isceb-grid-item" id="isceb-grid-item-upload">
                     <h4>Upload your files</h4>
                     <p>Some text here that is long</p>
                     <button class="isceb-wiki-button-not-gb"> Upload files </button>

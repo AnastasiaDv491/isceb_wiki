@@ -74,7 +74,7 @@ foreach ($wiki_file_terms as $wiki_file_term) {
                         if (isset($isceb_wiki_login_page['isceb_wiki_login_page']) && $isceb_wiki_login_page['isceb_wiki_login_page'] != '') {
                         ?>
                             <a href=" <?php echo get_page_link($isceb_wiki_login_page['isceb_wiki_login_page']) ?> " class="isceb-wiki-download-wrap">
-                                <button class="isceb-wiki-file-download isceb-wiki-button-not-gb">Login to download file</button>
+                                <button class="isceb-wiki-file-download isceb-wiki-button-not-gb">Login</button>
                             </a>
 
                         <?php
@@ -83,7 +83,7 @@ foreach ($wiki_file_terms as $wiki_file_term) {
                         ?>
 
                             <a href=" <?php echo (wp_login_url(home_url($wp->request))) ?> " class="isceb-wiki-download-wrap">
-                                <button class="isceb-wiki-file-download isceb-wiki-button-not-gb">Login to download file</button>
+                                <button class="isceb-wiki-file-download isceb-wiki-button-not-gb">Login</button>
                             </a>
 
                         <?php
