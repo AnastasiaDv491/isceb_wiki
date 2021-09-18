@@ -482,11 +482,11 @@ function isceb_add_custom_field_userswp($custom_fields, $type)
 }
 
 
-add_action('template_redirect', 'template_redirect_cb');
+add_action('template_redirect', 'isceb_template_redirect_userswp_privacy');
 /* Hide all profile information 
     This is not perfect because if a shortcode would be used on another page we wouldn't block it
 */
-function template_redirect_cb(){
+function isceb_template_redirect_userswp_privacy(){
 	global $post;
 
 	if ( ! is_page() ) {
