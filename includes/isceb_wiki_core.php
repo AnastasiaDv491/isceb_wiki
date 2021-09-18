@@ -366,7 +366,7 @@ function isceb_account_page_title_cb($title, $type)
 function isceb_display_user_tab_content($type)
 {
 	if ($type == "Order") {
-		var_dump(get_option('uwp_settings')['account_page']);
+		var_dump(get_option('uwp_settings') );
 
 		print_r(get_user_meta(get_current_user_id()));
 	}
@@ -406,6 +406,9 @@ function isceb_after_register($data, $user_id)
 	// error_log(print_r($user_id, true));
 
 	isceb_sync_user_with_woocommerce($data, $user_id);
+
+    //Default to hiding users
+    update_user_meta( $user_id, 'uwp_hide_from_listing', 1 );
 }
 
 function isceb_sync_user_with_woocommerce($data, $user_ID)
@@ -476,4 +479,45 @@ function isceb_add_custom_field_userswp($custom_fields, $type)
 	);
 
 	return $custom_fields;
+}
+
+
+add_action('template_redirect', 'template_redirect_cb');
+/* Hide all profile information 
+    This is not perfect because if a shortcode would be used on another page we wouldn't block it
+*/
+function template_redirect_cb(){
+	global $post;
+
+	if ( ! is_page() ) {
+		return false;
+	}
+
+	if ( uwp_is_page_builder() ) {
+		return false;
+	}
+
+	$current_page_id = isset($post->ID) ? absint($post->ID) : '';
+	$uwp_page = uwp_get_page_id('profile_page', false);
+    $uwp_users_page = uwp_get_page_id('users_page', false);
+   
+	
+    if ( $uwp_page && ((int) $uwp_page ==  $current_page_id ) ||   $uwp_users_page && ((int) $uwp_users_page ==  $current_page_id )) {
+        wp_safe_redirect( home_url() );
+	    exit();
+    }
+    
+
+    //Works if you want to hide for certain roles
+    // if ( $uwp_page && ((int) $uwp_page ==  $current_page_id ) ) {
+	// 	$user = uwp_get_user_by_author_slug();
+	// 	if( ! $user || ! $user->roles ){
+	// 		return false;
+	// 	}
+
+	// 	if(isset($user->roles) && $user->ID != get_current_user_id() && (in_array('administrator', (array) $user->roles) || in_array('subscriber', (array) $user->roles))){
+	// 		wp_redirect( home_url() );
+	// 		exit();
+	// 	}
+	// }
 }
