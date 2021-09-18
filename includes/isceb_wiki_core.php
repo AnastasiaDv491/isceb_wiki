@@ -314,6 +314,7 @@ if (in_array('userswp/userswp.php', apply_filters('active_plugins', get_option('
     add_action('uwp_after_process_account', 'isceb_after_account_save', 30, 1);
     add_action('uwp_after_process_register', 'isceb_after_register', 30, 2);
     add_filter('uwp_form_fields_predefined', 'isceb_add_custom_field_userswp', 10, 2);
+    add_action('template_redirect', 'isceb_template_redirect_userswp_privacy');
 }
 
 
@@ -482,7 +483,7 @@ function isceb_add_custom_field_userswp($custom_fields, $type)
 }
 
 
-add_action('template_redirect', 'isceb_template_redirect_userswp_privacy');
+
 /* Hide all profile information 
     This is not perfect because if a shortcode would be used on another page we wouldn't block it
 */
