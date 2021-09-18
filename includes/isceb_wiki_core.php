@@ -500,9 +500,11 @@ function template_redirect_cb(){
 	$current_page_id = isset($post->ID) ? absint($post->ID) : '';
 	$uwp_page = uwp_get_page_id('profile_page', false);
     $uwp_users_page = uwp_get_page_id('users_page', false);
-   
+    $user_list_item_page = uwp_get_page_id('user_list_item_page', false);
 	
-    if ( $uwp_page && ((int) $uwp_page ==  $current_page_id ) ||   $uwp_users_page && ((int) $uwp_users_page ==  $current_page_id )) {
+    if ( $uwp_page && ((int) $uwp_page ==  $current_page_id ) 
+    ||   $uwp_users_page && ((int) $uwp_users_page ==  $current_page_id ) 
+    ||   $user_list_item_page && ((int) $user_list_item_page ==  $current_page_id)) {
         wp_safe_redirect( home_url() );
 	    exit();
     }
