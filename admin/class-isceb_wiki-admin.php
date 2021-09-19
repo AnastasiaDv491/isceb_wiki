@@ -410,16 +410,29 @@ class Isceb_wiki_Admin
 
 	public function isceb_wiki_add_admin_menu()
 	{
+		
+		$notification_count = $this->isceb_wiki_file_count();
 		// add_menu_page("ISCEB WIKI", "ISCEB WIKI", 'manage_options', $this->plugin_name . '-test');
-		add_menu_page("ISCEB WIKI", "ISCEB WIKI", 'manage_options', $this->plugin_name . '_admin_menu', array($this, 'page_signups'));
+		add_menu_page("ISCEB WIKI", $notification_count ? sprintf('ISCEB WIKI <span class="awaiting-mod">%d</span>', $notification_count) : 'ISCEB WIKI',
+		 'manage_options', $this->plugin_name . '_admin_menu', array($this, 'page_signups'));
 
 		add_submenu_page($this->plugin_name . '_admin_menu','Program categories','Program categories','manage_options','edit-tags.php?taxonomy=program_category&post_type=program');
 		add_submenu_page($this->plugin_name . '_admin_menu','Phase categories','Phase categories','manage_options','edit-tags.php?taxonomy=phase_category&post_type=phase');
 		add_submenu_page($this->plugin_name . '_admin_menu','Course categories','Course categories','manage_options','edit-tags.php?taxonomy=course_category&post_type=course');
-		add_submenu_page($this->plugin_name . '_admin_menu','Wiki-files categories','Wiki-files categories','manage_options','edit-tags.php?taxonomy=wiki_file_category&post_type=wiki-file');
+		add_submenu_page($this->plugin_name . '_admin_menu','Wiki-files categories','Wiki-files categories', 'manage_options','edit-tags.php?taxonomy=wiki_file_category&post_type=wiki-file');
 	}
 
-	
+	public function isceb_wiki_file_count(){
+		$posts = get_posts(array(
+			'numberposts'	=> -1,
+			'post_type'		=> 'wiki-file',
+			'meta_key'		=> 'approved',
+			'meta_value'	=> 'No',
+		));
+		
+		return count($posts);
+		
+	}
 
 
 
