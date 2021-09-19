@@ -70,10 +70,7 @@ if (isset($_GET['message'])) {
 		<li> Select summary/exercises/exam types </li>
 	</ul>
 	<br>
-	<!-- <p>
-		<input id='filesInput' multiple onchange='updateList()' type='file' name='wiki_file[]' accept='.pdf'  class="isceb-wiki-upload-input">
-	</p> -->
-
+	
 	<label for="filesInput" class="custom-file-upload">
 	<i class="fa fa-upload"  monospace="true"></i> Upload files
 	</label>
@@ -93,7 +90,6 @@ if (isset($_GET['message'])) {
 	<script type="text/javascript">
 		//Assign php generated json to JavaScript variable
 		var tempArray = <?php echo json_encode($terms); ?>;
-		console.log(tempArray);
 	</script>
 
 	<p>

@@ -2,8 +2,6 @@
 /**
  * Template for displaying wiki files 
  * 
- * Expects: 
- * $isceb_wiki_nav_list: a collection of posts
  *
  * @package ISCEB_WIKI
  * @version 1.0.0
@@ -20,7 +18,7 @@ defined('ABSPATH') || exit;
 	<div class="entry-content">
 		<?php
 		the_content();
-		do_action('isceb_wiki_after_content', get_the_id())
+		do_action('isceb_wiki_after_content', get_the_id());
 		?>
 	</div>
 

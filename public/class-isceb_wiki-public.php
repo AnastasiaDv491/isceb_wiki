@@ -213,32 +213,4 @@ class Isceb_wiki_Public
 		}
 		flush_rewrite_rules();
 	}
-
-	public function isceb_wiki_set_upload_page()
-	{
-		// delete_option('isceb_wiki-test');
-
-
-		//get_option returns false by default if option doesn't exist
-		$options = get_option('isceb_wiki-test');
-
-		if ($options && ($options['en']['wiki_upload_1'] === null || $options['en']['wiki_upload_1'] == '')) {
-			$page = get_page_by_title('Wiki Upload Page');
-			if ($page === null) {
-				$wiki_upload_page = array(
-					'ID' => 0,
-					'post_type' => 'page',
-					'post_name' => 'wiki Upload Page',
-					'post_title' => 'Wiki Upload Page',
-					'post_status' => 'publish',
-					'post_content' => '[wiki-form]',
-				);
-				$page_id = wp_insert_post($wiki_upload_page);
-			} else {
-				$page_id = $page->ID;
-			}
-
-		}
-		
-	}
 }
