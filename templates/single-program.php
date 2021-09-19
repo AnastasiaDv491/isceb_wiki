@@ -26,7 +26,7 @@ get_header();
 
                 while (have_posts()) {
                     the_post();
-                    isceb_wiki_get_template('template-parts/content-isceb-wiki.php');
+                    isceb_wiki_get_template('template-parts/content-isceb-program.php');
                 }
 
                 ?>

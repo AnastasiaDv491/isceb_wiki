@@ -314,6 +314,20 @@ class Isceb_wiki_Admin
 					'class'       => 'chosen',
 				),
 				array(
+					'id' => 'wiki_upload_1',
+					'type' => 'select',
+					'title' => 'Wiki Upload Page',
+					'query'          => array(
+						'type'           => 'pages',
+						'args'           => array(
+							'orderby'      => 'post_date',
+							'order'        => 'DESC',
+						),
+					),
+					'default_option' => '',
+					'class'       => 'chosen',
+				),
+				array(
 					'id' => 'isceb_wiki_login_page',
 					'type' => 'select',
 					'title' => 'ISCEB wiki Login',

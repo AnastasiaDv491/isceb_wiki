@@ -45,6 +45,7 @@ get_header();
                 );
                 
                 $query = new WP_Query($wiki_programs_args);
+              
                 if ($query->have_posts()) :
                     remove_filter('get_the_excerpt', 'wp_trim_excerpt');
                     while ($query->have_posts()) : $query->the_post();

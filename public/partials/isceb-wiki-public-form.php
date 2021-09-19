@@ -70,9 +70,15 @@ if (isset($_GET['message'])) {
 		<li> Select summary/exercises/exam types </li>
 	</ul>
 	<br>
-	<p>
-		<input id='filesInput' multiple onchange='updateList()' type='file' name='wiki_file[]' accept='.pdf'>
-	</p>
+	<!-- <p>
+		<input id='filesInput' multiple onchange='updateList()' type='file' name='wiki_file[]' accept='.pdf'  class="isceb-wiki-upload-input">
+	</p> -->
+
+	<label for="filesInput" class="custom-file-upload">
+	<i class="fa fa-upload"  monospace="true"></i> Upload files
+	</label>
+	<input id="filesInput" multiple onchange='updateList()' type='file' name='wiki_file[]' accept='.pdf'  class="isceb-wiki-upload-input" />
+
 	<div id="fileList"></div>
 
 
@@ -93,7 +99,7 @@ if (isset($_GET['message'])) {
 	<p>
 		<input type='hidden' name='action' value='post_first'>
 		<input type='hidden' name='userID' value='<?php echo get_current_user_id(); ?>'>
-		<input id="button_wiki_file_submit" type='submit' value='Submit Content' disabled="disabled">
+		<input id="button_wiki_file_submit" type='submit' value='Submit Content' disabled="disabled" class="isceb-wiki-upload-submit">
 	</p>
 
 </form>
