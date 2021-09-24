@@ -131,6 +131,10 @@ class Isceb_wiki
 
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/isceb_wiki_core.php';
 
+		/*Contains the events expansion of woocommerce */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/isceb_events_core.php';
+
+
 		/**
 		 * Define path and URL to the ACF plugin.
 		 * Include the ACF plugin.
