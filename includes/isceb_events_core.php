@@ -8,11 +8,10 @@ function isceb_add_new_event_product_tab($tabs)
     $tabs['isceb_event_tab'] = array(
         'label' => __('Events info', 'woocommerce'),
         'target' => 'isceb_events_tab',
-        'class'    => array('hide_if_simple', 'hide_if_variable', 'hide_if_grouped', 'hide_if_external'),
+        'class'    => array('show_if_isceb_event'),
         'priority' => 10,
     );
 
-    $tabs['variations']['class'][] = 'show_if_' . $product_type;
 
     return $tabs;
 }
@@ -74,7 +73,6 @@ function isceb_fill_new_events_tab()
 // Save the start of the event date 
 function isceb_save_product_custom_fields($post_id)
 {
-    // wp_set_object_terms( $post_id, 'isceb_event_product', 'product_type' );
     $product = wc_get_product($post_id);
 
     $custom_fields_event_start_date = isset($_POST['isceb-start-of-event']) ? $_POST['isceb-start-of-event'] : '';
@@ -84,72 +82,30 @@ function isceb_save_product_custom_fields($post_id)
     $product->update_meta_data('isceb-end-of-event', sanitize_text_field($custom_fields_event_end_date));
 
     $custom_fields_isceb_location_of_event = isset($_POST['isceb-location-of-event']) ? $_POST['isceb-location-of-event'] : '';
-    $product->update_meta_data('isceb-location-of-event', sanitize_text_field( $custom_fields_isceb_location_of_event));
+    $product->update_meta_data('isceb-location-of-event', sanitize_text_field($custom_fields_isceb_location_of_event));
+
+    $custom_fields_isceb_event_option = isset($_POST['_isceb_event']) ? $_POST['_isceb_event'] : '';
+    $product->update_meta_data('_isceb_event', sanitize_text_field(isset($_POST["_wildcard"]) ? "yes" : "no"));
 
     $product->save();
 }
 add_action('woocommerce_process_product_meta', 'isceb_save_product_custom_fields');
 
 
+add_filter("product_type_options", function ($product_type_options) {
 
-// add_action('save_post', 'wc_rrp_save_product');
-// function wc_rrp_save_product($product_id)
-// {
-// 	// If this is a auto save do nothing, we only save when update button is clicked
-// 	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
-// 		return;
-// 	if (isset($_POST['rrp_price'])) {
-// 		if (is_numeric($_POST['rrp_price']))
-// 			update_post_meta($product_id, 'rrp_price', $_POST['rrp_price']);
+    $product_type_options["isceb_event"] = [
+        "id"            => "_isceb_event",
+        "wrapper_class" => "",
+        "label"         => "Event",
+        "description"   => "Events give access to the event tab",
+        "default"       => "yes",
+    ];
 
-// 	} else delete_post_meta($product_id, 'rrp_price');
-
-// 	var_dump($_POST['isceb-start-of-event']);
+    return $product_type_options;
+});
 
 
-// 	if (isset($_POST['isceb-start-of-event'])) {
-// 		if (is_numeric($_POST['isceb-start-of-event']))
-// 			update_post_meta($product_id, 'isceb-start-of-event', $_POST['isceb-start-of-event']);
-
-// 	} else delete_post_meta($product_id, 'isceb-start-of-event');
-// }
-
-
-/* Second test custom product type */
-// add a product type
-add_filter('product_type_selector', 'isceb_add_custom_product_type_event');
-function isceb_add_custom_product_type_event($types)
-{
-    $types['isceb_event'] = __('Event');
-    return $types;
-}
-
-// add_action('plugins_loaded', 'isceb_create_custom_product_type_event');
-add_action('init', 'isceb_create_custom_product_type_event');
-function isceb_create_custom_product_type_event()
-{
-    // declare the product class
-    class WC_Product_isceb_event extends WC_Product
-    {
-        public function __construct($product)
-        {
-            $this->product_type = 'isceb_event';
-            parent::__construct($product);
-            // add additional functions here
-        }
-    }
-}
-
-function isceb_woocommerce_event_product_class($classname, $product_type)
-{
-    if ($product_type == 'WC_Product_Isceb_event') { // notice the checking here.
-        $classname = 'WC_Product_isceb_event';
-    }
-
-    return $classname;
-}
-
-add_filter('woocommerce_product_class', 'isceb_woocommerce_event_product_class', 10, 2);
 
 
 add_action('admin_footer', 'isceb_wc_show_tabs_on_custom_product');
@@ -165,53 +121,32 @@ function isceb_wc_show_tabs_on_custom_product()
     endif;
 ?><script type='text/javascript'>
         jQuery(function($) {
-            //For variations tab
-            $('.show_if_variable:not(.hide_if_isceb_event)').addClass('show_if_isceb_event');
 
-            //for Price tab
-            jQuery('.product_data_tabs .general_tab').addClass('show_if_variable_bulk').show();
-            jQuery('#general_product_data').addClass('show_if_variable_bulk').show();
-            jQuery('.show_if_simple').addClass('show_if_variable_bulk').show();
-            //for Inventory tab
-            jQuery('.inventory_options').addClass('show_if_variable_bulk').show();
-            jQuery('#inventory_product_data ._manage_stock_field').addClass('show_if_variable_bulk').show();
-            jQuery('#inventory_product_data ._sold_individually_field').parent().addClass('show_if_variable_bulk').show();
-            jQuery('#inventory_product_data ._sold_individually_field').addClass('show_if_variable_bulk').show();
+            if ($('input#_isceb_event').is(':checked')) {
+                    jQuery('.isceb_event_tab_tab').show();
+                } else {
+                    jQuery('.isceb_event_tab_tab').hide();
 
-            $('input#_downloadable, input#_virtual').on('change', function() {
-                jQuery('.product_data_tabs .general_tab').addClass('show_if_variable_bulk').show();
-                jQuery('#general_product_data').addClass('show_if_variable_bulk').show();
-                jQuery('.show_if_simple').addClass('show_if_variable_bulk').show();
-                //for Inventory tab
-                jQuery('.inventory_options').addClass('show_if_variable_bulk').show();
-                jQuery('#inventory_product_data ._manage_stock_field').addClass('show_if_variable_bulk').show();
-                jQuery('#inventory_product_data ._sold_individually_field').parent().addClass('show_if_variable_bulk').show();
-                jQuery('#inventory_product_data ._sold_individually_field').addClass('show_if_variable_bulk').show();
-            });
+                    //GO to inventory tab when event tab is current
+                    if ($('.isceb_event_tab_tab').hasClass('active')) {
+                        $('.inventory_options.inventory_tab > a').trigger('click');
+                    }
+                }
 
-            $('#product-type').on('change', function($) {
 
-                jQuery('.product_data_tabs .general_tab').addClass('show_if_variable_bulk').show();
-                jQuery('#general_product_data').addClass('show_if_variable_bulk').show();
-                jQuery('.show_if_simple').addClass('show_if_variable_bulk').show();
-                //for Inventory tab
-                jQuery('.inventory_options').addClass('show_if_variable_bulk').show();
-                jQuery('#inventory_product_data ._manage_stock_field').addClass('show_if_variable_bulk').show();
-                jQuery('#inventory_product_data ._sold_individually_field').parent().addClass('show_if_variable_bulk').show();
-                jQuery('#inventory_product_data ._sold_individually_field').addClass('show_if_variable_bulk').show();
-            });
+            $('input#_isceb_event').change(function() {
+                if (this.checked) {
+                    jQuery('.isceb_event_tab_tab').show();
+                } else {
+                    jQuery('.isceb_event_tab_tab').hide();
 
-            // Show variable type options when new attribute is added.
-            $(document.body).on('woocommerce_added_attribute', function(e) {
-
-                $('#product_attributes .show_if_variable:not(.hide_if_isceb_event)').addClass('show_if_isceb_event');
-
-                var $attributes = $('#product_attributes').find('.woocommerce_attribute');
-
-                if ('isceb_event' == $('select#product-type').val()) {
-                    $attributes.find('.enable_variation').show();
+                    //GO to inventory tab when event tab is current
+                    if ($('.isceb_event_tab_tab').hasClass('active')) {
+                        $('.inventory_options.inventory_tab > a').trigger('click');
+                    }
                 }
             });
+
 
         });
     </script><?php
