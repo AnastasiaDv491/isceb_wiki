@@ -84,8 +84,8 @@ function isceb_save_product_custom_fields($post_id)
     $custom_fields_isceb_location_of_event = isset($_POST['isceb-location-of-event']) ? $_POST['isceb-location-of-event'] : '';
     $product->update_meta_data('isceb-location-of-event', sanitize_text_field($custom_fields_isceb_location_of_event));
 
-    $custom_fields_isceb_event_option = isset($_POST['_isceb_event']) ? $_POST['_isceb_event'] : '';
-    $product->update_meta_data('_isceb_event', sanitize_text_field(isset($_POST["_wildcard"]) ? "yes" : "no"));
+    $custom_fields_isceb_event_option = isset($_POST["_isceb_event"]) ? "yes" : "no";
+    $product->update_meta_data('_isceb_event', sanitize_text_field( $custom_fields_isceb_event_option));
 
     $product->save();
 }
