@@ -85,7 +85,7 @@ function isceb_save_product_custom_fields($post_id)
     $product->update_meta_data('isceb-location-of-event', sanitize_text_field($custom_fields_isceb_location_of_event));
 
     $custom_fields_isceb_event_option = isset($_POST["_isceb_event"]) ? "yes" : "no";
-    $product->update_meta_data('_isceb_event', sanitize_text_field( $custom_fields_isceb_event_option));
+    $product->update_meta_data('_isceb_event', sanitize_text_field($custom_fields_isceb_event_option));
 
     $product->save();
 }
@@ -123,15 +123,15 @@ function isceb_wc_show_tabs_on_custom_product()
         jQuery(function($) {
 
             if ($('input#_isceb_event').is(':checked')) {
-                    jQuery('.isceb_event_tab_tab').show();
-                } else {
-                    jQuery('.isceb_event_tab_tab').hide();
+                jQuery('.isceb_event_tab_tab').show();
+            } else {
+                jQuery('.isceb_event_tab_tab').hide();
 
-                    //GO to inventory tab when event tab is current
-                    if ($('.isceb_event_tab_tab').hasClass('active')) {
-                        $('.inventory_options.inventory_tab > a').trigger('click');
-                    }
+                //GO to inventory tab when event tab is current
+                if ($('.isceb_event_tab_tab').hasClass('active')) {
+                    $('.inventory_options.inventory_tab > a').trigger('click');
                 }
+            }
 
 
             $('input#_isceb_event').change(function() {
@@ -150,4 +150,63 @@ function isceb_wc_show_tabs_on_custom_product()
 
         });
     </script><?php
+            }
+
+
+            // add_filter('woocommerce_get_price_html', 'isceb_get_price_html_zero_to_free', 100, 2);
+            // function isceb_get_price_html_zero_to_free ($price, $product)
+            // {
+            //     echo $product->get_price();
+
+            //     // var_dump($price);
+            //     // return str_replace('<span class="woocommerce-Price-currencySymbol">&euro;</span>','',$price);
+            //     // var_dump($price);
+            //     if (strpos($price, '0,00') !== false) {
+            //         $search_words = ['&euro;','0,00'];
+            //     $replace_words = ['','Free'];
+            //     return str_replace($search_words,$replace_words, $price);
+            //     }
+            //     return $price;
+
+            // }
+
+            function isceb_get_price_html_zero_free($product)
+            {
+                $price = '';
+                // var_dump($product->get_type());
+                if ($product->get_type() == 'variable') {
+                    $prices = $product->get_variation_prices(true);
+                    if (empty($prices['price'])) {
+                        $price = apply_filters('woocommerce_variable_empty_price_html', '', $product);
+                    } else {
+                        $min_price     = current($prices['price']);
+                        $max_price     = end($prices['price']);
+                        $min_reg_price = current($prices['regular_price']);
+                        $max_reg_price = end($prices['regular_price']);
+
+                        if ($min_price !== $max_price) {
+                            
+                            if (intval($min_price) === 0) {
+                                
+                                $min_price = 'Free';
+                            }
+                            $price = wc_format_price_range($min_price, $max_price);
+                        } elseif ($product->is_on_sale() && $min_reg_price === $max_reg_price) {
+                            $price = wc_format_sale_price(wc_price($max_reg_price), wc_price($min_price));
+                        } else {
+                            $price = wc_price($min_price);
+                        }
+
+                        $price = apply_filters('woocommerce_variable_price_html', $price . $product->get_price_suffix(), $product);
+                    }
+                    
+                }
+                else{
+                    $price = $product->get_price_html();
+                }
+               
+
+                $price = str_replace('woocommerce-Price-amount','isceb_event_price',$price);
+
+                return apply_filters('woocommerce_get_price_html', $price, $product);
             }
