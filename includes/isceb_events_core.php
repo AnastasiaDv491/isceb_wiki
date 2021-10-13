@@ -152,24 +152,6 @@ function isceb_wc_show_tabs_on_custom_product()
     </script><?php
             }
 
-
-            // add_filter('woocommerce_get_price_html', 'isceb_get_price_html_zero_to_free', 100, 2);
-            // function isceb_get_price_html_zero_to_free ($price, $product)
-            // {
-            //     echo $product->get_price();
-
-            //     // var_dump($price);
-            //     // return str_replace('<span class="woocommerce-Price-currencySymbol">&euro;</span>','',$price);
-            //     // var_dump($price);
-            //     if (strpos($price, '0,00') !== false) {
-            //         $search_words = ['&euro;','0,00'];
-            //     $replace_words = ['','Free'];
-            //     return str_replace($search_words,$replace_words, $price);
-            //     }
-            //     return $price;
-
-            // }
-
             function isceb_get_price_html_zero_free($product)
             {
                 $price = '';
