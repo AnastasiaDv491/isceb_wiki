@@ -152,6 +152,96 @@ function isceb_wc_show_tabs_on_custom_product()
     </script>
 <?php
 }
+add_action('add_meta_boxes', 'create_custom_meta_box');
+if (!function_exists('create_custom_meta_box')) {
+    function create_custom_meta_box()
+    {
+        add_meta_box(
+            'custom_product_meta_box',
+            __('Additional Product Information <em>(optional)</em>', 'cmb'),
+            'add_custom_content_meta_box',
+            'product',
+            'normal',
+            'default'
+        );
+    }
+}
+
+
+//  Custom metabox content in admin product pages
+if (!function_exists('add_custom_content_meta_box')) {
+    function add_custom_content_meta_box()
+    {
+        // $prefix = '_bhww_'; // global $prefix;
+        // $ingredients = get_post_meta($post->ID, $prefix . 'ingredients_wysiwyg', true) ? get_post_meta($post->ID, $prefix . 'ingredients_wysiwyg', true) : '';
+        // $benefits = get_post_meta($post->ID, $prefix . 'benefits_wysiwyg', true) ? get_post_meta($post->ID, $prefix . 'benefits_wysiwyg', true) : '';
+        // $args['textarea_rows'] = 6;
+        // echo '<p>' . __('Ingredients', 'cmb') . '</p>';
+        // wp_editor($ingredients, 'ingredients_wysiwyg', $args);
+        // echo '<p>' . __('Benefits', 'cmb') . '</p>';
+        // wp_editor($benefits, 'benefits_wysiwyg', $args);
+        // echo '<input type="hidden" name="custom_product_field_nonce" value="' . wp_create_nonce() . '">';
+        // echo "hello";
+
+        //Get all orders for the current product 
+        $orders_id = get_orders_ids_by_product_id(get_the_ID());
+        echo '<table class="isceb-event-order-table">
+            <tr>
+                <th>Last name</th>
+                <th>First name</th>
+                <th>Email</th>
+                <th>Program</th>
+                <th>Number of tickets</th>
+            </tr>
+        
+        ';
+        foreach ($orders_id as $order_id) {
+            $order = wc_get_order( $order_id );
+            $item_count = $order->get_item_count();
+        
+            $order_meta = get_post_meta($order_id);
+            if (array_key_exists('isceb_program', $order_meta) && is_numeric($order_meta['isceb_program'][0])) {
+                echo '<tr class="isceb-event-order-table-row">
+                    <td>' . $order_meta['_billing_last_name'][0] . '</td>
+                    <td>' . $order_meta['_billing_first_name'][0] . '</td>
+                    <td>' . $order_meta['_billing_email'][0] . '</td>
+                    <td>' . isceb_get_programs()[$order_meta['isceb_program'][0]] . '</td>
+                    <td>' . $item_count . '</td>
+                    
+                </tr>';
+            }
+        }
+        echo '</table>';
+    }
+}
+
+/**
+ * Get All orders IDs for a given product ID.
+ *
+ * @param  integer  $product_id (required)
+ * @param  array    $order_status (optional) Default is 'wc-completed'
+ *
+ * @return array
+ */
+function get_orders_ids_by_product_id($product_id, $order_status = array('wc-completed', 'wc-processing'))
+{
+    global $wpdb;
+
+    $results = $wpdb->get_col("
+        SELECT order_items.order_id
+        FROM {$wpdb->prefix}woocommerce_order_items as order_items
+        LEFT JOIN {$wpdb->prefix}woocommerce_order_itemmeta as order_item_meta ON order_items.order_item_id = order_item_meta.order_item_id
+        LEFT JOIN {$wpdb->posts} AS posts ON order_items.order_id = posts.ID
+        WHERE posts.post_type = 'shop_order'
+        AND posts.post_status IN ( '" . implode("','", $order_status) . "' )
+        AND order_items.order_item_type = 'line_item'
+        AND order_item_meta.meta_key = '_product_id'
+        AND order_item_meta.meta_value = '$product_id'
+    ");
+
+    return $results;
+}
+
 
 function isceb_get_price_html_zero_free($product)
 {
