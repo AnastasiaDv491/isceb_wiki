@@ -170,7 +170,6 @@ function isceb_get_price_html_zero_free($product)
             if ($min_price !== $max_price) {
 
                 if (intval($min_price) === 0) {
-
                     $min_price = 'Free';
                 }
                 $price = wc_format_price_range($min_price, $max_price);
@@ -229,35 +228,38 @@ function isceb_get_phases()
 add_action('woocommerce_after_checkout_billing_form', 'isceb_display_extra_fields_after_billing_address', 10, 1);
 function isceb_display_extra_fields_after_billing_address()
 {
-    woocommerce_form_field('isceb_program', array(
-        'type'      => 'select',
-        'options'   => isceb_get_programs(),
-        'label'     => __('Program', 'woocommerce'),
-        'placeholder'   => _x('Program', 'placeholder', 'woocommerce'),
-        'required'  => true,
-        'class'     => array('form-row-wide'),
-        'clear'     => true
-    ));
+    if (!is_user_logged_in()) {
+        # code...
+        woocommerce_form_field('isceb_program', array(
+            'type'      => 'select',
+            'options'   => isceb_get_programs(),
+            'label'     => __('Program', 'woocommerce'),
+            'placeholder'   => _x('Program', 'placeholder', 'woocommerce'),
+            'required'  => true,
+            'class'     => array('form-row-wide'),
+            'clear'     => true
+        ));
 
-    woocommerce_form_field('isceb_phase', array(
-        'type'      => 'select',
-        'options'   =>  isceb_get_phases(),
-        'label'     => __('Phase', 'woocommerce'),
-        'placeholder'   => _x('Phase', 'placeholder', 'woocommerce'),
-        'required'  => true,
-        'class'     => array('form-row-wide'),
-        'clear'     => true
-    ));
+        woocommerce_form_field('isceb_phase', array(
+            'type'      => 'select',
+            'options'   =>  isceb_get_phases(),
+            'label'     => __('Phase', 'woocommerce'),
+            'placeholder'   => _x('Phase', 'placeholder', 'woocommerce'),
+            'required'  => true,
+            'class'     => array('form-row-wide'),
+            'clear'     => true
+        ));
 
-    woocommerce_form_field('isceb_newsletter_consent', array(
-        'type'      => 'checkbox',
-        'label'     => __('Phase', 'woocommerce'),
-        'placeholder'   => _x('Phase', 'placeholder', 'woocommerce'),
-        'label_class'   => array('woocommerce-form__label woocommerce-form__label-for-checkbox checkbox'),
-        'input_class'   => array('woocommerce-form__input woocommerce-form__input-checkbox input-checkbox'),
-        'required'      => false, // Mandatory or Optional
-        'label'         => 'ISCEB can keep me up to date about what is going on', // Label and Link
-    ));
+        woocommerce_form_field('isceb_newsletter_consent', array(
+            'type'      => 'checkbox',
+            'label'     => __('Phase', 'woocommerce'),
+            'placeholder'   => _x('Phase', 'placeholder', 'woocommerce'),
+            'label_class'   => array('woocommerce-form__label woocommerce-form__label-for-checkbox checkbox'),
+            'input_class'   => array('woocommerce-form__input woocommerce-form__input-checkbox input-checkbox'),
+            'required'      => false, // Mandatory or Optional
+            'label'         => 'ISCEB can keep me up to date about what is going on', // Label and Link
+        ));
+    }
 }
 
 /**
@@ -267,17 +269,20 @@ add_action('woocommerce_checkout_process', 'my_custom_checkout_field_process');
 
 function my_custom_checkout_field_process()
 {
-    // Check if set, if its not set add an error.
-    if (!$_POST['isceb_program'])
-        wc_add_notice(__('Please select a program.'), 'error');
-    if (!$_POST['isceb_phase'])
-        wc_add_notice(__('Please select a phase.'), 'error');
+    if (!is_user_logged_in()) {
+        // Check if set, if its not set add an error.
+        if (!$_POST['isceb_program'])
+            wc_add_notice(__('Please select a program.'), 'error');
+        if (!$_POST['isceb_phase'])
+            wc_add_notice(__('Please select a phase.'), 'error');
+    }
 }
 
 add_action('woocommerce_admin_order_data_after_shipping_address', 'my_custom_checkout_field_display_admin_order_meta', 10, 1);
 
 function my_custom_checkout_field_display_admin_order_meta($order)
 {
+
     $order_metadata = get_post_meta($order->get_id());
 
     if (array_key_exists('isceb_program', $order_metadata) && is_numeric($order_metadata['isceb_program'][0])) {
@@ -289,20 +294,22 @@ function my_custom_checkout_field_display_admin_order_meta($order)
     }
 
     if (array_key_exists('isceb_newsletter_consent', $order_metadata) && is_numeric($order_metadata['isceb_newsletter_consent'][0])) {
-        echo '<p><strong>' . __('Newsletter') . ':</strong> ' .  esc_html(($order_metadata['isceb_newsletter_consent'][0] === '1'?'Yes':'No')) . '</p>';
+        echo '<p><strong>' . __('Newsletter') . ':</strong> ' .  esc_html(($order_metadata['isceb_newsletter_consent'][0] === '1' ? 'Yes' : 'No')) . '</p>';
     }
 }
 
 add_action('woocommerce_checkout_update_order_meta', 'isceb_custom_checkout_field_update_order_meta');
 function isceb_custom_checkout_field_update_order_meta($order_id)
 {
-    if (!empty($_POST['isceb_program'])) {
-        update_post_meta($order_id, 'isceb_program', sanitize_text_field($_POST['isceb_program']));
-    }
-    if (!empty($_POST['isceb_phase'])) {
-        update_post_meta($order_id, 'isceb_phase', sanitize_text_field($_POST['isceb_phase']));
-    }
-    if (!empty($_POST['isceb_newsletter_consent'])) {
-        update_post_meta($order_id, 'isceb_newsletter_consent', sanitize_text_field($_POST['isceb_newsletter_consent']));
+    if (!is_user_logged_in()) {
+        if (!empty($_POST['isceb_program'])) {
+            update_post_meta($order_id, 'isceb_program', sanitize_text_field($_POST['isceb_program']));
+        }
+        if (!empty($_POST['isceb_phase'])) {
+            update_post_meta($order_id, 'isceb_phase', sanitize_text_field($_POST['isceb_phase']));
+        }
+        if (!empty($_POST['isceb_newsletter_consent'])) {
+            update_post_meta($order_id, 'isceb_newsletter_consent', sanitize_text_field($_POST['isceb_newsletter_consent']));
+        }
     }
 }
