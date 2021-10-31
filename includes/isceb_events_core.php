@@ -152,14 +152,14 @@ function isceb_wc_show_tabs_on_custom_product()
     </script>
 <?php
 }
-add_action('add_meta_boxes', 'create_custom_meta_box');
-if (!function_exists('create_custom_meta_box')) {
-    function create_custom_meta_box()
+add_action('add_meta_boxes', 'isceb_create_custom_meta_box');
+if (!function_exists('isceb_create_custom_meta_box')) {
+    function isceb_create_custom_meta_box($post)
     {
         add_meta_box(
-            'custom_product_meta_box',
-            __('Additional Product Information <em>(optional)</em>', 'cmb'),
-            'add_custom_content_meta_box',
+            'isceb_custom_event_metadata',
+            __('Event metadata', 'cmb'),
+            'isceb_add_custom_content_meta_box',
             'product',
             'normal',
             'default'
@@ -169,8 +169,8 @@ if (!function_exists('create_custom_meta_box')) {
 
 
 //  Custom metabox content in admin product pages
-if (!function_exists('add_custom_content_meta_box')) {
-    function add_custom_content_meta_box()
+if (!function_exists('isceb_add_custom_content_meta_box')) {
+    function isceb_add_custom_content_meta_box()
     {
         // $prefix = '_bhww_'; // global $prefix;
         // $ingredients = get_post_meta($post->ID, $prefix . 'ingredients_wysiwyg', true) ? get_post_meta($post->ID, $prefix . 'ingredients_wysiwyg', true) : '';
@@ -185,6 +185,7 @@ if (!function_exists('add_custom_content_meta_box')) {
 
         //Get all orders for the current product 
         $orders_id = get_orders_ids_by_product_id(get_the_ID());
+
         echo '<table class="isceb-event-order-table">
             <tr>
                 <th>Last name</th>
@@ -192,6 +193,7 @@ if (!function_exists('add_custom_content_meta_box')) {
                 <th>Email</th>
                 <th>Program</th>
                 <th>Number of tickets</th>
+                <th>Type</th>
             </tr>
         
         ';
@@ -200,15 +202,26 @@ if (!function_exists('add_custom_content_meta_box')) {
             $item_count = $order->get_item_count();
 
             $order_meta = get_post_meta($order_id);
-            if (array_key_exists('isceb_program', $order_meta) && is_numeric($order_meta['isceb_program'][0])) {
-                echo '<tr class="isceb-event-order-table-row">
+            $order_items = $order->get_items();
+
+
+            foreach ($order_items as $order_item) {
+                if ($order_item->get_product_id() === get_the_ID()) {
+
+                    $variation = wc_get_product($order_item->get_variation_id());
+                    
+                    $variation_name = ($variation)? $variation->get_attribute_summary() : 'Regular';
+                    $program_name = array_key_exists('isceb_program', $order_meta) && is_numeric($order_meta['isceb_program'][0])? isceb_get_programs()[$order_meta['isceb_program'][0]]:'';
+                    
+                    echo '<tr class="isceb-event-order-table-row">
                     <td>' . $order_meta['_billing_last_name'][0] . '</td>
                     <td>' . $order_meta['_billing_first_name'][0] . '</td>
                     <td>' . $order_meta['_billing_email'][0] . '</td>
-                    <td>' . isceb_get_programs()[$order_meta['isceb_program'][0]] . '</td>
-                    <td>' . $item_count . '</td>
-                    
+                    <td>' . $program_name. '</td>
+                    <td>' . $order_item->get_quantity(). '</td>
+                    <td>' . $variation_name . '</td>
                 </tr>';
+                }
             }
         }
         echo '</table>';
@@ -228,7 +241,7 @@ function get_orders_ids_by_product_id($product_id, $order_status = array('wc-com
     global $wpdb;
 
     $results = $wpdb->get_col("
-        SELECT order_items.order_id
+        SELECT DISTINCT order_items.order_id
         FROM {$wpdb->prefix}woocommerce_order_items as order_items
         LEFT JOIN {$wpdb->prefix}woocommerce_order_itemmeta as order_item_meta ON order_items.order_item_id = order_item_meta.order_item_id
         LEFT JOIN {$wpdb->posts} AS posts ON order_items.order_id = posts.ID
@@ -238,7 +251,6 @@ function get_orders_ids_by_product_id($product_id, $order_status = array('wc-com
         AND order_item_meta.meta_key = '_product_id'
         AND order_item_meta.meta_value = '$product_id'
     ");
-
     return $results;
 }
 
