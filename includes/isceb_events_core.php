@@ -196,9 +196,9 @@ if (!function_exists('add_custom_content_meta_box')) {
         
         ';
         foreach ($orders_id as $order_id) {
-            $order = wc_get_order( $order_id );
+            $order = wc_get_order($order_id);
             $item_count = $order->get_item_count();
-        
+
             $order_meta = get_post_meta($order_id);
             if (array_key_exists('isceb_program', $order_meta) && is_numeric($order_meta['isceb_program'][0])) {
                 echo '<tr class="isceb-event-order-table-row">
@@ -402,4 +402,21 @@ function isceb_custom_checkout_field_update_order_meta($order_id)
             update_post_meta($order_id, 'isceb_newsletter_consent', sanitize_text_field($_POST['isceb_newsletter_consent']));
         }
     }
+}
+
+add_filter('woocommerce_is_purchasable', 'isceb_is_event_still_purchasable', 10, 2);
+
+function isceb_is_event_still_purchasable($is_purchasable, $product)
+{
+    if ($product->get_meta('isceb-start-of-event') == '') {
+        return $is_purchasable;
+    }
+
+    $isceb_event_countdown = date_diff(new DateTime('now'), new DateTime($product->get_meta('isceb-start-of-event')));
+    if ($isceb_event_countdown->invert == 0) {
+        $is_purchasable = true;
+    }
+    // var_dump($isceb_event_countdown->invert == 0);
+
+    return $is_purchasable;
 }
