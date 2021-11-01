@@ -37,7 +37,8 @@ function isceb_fill_new_events_tab()
                 array(
                     'id' => 'isceb-start-of-event',
                     'label' => __('Start of event', 'woocommerce'),
-                    'type'  => 'datetime-local'
+                    'type'  => 'datetime-local',
+                    'custom_attributes' => array('required' => 'required'),
                 )
 
             );
@@ -48,6 +49,7 @@ function isceb_fill_new_events_tab()
                     'label'             => __('End of event', 'woocommerce'),
                     'placeholder'       => '',
                     'type'              => 'datetime-local',
+                    'custom_attributes' => array('required' => 'required'),
                 )
             );
 
@@ -55,7 +57,8 @@ function isceb_fill_new_events_tab()
                 array(
                     'id' => 'isceb-location-of-event',
                     'label' => __('Location of event', 'woocommerce'),
-                    'type'  => 'text'
+                    'type'  => 'text',
+                    'custom_attributes' => array('required' => 'required'),
                 )
 
             );
@@ -124,8 +127,16 @@ function isceb_wc_show_tabs_on_custom_product()
 
             if ($('input#_isceb_event').is(':checked')) {
                 jQuery('.isceb_event_tab_tab').show();
+                jQuery('#isceb-start-of-event').attr("required", true);
+                jQuery('#isceb-end-of-event').attr("required", true);
+                jQuery('#isceb-location-of-event').attr("required", true);
             } else {
                 jQuery('.isceb_event_tab_tab').hide();
+                jQuery('#isceb-start-of-event').removeAttr('required');
+                jQuery('#isceb-end-of-event').removeAttr('required');
+                jQuery('#isceb-location-of-event').removeAttr('required');
+
+
 
                 //GO to inventory tab when event tab is current
                 if ($('.isceb_event_tab_tab').hasClass('active')) {
@@ -137,8 +148,14 @@ function isceb_wc_show_tabs_on_custom_product()
             $('input#_isceb_event').change(function() {
                 if (this.checked) {
                     jQuery('.isceb_event_tab_tab').show();
+                    jQuery('#isceb-start-of-event').attr("required", true);
+                    jQuery('#isceb-end-of-event').attr("required", true);
+                    jQuery('#isceb-location-of-event').attr("required", true);
                 } else {
                     jQuery('.isceb_event_tab_tab').hide();
+                    jQuery('#isceb-start-of-event').removeAttr('required');
+                    jQuery('#isceb-end-of-event').removeAttr('required');
+                    jQuery('#isceb-location-of-event').removeAttr('required');
 
                     //GO to inventory tab when event tab is current
                     if ($('.isceb_event_tab_tab').hasClass('active')) {
@@ -209,16 +226,16 @@ if (!function_exists('isceb_add_custom_content_meta_box')) {
                 if ($order_item->get_product_id() === get_the_ID()) {
 
                     $variation = wc_get_product($order_item->get_variation_id());
-                    
-                    $variation_name = ($variation)? $variation->get_attribute_summary() : 'Regular';
-                    $program_name = array_key_exists('isceb_program', $order_meta) && is_numeric($order_meta['isceb_program'][0])? isceb_get_programs()[$order_meta['isceb_program'][0]]:'';
-                    
+
+                    $variation_name = ($variation) ? $variation->get_attribute_summary() : 'Regular';
+                    $program_name = array_key_exists('isceb_program', $order_meta) && is_numeric($order_meta['isceb_program'][0]) ? isceb_get_programs()[$order_meta['isceb_program'][0]] : '';
+
                     echo '<tr class="isceb-event-order-table-row">
                     <td>' . $order_meta['_billing_last_name'][0] . '</td>
                     <td>' . $order_meta['_billing_first_name'][0] . '</td>
                     <td>' . $order_meta['_billing_email'][0] . '</td>
-                    <td>' . $program_name. '</td>
-                    <td>' . $order_item->get_quantity(). '</td>
+                    <td>' . $program_name . '</td>
+                    <td>' . $order_item->get_quantity() . '</td>
                     <td>' . $variation_name . '</td>
                 </tr>';
                 }
