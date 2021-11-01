@@ -62,7 +62,7 @@ defined('ABSPATH') || exit;
                             <?php foreach ($wiki_courses  as $course) :
                             ?>
                                 <li>
-                                    <a href="<?php echo get_permalink($course->ID); ?>" class="isceb-wiki-nav-course"> <?php echo $course->post_title; ?> </a>
+                                    <a href="<?php echo add_query_arg( 'phase', $phase->ID, get_permalink($course->ID) ); ?>" class="isceb-wiki-nav-course"> <?php echo $course->post_title; ?> </a>
                                 </li>
                             <?php endforeach; ?>
                         </ul>

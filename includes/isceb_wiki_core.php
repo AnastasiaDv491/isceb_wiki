@@ -272,7 +272,18 @@ function isceb_wiki_navigation_sidebar($pageID)
             break;
         case 'course':
             $phases_of_course = get_field('phases', get_the_ID());
-            $programs_of_phase = get_field('program', $phases_of_course[0]->ID);
+
+            $phase_id = $phases_of_course[0]->ID;
+            if (get_query_var('phase') !== '') {
+                foreach ($phases_of_course as $phase) {
+                    if ($phase->ID === intval(get_query_var('phase'))) {
+                        $phase_id = $phase->ID;
+                        break;
+                    }
+                }
+            }          
+
+            $programs_of_phase = get_field('program', $phase_id);
 
             $wiki_phases = get_posts(array(
                 'post_type' => 'phase',
@@ -325,34 +336,34 @@ if (in_array('userswp/userswp.php', apply_filters('active_plugins', get_option('
 function add_extra_tab_to_edit_account_page($tabs)
 {
 
-	// 	["title" => 'Orders',
-	// 	 'icon' => 'fas fa-sign-out-alt'];
-	// 'link' => 'http://localhost/www/my-account/orders/'];
+    // 	["title" => 'Orders',
+    // 	 'icon' => 'fas fa-sign-out-alt'];
+    // 'link' => 'http://localhost/www/my-account/orders/'];
     // A direct link to somewhere is also possible
 
-	$new_tab = array('Order' => ["title" => 'Orders',	 'icon' => 'fas fa-sign-out-alt']);
+    $new_tab = array('Order' => ["title" => 'Orders',     'icon' => 'fas fa-sign-out-alt']);
 
-	//Remove notifcations tab
-	unset($new_tab["Notifications"]);
+    //Remove notifcations tab
+    unset($new_tab["Notifications"]);
 
-	$new_tabs = insertInArrayAfterPosition($tabs, $new_tab, 3);
-	unset($new_tabs['notifications']);
+    $new_tabs = insertInArrayAfterPosition($tabs, $new_tab, 3);
+    unset($new_tabs['notifications']);
 
-	return $new_tabs;
+    return $new_tabs;
 }
 
 function insertInArrayAfterPosition($array, $toInsertValue, $position)
 {
-	return array_slice($array, 0, $position, true) + $toInsertValue +  array_slice($array, $position, count($array) - 3, true);
+    return array_slice($array, 0, $position, true) + $toInsertValue +  array_slice($array, $position, count($array) - 3, true);
 }
 
 function isceb_account_page_title_cb($title, $type)
 {
-	if ($type == 'Order') {
-		$title = __('Your orders', 'uwp-messaging');
-	}
+    if ($type == 'Order') {
+        $title = __('Your orders', 'uwp-messaging');
+    }
 
-	return $title;
+    return $title;
 }
 
 
@@ -366,11 +377,11 @@ function isceb_account_page_title_cb($title, $type)
  */
 function isceb_display_user_tab_content($type)
 {
-	if ($type == "Order") {
-		var_dump(get_option('uwp_settings') );
+    if ($type == "Order") {
+        var_dump(get_option('uwp_settings'));
 
-		print_r(get_user_meta(get_current_user_id()));
-	}
+        print_r(get_user_meta(get_current_user_id()));
+    }
 }
 
 
@@ -393,35 +404,35 @@ Array
 function isceb_after_account_save($data)
 {
     // error_log(print_r($data, true));
-	// error_log($user->ID);
-	
+    // error_log($user->ID);
+
     $user = wp_get_current_user();
-	isceb_sync_user_with_woocommerce($data, $user->ID);
+    isceb_sync_user_with_woocommerce($data, $user->ID);
 }
 
 
 //This function is being called when a new account is registered
 function isceb_after_register($data, $user_id)
 {
-	// error_log(print_r($data, true));
-	// error_log(print_r($user_id, true));
+    // error_log(print_r($data, true));
+    // error_log(print_r($user_id, true));
 
-	isceb_sync_user_with_woocommerce($data, $user_id);
+    isceb_sync_user_with_woocommerce($data, $user_id);
 
     //Default to hiding users
-    update_user_meta( $user_id, 'uwp_hide_from_listing', 1 );
+    update_user_meta($user_id, 'uwp_hide_from_listing', 1);
 }
 
 function isceb_sync_user_with_woocommerce($data, $user_ID)
 {
-	$metaFieldsToUpdate = array(
-		'billing_first_name' => $data['first_name'],
-		'billing_last_name' => $data['last_name'],
-	);
+    $metaFieldsToUpdate = array(
+        'billing_first_name' => $data['first_name'],
+        'billing_last_name' => $data['last_name'],
+    );
 
-	foreach ($metaFieldsToUpdate as $key => $value) {
-		update_user_meta($user_ID, $key, $value);
-	}
+    foreach ($metaFieldsToUpdate as $key => $value) {
+        update_user_meta($user_ID, $key, $value);
+    }
 }
 
 
@@ -458,28 +469,28 @@ Metadata fields used by woocommerce
 //A way to add a custom filed to userswp
 function isceb_add_custom_field_userswp($custom_fields, $type)
 {
-	// WordPress
-	$custom_fields['testisceb'] = array(
-		'field_type' => 'text',
-		'class'      => 'isceb-wc-field-sync',
-		'field_icon' => 'fab fa-wordpress-simple',
-		'site_title' => __('Isceb test', 'userswp'),
-		'help_text'  => __('Let users enter their WordPress profile url.', 'userswp'),
-		'defaults'   => array(
-			'admin_title'   => 'Test Isceb',
-			'site_title'    => 'Test Isceb',
-			'form_label'    => __('WordPress url', 'userswp'),
-			'htmlvar_name'  => 'wordpress',
-			'is_active'     => 1,
-			'default_value' => '',
-			'is_required'   => 0,
-			'required_msg'  => '',
-			'field_icon'    => 'fab fa-wordpress-simple',
-			'css_class'     => 'btn-wordpress'
-		)
-	);
+    // WordPress
+    $custom_fields['testisceb'] = array(
+        'field_type' => 'text',
+        'class'      => 'isceb-wc-field-sync',
+        'field_icon' => 'fab fa-wordpress-simple',
+        'site_title' => __('Isceb test', 'userswp'),
+        'help_text'  => __('Let users enter their WordPress profile url.', 'userswp'),
+        'defaults'   => array(
+            'admin_title'   => 'Test Isceb',
+            'site_title'    => 'Test Isceb',
+            'form_label'    => __('WordPress url', 'userswp'),
+            'htmlvar_name'  => 'wordpress',
+            'is_active'     => 1,
+            'default_value' => '',
+            'is_required'   => 0,
+            'required_msg'  => '',
+            'field_icon'    => 'fab fa-wordpress-simple',
+            'css_class'     => 'btn-wordpress'
+        )
+    );
 
-	return $custom_fields;
+    return $custom_fields;
 }
 
 
@@ -487,40 +498,43 @@ function isceb_add_custom_field_userswp($custom_fields, $type)
 /* Hide all profile information 
     This is not perfect because if a shortcode would be used on another page we wouldn't block it
 */
-function isceb_template_redirect_userswp_privacy(){
-	global $post;
+function isceb_template_redirect_userswp_privacy()
+{
+    global $post;
 
-	if ( ! is_page() ) {
-		return false;
-	}
+    if (!is_page()) {
+        return false;
+    }
 
-	if ( uwp_is_page_builder() ) {
-		return false;
-	}
+    if (uwp_is_page_builder()) {
+        return false;
+    }
 
-	$current_page_id = isset($post->ID) ? absint($post->ID) : '';
-	$uwp_page = uwp_get_page_id('profile_page', false);
+    $current_page_id = isset($post->ID) ? absint($post->ID) : '';
+    $uwp_page = uwp_get_page_id('profile_page', false);
     $uwp_users_page = uwp_get_page_id('users_page', false);
     $user_list_item_page = uwp_get_page_id('user_list_item_page', false);
-	
-    if ( $uwp_page && ((int) $uwp_page ==  $current_page_id ) 
-    ||   $uwp_users_page && ((int) $uwp_users_page ==  $current_page_id ) 
-    ||   $user_list_item_page && ((int) $user_list_item_page ==  $current_page_id)) {
-        wp_safe_redirect( home_url() );
-	    exit();
+
+    if (
+        $uwp_page && ((int) $uwp_page ==  $current_page_id)
+        ||   $uwp_users_page && ((int) $uwp_users_page ==  $current_page_id)
+        ||   $user_list_item_page && ((int) $user_list_item_page ==  $current_page_id)
+    ) {
+        wp_safe_redirect(home_url());
+        exit();
     }
-    
+
 
     //Works if you want to hide for certain roles
     // if ( $uwp_page && ((int) $uwp_page ==  $current_page_id ) ) {
-	// 	$user = uwp_get_user_by_author_slug();
-	// 	if( ! $user || ! $user->roles ){
-	// 		return false;
-	// 	}
+    // 	$user = uwp_get_user_by_author_slug();
+    // 	if( ! $user || ! $user->roles ){
+    // 		return false;
+    // 	}
 
-	// 	if(isset($user->roles) && $user->ID != get_current_user_id() && (in_array('administrator', (array) $user->roles) || in_array('subscriber', (array) $user->roles))){
-	// 		wp_redirect( home_url() );
-	// 		exit();
-	// 	}
-	// }
+    // 	if(isset($user->roles) && $user->ID != get_current_user_id() && (in_array('administrator', (array) $user->roles) || in_array('subscriber', (array) $user->roles))){
+    // 		wp_redirect( home_url() );
+    // 		exit();
+    // 	}
+    // }
 }
