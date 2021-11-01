@@ -2,3 +2,14 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+ .isceb-event-order-table td,  .isceb-event-order-table th{
+     /* background-color: aqua; */
+     padding: 8px;
+ }
+
+ .isceb-event-order-table tr:nth-child(even){
+     background-color: #f2f2f2;
+ }
+ .isceb-event-order-table th{
+     background-color: #99ceeb;
+ }
