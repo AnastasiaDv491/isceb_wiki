@@ -416,8 +416,8 @@ function isceb_custom_checkout_field_update_order_meta($order_id)
     }
 }
 
-add_filter('woocommerce_is_purchasable', 'isceb_is_event_still_purchasable', 10, 2);
-
+/* TODO #32 What with multi day events? Seperate registration time needed?*/
+// add_filter('woocommerce_is_purchasable', 'isceb_is_event_still_purchasable', 10, 2);
 function isceb_is_event_still_purchasable($is_purchasable, $product)
 {
     if ($product->get_meta('isceb-start-of-event') == '') {
@@ -425,10 +425,10 @@ function isceb_is_event_still_purchasable($is_purchasable, $product)
     }
 
     $isceb_event_countdown = date_diff(new DateTime('now'), new DateTime($product->get_meta('isceb-start-of-event')));
-    if ($isceb_event_countdown->invert == 0) {
-        $is_purchasable = true;
+
+    if ($isceb_event_countdown->invert === 1) {
+        $is_purchasable = false;
     }
-    // var_dump($isceb_event_countdown->invert == 0);
 
     return $is_purchasable;
 }
