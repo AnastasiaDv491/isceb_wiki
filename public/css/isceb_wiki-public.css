@@ -4,21 +4,19 @@
  */
 
  .inputFileName{
-    width:70%
+    width: 200px;
  }
 
- .select2-container--classic .select2-selection--single {
-   margin:5px;
+ /* .select2-container--classic .select2-selection--single {
+   margin-left:5px;
+ } */
+
+ .select2  {
+   margin-left: 5px;
  }
 
- .select2-selection__arrow{
-    margin: 5px;
- }
-
- #fileList > ul > li > ul > li> p{
-   line-height: 40px;
-   text-align: center;
-   margin-bottom: 0px;
+ .isceb-wiki-upload-file-type,.isceb-wiki-upload-file-year,.isceb-wiki-upload-file-course{
+   margin-right: 5px;
  }
 
 input[type="submit"]:disabled {

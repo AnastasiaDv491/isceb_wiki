@@ -145,12 +145,16 @@ class Isceb_wiki_Public
 
 			return ob_get_clean();
 		} else {
+			global $wp;
 			ob_start();
-			echo ('You need to be logged in to upload something to the wiki');
-			$args = array(
-				'redirect' => get_permalink()
-			);
-			wp_login_form($args);
+			echo 
+			'
+			<h2>Please, login to upload your files! </h2>
+			<p> Thank you in advance for contributing to the open community. </p>
+			<a href=" '. wp_login_url(home_url($wp->request)) .'">
+			<button class="isceb-wiki-login-button-not-gb">Login</button>
+		</a>';
+			// wp_login_url(home_url($wp->request));
 			return ob_get_clean();
 		}
 	}
