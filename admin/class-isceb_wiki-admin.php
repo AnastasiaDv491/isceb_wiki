@@ -333,20 +333,6 @@ class Isceb_wiki_Admin
 					'class'       => 'chosen',
 				),
 				array(
-					'id' => 'isceb_wiki_login_page',
-					'type' => 'select',
-					'title' => 'ISCEB wiki Login',
-					'query'          => array(
-						'type'           => 'pages',
-						'args'           => array(
-							'orderby'      => 'post_date',
-							'order'        => 'DESC',
-						),
-					),
-					'default_option' => '',
-					'class'       => 'chosen',
-				),
-				array(
 					'id' => 'isceb_wiki_file_upload_went_wrong_text',
 					'type' => 'text',
 					'title' => 'Wiki file upload went wrong message',

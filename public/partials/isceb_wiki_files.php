@@ -1,5 +1,8 @@
 <?php
 
+/* TODO: #34 Check if this is code tha is still */
+
+
 /*
 *  Query posts for a relationship value.
 *  This method uses the meta_query LIKE to match the string "123" to the database value a:1:{i:0;s:3:"123";} (serialized array)
@@ -75,7 +78,7 @@ foreach ($wiki_file_terms as $wiki_file_term) {
                         ?>
                             <a href=" <?php echo get_page_link($isceb_wiki_login_page['isceb_wiki_login_page']) ?> " class="isceb-wiki-download-wrap">
                                 <button class="isceb-wiki-file-download isceb-wiki-button-not-gb">Login</button>
-                            </a>
+                            </a>                        
 
                         <?php
                         } else {
@@ -85,7 +88,7 @@ foreach ($wiki_file_terms as $wiki_file_term) {
                             <a href=" <?php echo (wp_login_url(home_url($wp->request))) ?> " class="isceb-wiki-download-wrap">
                                 <button class="isceb-wiki-file-download isceb-wiki-button-not-gb">Login</button>
                             </a>
-
+                                                    
                         <?php
                         }
                         ?>
