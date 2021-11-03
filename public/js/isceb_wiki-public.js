@@ -44,19 +44,6 @@ var courses = [];
 		}
 	});
 
-	$('#isceb_wiki_file').click(function(test) {
-		$.ajax({
-			type: 'POST',
-			url: wp_ajax.ajax_url,
-			dataType: "json", // add data type
-			data: { action: 'isceb_wiki_download_count' },
-			success: function (response) {
-				console.log(response);
-				console.log(test);
-			}
-		});
-	});
-
 })(jQuery);
 
 function updateList() {
@@ -136,17 +123,6 @@ function updateList() {
 		})(jQuery);
 	}
 
-}
-
-function countProperties(obj) {
-	var count = 0;
-
-	for (var prop in obj) {
-		if (obj.hasOwnProperty(prop))
-			++count;
-	}
-
-	return count;
 }
 
 function getCurrentAcademicYear() {
