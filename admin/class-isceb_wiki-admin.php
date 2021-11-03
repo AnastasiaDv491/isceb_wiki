@@ -152,6 +152,7 @@ class Isceb_wiki_Admin
 		return $attach_id;
 	}
 
+	/* Don't forget to set right upload_max_filesize and post_max_size in php settings */
 	function post_first()
 	{
 		$i = 0;
