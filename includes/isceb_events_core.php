@@ -188,17 +188,9 @@ if (!function_exists('isceb_create_custom_meta_box')) {
 //  Custom metabox content in admin product pages
 if (!function_exists('isceb_add_custom_content_meta_box')) {
     function isceb_add_custom_content_meta_box()
-    {
-        // $prefix = '_bhww_'; // global $prefix;
-        // $ingredients = get_post_meta($post->ID, $prefix . 'ingredients_wysiwyg', true) ? get_post_meta($post->ID, $prefix . 'ingredients_wysiwyg', true) : '';
-        // $benefits = get_post_meta($post->ID, $prefix . 'benefits_wysiwyg', true) ? get_post_meta($post->ID, $prefix . 'benefits_wysiwyg', true) : '';
-        // $args['textarea_rows'] = 6;
-        // echo '<p>' . __('Ingredients', 'cmb') . '</p>';
-        // wp_editor($ingredients, 'ingredients_wysiwyg', $args);
-        // echo '<p>' . __('Benefits', 'cmb') . '</p>';
-        // wp_editor($benefits, 'benefits_wysiwyg', $args);
-        // echo '<input type="hidden" name="custom_product_field_nonce" value="' . wp_create_nonce() . '">';
-        // echo "hello";
+    {   
+        echo '<button id="download_button_events_admin" onClick="isceb_event_download_attendess(event,'.get_the_id().')">Download data</button>';
+
 
         //Get all orders for the current product 
         $orders_id = get_orders_ids_by_product_id(get_the_ID());

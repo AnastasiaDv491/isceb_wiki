@@ -347,6 +347,8 @@ class Isceb_wiki
 		// No need to access the count for public users. Used only for logged in users who can download files
 		// $this->loader->add_action('wp_ajax_nopriv_get_wiki_courses_ajax', $plugin_public, 'isceb_wiki_download_count');
 
+		$this->loader->add_action('wp_ajax_isceb_event_attendee_download', $plugin_admin, 'isceb_event_attendees_download_csv');
+
 		// Action to delete attachement of the wiki_file
 		$this->loader->add_action('before_delete_post', $plugin_admin, 'isceb_wiki_delete_attachment');
 	}
