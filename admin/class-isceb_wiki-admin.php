@@ -196,7 +196,10 @@ class Isceb_wiki_Admin
 										'post_title' => substr($_POST["fileName_{$i}"], 0, 50),
 										'post_status' => 'publish',
 										'post_type' => 'wiki-file',
-										'post_author' => $_POST["userID"]
+										'post_author' => $_POST["userID"],
+										'meta_input' => array(
+											'approved' => 'No',
+										)
 									);
 
 									$post_id = wp_insert_post($post_data);

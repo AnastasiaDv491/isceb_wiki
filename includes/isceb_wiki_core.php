@@ -281,7 +281,7 @@ function isceb_wiki_navigation_sidebar($pageID)
                         break;
                     }
                 }
-            }          
+            }
 
             $programs_of_phase = get_field('program', $phase_id);
 
@@ -540,13 +540,30 @@ function isceb_template_redirect_userswp_privacy()
 }
 
 
-function isceb_wiki_upload_page_url(){
+function isceb_wiki_upload_page_url()
+{
     $options = get_option('isceb_wiki-test');
-    if (array_key_exists('wiki_upload_1',$options['en'])&& $options['en']['wiki_upload_1'] !== '') {
+    if (array_key_exists('wiki_upload_1', $options['en']) && $options['en']['wiki_upload_1'] !== '') {
         # code...
         return get_permalink($options['en']['wiki_upload_1']);
-    }
-    else{
+    } else {
         return '';
+    }
+}
+
+add_action('pre_get_posts', 'isceb_remove_not_approved_files_from_search');
+function isceb_remove_not_approved_files_from_search($query)
+{
+    if ($query->is_search) {
+        $query->set(
+            'meta_query',
+            array(
+                array(
+                    'key' => 'approved',
+                    'value' => 'No',
+                    'compare' => 'NOT EXISTS',
+                ),
+            )
+        );
     }
 }
