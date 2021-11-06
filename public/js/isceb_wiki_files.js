@@ -41,8 +41,8 @@ var courses = [];
 				isceb_wiki_file: event.target.id 
 			},
 			success: function (response) {
-				console.log(response);
-				console.log(event.target.id);
+				// console.log(response);
+				// console.log(event.target.id);
 			}
 		});
 	});
