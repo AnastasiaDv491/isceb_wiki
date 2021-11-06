@@ -20,8 +20,12 @@ global $wp;
 
 
 <?php if (count($isceb_wiki_course_files) == 0) : ?>
-    <p>Upload yours</p>
-    <button class="isceb-wiki-button-not-gb"> Upload files </button>
+    <?php if (isceb_wiki_upload_page_url() !== '') : ?>
+        <p>Upload yours</p>
+        <a href="<?php echo (esc_url(isceb_wiki_upload_page_url())) ?>">
+            <button class="isceb-wiki-button-not-gb"> Upload files </button>
+        </a>
+    <?php endif; ?>
 <?php endif; ?>
 
 <div class="isceb-wiki-container">

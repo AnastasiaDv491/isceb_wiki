@@ -62,7 +62,7 @@ defined('ABSPATH') || exit;
                             <?php foreach ($wiki_courses  as $course) :
                             ?>
                                 <li>
-                                    <a href="<?php echo add_query_arg( 'phase', $phase->ID, get_permalink($course->ID) ); ?>" class="isceb-wiki-nav-course"> <?php echo $course->post_title; ?> </a>
+                                    <a href="<?php echo add_query_arg('phase', $phase->ID, get_permalink($course->ID)); ?>" class="isceb-wiki-nav-course"> <?php echo $course->post_title; ?> </a>
                                 </li>
                             <?php endforeach; ?>
                         </ul>
@@ -71,7 +71,11 @@ defined('ABSPATH') || exit;
             <?php
         endif;
             ?>
-            <button class="isceb-wiki-button-not-gb" id="isceb-wiki-nav-upload-btn"> Upload files </button>
+            <?php if (isceb_wiki_upload_page_url() !== '') : ?>
+                <a href="<?php echo esc_url(isceb_wiki_upload_page_url()) ?>">
+                    <button class="isceb-wiki-button-not-gb" id="isceb-wiki-nav-upload-btn"> Upload files </button>
+                </a>
+            <?php endif; ?>
             </div>
     </div>
 </div>

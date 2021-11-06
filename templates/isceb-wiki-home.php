@@ -63,11 +63,16 @@ get_header();
 
                 ?>
 
+                <?php if(isceb_wiki_upload_page_url() !== ''):?>
                 <div class="isceb-grid-item" id="isceb-grid-item-upload">
                     <h4>Upload your files</h4>
                     <p>Some text here that is long</p>
+                    <a href="<?php echo esc_url(isceb_wiki_upload_page_url())?>">
                     <button class="isceb-wiki-button-not-gb"> Upload files </button>
+                    </a>
                 </div>
+                <?php endif;?>
+
             </div>
         </main>
     </div>

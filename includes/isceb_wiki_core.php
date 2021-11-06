@@ -538,3 +538,15 @@ function isceb_template_redirect_userswp_privacy()
     // 	}
     // }
 }
+
+
+function isceb_wiki_upload_page_url(){
+    $options = get_option('isceb_wiki-test');
+    if (array_key_exists('wiki_upload_1',$options['en'])&& $options['en']['wiki_upload_1'] !== '') {
+        # code...
+        return get_permalink($options['en']['wiki_upload_1']);
+    }
+    else{
+        return '';
+    }
+}
