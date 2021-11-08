@@ -341,7 +341,10 @@ function add_extra_tab_to_edit_account_page($tabs)
     // 'link' => 'http://localhost/www/my-account/orders/'];
     // A direct link to somewhere is also possible
 
-    $new_tab = array('Order' => ["title" => 'Orders',     'icon' => 'fas fa-sign-out-alt']);
+    $new_tab = array(
+        'Order' => ["title" => 'Orders',     'icon' => 'fas fa-sign-out-alt'],
+        'WikiFiles' => ["title" => 'Your Wiki Files', 'icon' => 'fas fa-file']
+    );
 
     //Remove notifcations tab
     unset($new_tab["Notifications"]);
@@ -359,8 +362,13 @@ function insertInArrayAfterPosition($array, $toInsertValue, $position)
 
 function isceb_account_page_title_cb($title, $type)
 {
-    if ($type == 'Order') {
-        $title = __('Your orders', 'uwp-messaging');
+    switch ($type) {
+        case 'Order':
+            $title = __('Your orders', 'uwp-messaging');
+            break;
+        case 'WikiFiles':
+            $title = __('Your Wiki Files', 'uwp-messaging');
+            break;
     }
 
     return $title;
@@ -377,10 +385,17 @@ function isceb_account_page_title_cb($title, $type)
  */
 function isceb_display_user_tab_content($type)
 {
-    if ($type == "Order") {
-        var_dump(get_option('uwp_settings'));
+    switch ($type) {
+        case 'Order':
+            wc_get_template('myaccount/my-orders.php', array(
+                'current_user' => get_user_by('id', get_current_user_id()),
+                'order_count'   => -1
+            ));
+            break;
 
-        print_r(get_user_meta(get_current_user_id()));
+        case 'WikiFiles':
+            isceb_wiki_get_files_of_owner(get_current_user_ID());
+            break;
     }
 }
 
@@ -565,5 +580,54 @@ function isceb_remove_not_approved_files_from_search($query)
                 ),
             )
         );
+    }
+}
+
+
+
+function isceb_wiki_get_files_of_owner($user_id)
+{
+    $owned_wiki_files = get_posts(array(
+        'post_type' => 'wiki-file',
+        'post_status' => 'publish',
+        'meta_key' => 'academic_year',
+        'orderby' => 'meta_value',
+        'order' => 'DESC',
+        'author' => $user_id,
+    ));
+
+    // var_dump($owned_wiki_files);
+    foreach ($owned_wiki_files as $owned_wiki_file) {
+        ?> 
+        <h1>This is the data of the file you uploaded: </h1>
+        <h2> <?php echo $owned_wiki_file->post_title?></h2>
+        <?php
+
+        $owned_wiki_files_categories = get_the_terms($owned_wiki_file->ID, 'wiki_file_category');
+        $owned_wiki_file_courses = get_field('course', $owned_wiki_file->ID);
+
+        // var_dump($owned_wiki_files_categories);
+      
+        foreach ($owned_wiki_files_categories as $owned_wiki_files_category) {
+
+?><p><?php echo $owned_wiki_files_category->name; ?></p>
+        <?php
+        }
+        foreach ($owned_wiki_file_courses as $owned_wiki_files_course) {
+        ?><p><?php echo $owned_wiki_files_course->post_title; ?></p>
+<?php
+            $owned_wiki_files_phases = get_field('phases', $owned_wiki_files_course->ID);
+            foreach ($owned_wiki_files_phases as $owned_wiki_files_phase) {
+                ?><p><?php echo $owned_wiki_files_phase->post_title; ?></p>
+            <?php
+
+                $owned_wiki_files_programs = get_field('program', $owned_wiki_files_phase);
+                foreach ($owned_wiki_files_programs as $owned_wiki_files_program) {
+                    ?><p><?php echo $owned_wiki_files_program->post_title; ?></p>
+            <?php
+                }
+            }
+            
+        }
     }
 }
