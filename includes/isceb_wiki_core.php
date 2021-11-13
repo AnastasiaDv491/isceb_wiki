@@ -397,7 +397,6 @@ function isceb_display_user_tab_content($type)
             isceb_wiki_get_files_of_owner(get_current_user_ID());
             break;
     }
-    
 }
 
 
@@ -600,10 +599,7 @@ function isceb_wiki_get_files_of_owner($user_id)
     // var_dump($owned_wiki_files);
     if (!empty($owned_wiki_files)) {
         foreach ($owned_wiki_files as $owned_wiki_file) {
-?>
-            <h1>This is the data of the file you uploaded: </h1>
-            <h2> <?php echo $owned_wiki_file->post_title ?></h2>
-            <?php
+            $file_content = get_field('file_attachment', $owned_wiki_file->ID);
 
             if (!empty(get_the_terms($owned_wiki_file->ID, 'wiki_file_category'))) {
                 $owned_wiki_files_categories = get_the_terms($owned_wiki_file->ID, 'wiki_file_category');
@@ -611,30 +607,37 @@ function isceb_wiki_get_files_of_owner($user_id)
                 if (get_field('course', $owned_wiki_file->ID)) {
                     $owned_wiki_file_courses = get_field('course', $owned_wiki_file->ID);
 
-                    // var_dump($owned_wiki_files_categories);
-
-                    foreach ($owned_wiki_files_categories as $owned_wiki_files_category) {
-
-            ?><p><?php echo $owned_wiki_files_category->name; ?></p>
-                    <?php
-                    }
                     foreach ($owned_wiki_file_courses as $owned_wiki_files_course) {
-                    ?><p><?php echo $owned_wiki_files_course->post_title; ?></p>
-                        <?php
                         $owned_wiki_files_phases = get_field('phases', $owned_wiki_files_course->ID);
                         foreach ($owned_wiki_files_phases as $owned_wiki_files_phase) {
-                        ?><p><?php echo $owned_wiki_files_phase->post_title; ?></p>
-                            <?php
-
-                            $owned_wiki_files_programs = get_field('program', $owned_wiki_files_phase);
-                            foreach ($owned_wiki_files_programs as $owned_wiki_files_program) {
-                            ?><p><?php echo $owned_wiki_files_program->post_title; ?></p>
-<?php
-                            }
+                            $owned_wiki_files_programs = get_field('program', $owned_wiki_files_phase->ID);
                         }
+
+                        // foreach ($owned_wiki_files_phases as $owned_wiki_files_phase) {
+                        // }
+                        // foreach ($owned_wiki_files_programs as $owned_wiki_files_program) {
+                        // }
                     }
                 }
             }
         }
     }
+    isceb_wiki_get_template(
+        'template-parts/content-isceb-user-wikifiles.php',
+        array(
+            "isceb_wiki_files" => $owned_wiki_files,
+            "isceb_wiki_files_category" =>  $owned_wiki_files_categories,
+            "isceb_wiki_file_course" => $owned_wiki_file_courses,
+            "isceb_wiki_file_phase" => $owned_wiki_files_phases,
+            "isceb_wiki_file_program" => $owned_wiki_files_programs,
+            "file_attachment" => $file_content,
+        ),
+    );
+
+    // get the file
+    // -- get the category
+    // -- get the course
+    // --- get phase
+    // ---- get the program
+
 }
