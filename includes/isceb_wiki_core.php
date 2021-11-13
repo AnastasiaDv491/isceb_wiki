@@ -596,43 +596,61 @@ function isceb_wiki_get_files_of_owner($user_id)
         'author' => $user_id,
     ));
 
+    $category_name = [];
+    $course_name = [];
+    $phase_name = [];
+    $program_name = [];
     // var_dump($owned_wiki_files);
-    if (!empty($owned_wiki_files)) {
-        foreach ($owned_wiki_files as $owned_wiki_file) {
-            $file_content = get_field('file_attachment', $owned_wiki_file->ID);
 
-            if (!empty(get_the_terms($owned_wiki_file->ID, 'wiki_file_category'))) {
-                $owned_wiki_files_categories = get_the_terms($owned_wiki_file->ID, 'wiki_file_category');
+    foreach ($owned_wiki_files as $owned_wiki_file) {
+        $file_content = get_field('file_attachment', $owned_wiki_file->ID);
 
-                if (get_field('course', $owned_wiki_file->ID)) {
-                    $owned_wiki_file_courses = get_field('course', $owned_wiki_file->ID);
+        $owned_wiki_files_categories = get_the_terms($owned_wiki_file->ID, 'wiki_file_category');
+        //Don't display file if it doesn't have a category (exam, summary....)
+        if (!empty($owned_wiki_files_categories)) {
 
-                    foreach ($owned_wiki_file_courses as $owned_wiki_files_course) {
-                        $owned_wiki_files_phases = get_field('phases', $owned_wiki_files_course->ID);
+            foreach ($owned_wiki_files_categories as $owned_wiki_files_category) {
+                $category_name[] = $owned_wiki_files_category->name;
+            }
+
+            $owned_wiki_file_courses = get_field('course', $owned_wiki_file->ID);
+            if ($owned_wiki_file_courses) {
+
+                foreach ($owned_wiki_file_courses as $owned_wiki_files_course) {
+                    $course_name[] = $owned_wiki_files_course->post_title;
+
+                    $owned_wiki_files_phases = get_field('phases', $owned_wiki_files_course->ID);
+
+                    if (!is_null($owned_wiki_files_phases) && !empty($owned_wiki_files_phases)) {
                         foreach ($owned_wiki_files_phases as $owned_wiki_files_phase) {
-                            $owned_wiki_files_programs = get_field('program', $owned_wiki_files_phase->ID);
-                        }
+                            $phase_name[] = $owned_wiki_files_phase->post_title;
 
-                        // foreach ($owned_wiki_files_phases as $owned_wiki_files_phase) {
-                        // }
-                        // foreach ($owned_wiki_files_programs as $owned_wiki_files_program) {
-                        // }
+                            $owned_wiki_files_programs = get_field('program', $owned_wiki_files_phase->ID);
+
+                            foreach ($owned_wiki_files_programs as $owned_wiki_files_program) {
+                                $program_name[] = $owned_wiki_files_program->post_title;
+                            }
+                        }
                     }
                 }
             }
+            isceb_wiki_get_template(
+                'template-parts/content-isceb-user-wikifiles.php',
+                array(
+                    "isceb_wiki_file" => $owned_wiki_file,
+                    "isceb_wiki_files_category" => implode(', ',  $category_name),
+                    "isceb_wiki_file_course" =>  implode(', ', $course_name),
+                    "isceb_wiki_file_phase" => implode(', ', array_unique($phase_name)),
+                    "isceb_wiki_file_program" =>    implode(', ', array_unique($program_name)),
+                    "file_attachment_url" => $file_content['url'],
+                ),
+            );
         }
+        $category_name = [];
+        $course_name = [];
+        $phase_name = [];
+        $program_name = [];
     }
-    isceb_wiki_get_template(
-        'template-parts/content-isceb-user-wikifiles.php',
-        array(
-            "isceb_wiki_files" => $owned_wiki_files,
-            "isceb_wiki_files_category" =>  $owned_wiki_files_categories,
-            "isceb_wiki_file_course" => $owned_wiki_file_courses,
-            "isceb_wiki_file_phase" => $owned_wiki_files_phases,
-            "isceb_wiki_file_program" => $owned_wiki_files_programs,
-            "file_attachment" => $file_content,
-        ),
-    );
 
     // get the file
     // -- get the category
