@@ -1,4 +1,6 @@
 includes/advanced-custom-fields
 includes/acf
-admin/exopite-simple-options
+admin/exopite-simple-options-framework
 .vscode/settings.json
+
+/vendor/

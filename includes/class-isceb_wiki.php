@@ -222,7 +222,7 @@ class Isceb_wiki
 		 * @link https://github.com/JoeSz/Exopite-Simple-Options-Framework
 		 * @author Joe Szalai
 		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/exopite-simple-options/exopite-simple-options-framework-class.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/exopite-simple-options-framework/exopite-simple-options/exopite-simple-options-framework-class.php';
 
 		/* Parent Menu Fix */
 		add_filter('parent_file', 'isceb_wiki_cpt_parent_menu_selection');

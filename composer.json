@@ -1,0 +1,42 @@
+{
+    "name": "isceb/isceb_wiki",
+    "type": "project",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://wpackagist.org",
+            "only": [
+                "wpackagist-plugin/*",
+                "wpackagist-theme/*"
+            ]
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "joesz/exopite-simple-options-framework",
+                "version": "dev-master",
+                "source": {
+                    "url": "https://github.com/JoeSz/Exopite-Simple-Options-Framework",
+                    "type": "git",
+                    "reference": "origin/master"
+                }
+            }
+        }
+    ],
+    "require": {
+        "wpackagist-plugin/advanced-custom-fields": "5.10.1",
+        "joesz/exopite-simple-options-framework": "dev-master",
+        "oomphinc/composer-installers-extender": "^2.0"
+    },
+    "extra": {
+        "installer-types": ["library"],
+        "installer-paths": {
+            "includes/acf": [
+                "wpackagist-plugin/advanced-custom-fields"
+            ],
+            "admin/exopite-simple-options-framework": [
+                "joesz/exopite-simple-options-framework"
+            ]
+        }
+    }
+}
