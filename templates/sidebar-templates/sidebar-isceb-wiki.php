@@ -42,6 +42,7 @@ defined('ABSPATH') || exit;
                         //Get all the courses for a certain phase
                         $wiki_courses = get_posts(array(
                             'post_type' => 'course',
+                            'numberposts'       => -1,
                             'meta_query' => array(
                                 array(
                                     'key' => 'phases', // name of custom field
