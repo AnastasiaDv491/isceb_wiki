@@ -600,10 +600,11 @@ function isceb_wiki_get_files_of_owner($user_id)
     $course_name = [];
     $phase_name = [];
     $program_name = [];
-    // var_dump($owned_wiki_files);
 
     foreach ($owned_wiki_files as $owned_wiki_file) {
         $file_content = get_field('file_attachment', $owned_wiki_file->ID);
+        $download_count = get_field('download_count', $owned_wiki_file->ID);
+        $download_count = is_null($download_count) ? 0 : $download_count;
 
         $owned_wiki_files_categories = get_the_terms($owned_wiki_file->ID, 'wiki_file_category');
         //Don't display file if it doesn't have a category (exam, summary....)
@@ -643,6 +644,7 @@ function isceb_wiki_get_files_of_owner($user_id)
                     "isceb_wiki_file_phase" => implode(', ', array_unique($phase_name)),
                     "isceb_wiki_file_program" =>    implode(', ', array_unique($program_name)),
                     "file_attachment_url" => $file_content['url'],
+                    "isceb_wiki_download_count" => $download_count,
                 ),
             );
         }
