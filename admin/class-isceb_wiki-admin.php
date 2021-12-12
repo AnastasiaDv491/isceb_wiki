@@ -103,7 +103,6 @@ class Isceb_wiki_Admin
 		wp_localize_script($this->plugin_name, 'wp_ajax', array(
 			'ajax_url' => admin_url('admin-ajax.php'),
 		));
-
 	}
 
 	//Custom directory for the wiki files upload
@@ -358,6 +357,18 @@ class Isceb_wiki_Admin
 		);
 
 		$options_panel = new Exopite_Simple_Options_Framework($config_submenu, $fields);
+
+		$page = get_page_by_title('Wiki Upload Page');
+		if ($page !== null) {
+			//Get entire array
+			$my_options = get_option('isceb_wiki-test');
+
+			//Alter the options array appropriately
+			$my_options['en']['wiki_upload_1'] = $page->ID;
+
+			//Update entire array
+			update_option('isceb_wiki-test', $my_options);
+		}
 	}
 
 
