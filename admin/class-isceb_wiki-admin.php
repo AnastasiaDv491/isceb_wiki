@@ -165,7 +165,7 @@ class Isceb_wiki_Admin
 				if (in_array($ext, $allowed)) {
 					if ($files['name'][$key]) {
 						$file = array(
-							'name' => $files['name'][$key],
+							'name' => sanitize_file_name($files['name'][$key]),
 							'type' => $files['type'][$key],
 							'tmp_name' => $files['tmp_name'][$key],
 							'error' => $files['error'][$key],
@@ -192,7 +192,7 @@ class Isceb_wiki_Admin
 									$post_data = array();
 									$post_id = null;
 									$post_data = array(
-										'post_title' => substr($_POST["fileName_{$i}"], 0, 50),
+										'post_title' => sanitize_title(substr($_POST["fileName_{$i}"], 0, 50)),
 										'post_status' => 'publish',
 										'post_type' => 'wiki-file',
 										'post_author' => $_POST["userID"],
