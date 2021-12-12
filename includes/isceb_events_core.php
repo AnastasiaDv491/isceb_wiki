@@ -188,10 +188,7 @@ if (!function_exists('isceb_create_custom_meta_box')) {
 //  Custom metabox content in admin product pages
 if (!function_exists('isceb_add_custom_content_meta_box')) {
     function isceb_add_custom_content_meta_box()
-    {   
-        echo '<button id="download_button_events_admin" onClick="isceb_event_download_attendess(event,'.get_the_id().')">Download data</button>';
-
-
+    {
         //Get all orders for the current product 
         $orders_id = get_orders_ids_by_product_id(get_the_ID());
 

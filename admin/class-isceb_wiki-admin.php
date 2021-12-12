@@ -554,20 +554,4 @@ class Isceb_wiki_Admin
 			return;
 		}
 	}
-
-
-	function isceb_event_attendees_download_csv()
-	{
-		wp_send_json_success('jaja');
-		// var_dump("test")
-		// error_log(print_r($_SERVER['REQUEST_URI'], true));
-		// if ($_SERVER['REQUEST_URI']=='/downloads/data.csv') {
-		//   header("Content-type: application/x-msdownload",true,200);
-		//   header("Content-Disposition: attachment; filename=data.csv");
-		//   header("Pragma: no-cache");
-		//   header("Expires: 0");
-		//   echo 'data';
-		//   exit();
-		// }
-	}
 }
