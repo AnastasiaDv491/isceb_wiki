@@ -162,7 +162,7 @@ function isceb_wiki_get_the_breadcrumb($post)
 }
 
 
-
+add_action('isceb_wiki_after_content', 'isceb_wiki_content_navigation', 10);
 function isceb_wiki_content_navigation($pageID)
 {
     switch (get_post_type($pageID)) {
@@ -235,9 +235,9 @@ function isceb_wiki_content_navigation($pageID)
             break;
     }
 }
-add_action('isceb_wiki_after_content', 'isceb_wiki_content_navigation', 10);
 
 
+add_action('isceb_wiki_before_main_content', 'isceb_wiki_navigation_sidebar', 10);
 function isceb_wiki_navigation_sidebar($pageID)
 {
     switch (get_post_type()) {
@@ -302,7 +302,7 @@ function isceb_wiki_navigation_sidebar($pageID)
 
     isceb_wiki_get_template('sidebar-templates/sidebar-isceb-wiki.php', array('wiki_phases' => $wiki_phases, 'title_of_page' => $title_of_page));
 }
-add_action('isceb_wiki_before_main_content', 'isceb_wiki_navigation_sidebar', 10);
+
 
 
 /* UsersWP Integration*/
