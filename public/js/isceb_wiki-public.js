@@ -94,13 +94,13 @@ function updateList() {
 
 			var children = "";
 			for (var i = 0; i < input.files.length; ++i) {
-				children += '<li>' + '<input class="inputFileName"  name="fileName_' + i + '" type="text" value="'
-					+ input.files[i].name + '">' + '<ul><li style="display:flex;"><p class="isceb-wiki-upload-file-type">Type:</p> <select style="width:100%;" name="file_category_' + i
+				children += '<li style="display:flex;"><p class="isceb-wiki-upload-file-type">Name:</p> <input class="inputFileName"  name="fileName_' + i + '" type="text" value="'
+					+ input.files[i].name + '"></li>' + '<li style="display:flex;"><p class="isceb-wiki-upload-file-type">Type:</p> <select style="width:100%;" name="file_category_' + i
 					+ '" class="js-example-basic-single">' + fileCategoryOptions
 					+ '</select></li><li style="display:flex;"><p class="isceb-wiki-upload-file-course">Course:</p> <select style="width:100%;" class="js-example-basic-single" name=file_course_' + i + '>'
 					+ fileCourseOptions + '</select></li>'
 					+ '<li style="display:flex;"><p class="isceb-wiki-upload-file-year">Year:</p> <select style="width:100%;" class="js-example-basic-single" name=file_academic_year_' + i + '>'
-					+ fileAcademicYearOptions + '</select></li></ul></li>';
+					+ fileAcademicYearOptions + '</select></li></ul>';
 
 			}
 			output.innerHTML = '<ul>' + children + '</ul>';

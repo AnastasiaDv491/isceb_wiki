@@ -4,7 +4,8 @@
  */
 
  .inputFileName{
-    width: 200px;
+    margin-bottom: 1rem;
+    width: 100%;
  }
 
  /* .select2-container--classic .select2-selection--single {

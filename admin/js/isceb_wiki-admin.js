@@ -33,21 +33,3 @@
 
 })(jQuery);
 
-
-function isceb_event_download_attendess(event, page_id) {
-	event.preventDefault();
-
-	jQuery.ajax({
-		type: 'POST',
-		url: wp_ajax.ajax_url,
-		dataType: "json", // add data type
-		data: {
-			action: 'isceb_event_attendee_download',
-			isceb_wiki_file: event.target.id
-		},
-		success: function (response) {
-			console.log(response);
-			console.log(event.target.id);
-		}
-	});
-}

@@ -103,7 +103,6 @@ class Isceb_wiki_Admin
 		wp_localize_script($this->plugin_name, 'wp_ajax', array(
 			'ajax_url' => admin_url('admin-ajax.php'),
 		));
-
 	}
 
 	//Custom directory for the wiki files upload
@@ -166,7 +165,7 @@ class Isceb_wiki_Admin
 				if (in_array($ext, $allowed)) {
 					if ($files['name'][$key]) {
 						$file = array(
-							'name' => $files['name'][$key],
+							'name' => sanitize_file_name($files['name'][$key]),
 							'type' => $files['type'][$key],
 							'tmp_name' => $files['tmp_name'][$key],
 							'error' => $files['error'][$key],
@@ -193,7 +192,7 @@ class Isceb_wiki_Admin
 									$post_data = array();
 									$post_id = null;
 									$post_data = array(
-										'post_title' => substr($_POST["fileName_{$i}"], 0, 50),
+										'post_title' => sanitize_title(substr($_POST["fileName_{$i}"], 0, 50)),
 										'post_status' => 'publish',
 										'post_type' => 'wiki-file',
 										'post_author' => $_POST["userID"],
@@ -358,6 +357,18 @@ class Isceb_wiki_Admin
 		);
 
 		$options_panel = new Exopite_Simple_Options_Framework($config_submenu, $fields);
+
+		$page = get_page_by_title('Wiki Upload Page');
+		if ($page !== null) {
+			//Get entire array
+			$my_options = get_option('isceb_wiki-test');
+
+			//Alter the options array appropriately
+			$my_options['en']['wiki_upload_1'] = $page->ID;
+
+			//Update entire array
+			update_option('isceb_wiki-test', $my_options);
+		}
 	}
 
 
@@ -542,21 +553,5 @@ class Isceb_wiki_Admin
 			}
 			return;
 		}
-	}
-
-
-	function isceb_event_attendees_download_csv()
-	{
-		wp_send_json_success('jaja');
-		// var_dump("test")
-		// error_log(print_r($_SERVER['REQUEST_URI'], true));
-		// if ($_SERVER['REQUEST_URI']=='/downloads/data.csv') {
-		//   header("Content-type: application/x-msdownload",true,200);
-		//   header("Content-Disposition: attachment; filename=data.csv");
-		//   header("Pragma: no-cache");
-		//   header("Expires: 0");
-		//   echo 'data';
-		//   exit();
-		// }
 	}
 }

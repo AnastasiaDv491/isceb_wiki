@@ -162,7 +162,7 @@ function isceb_wiki_get_the_breadcrumb($post)
 }
 
 
-
+add_action('isceb_wiki_after_content', 'isceb_wiki_content_navigation', 10);
 function isceb_wiki_content_navigation($pageID)
 {
     switch (get_post_type($pageID)) {
@@ -238,9 +238,9 @@ function isceb_wiki_content_navigation($pageID)
             break;
     }
 }
-add_action('isceb_wiki_after_content', 'isceb_wiki_content_navigation', 10);
 
 
+add_action('isceb_wiki_before_main_content', 'isceb_wiki_navigation_sidebar', 10);
 function isceb_wiki_navigation_sidebar($pageID)
 {
     switch (get_post_type()) {
@@ -305,7 +305,7 @@ function isceb_wiki_navigation_sidebar($pageID)
 
     isceb_wiki_get_template('sidebar-templates/sidebar-isceb-wiki.php', array('wiki_phases' => $wiki_phases, 'title_of_page' => $title_of_page));
 }
-add_action('isceb_wiki_before_main_content', 'isceb_wiki_navigation_sidebar', 10);
+
 
 
 /* UsersWP Integration*/
@@ -603,10 +603,11 @@ function isceb_wiki_get_files_of_owner($user_id)
     $course_name = [];
     $phase_name = [];
     $program_name = [];
-    // var_dump($owned_wiki_files);
 
     foreach ($owned_wiki_files as $owned_wiki_file) {
         $file_content = get_field('file_attachment', $owned_wiki_file->ID);
+        $download_count = get_field('download_count', $owned_wiki_file->ID);
+        $download_count = is_null($download_count) ? 0 : $download_count;
 
         $owned_wiki_files_categories = get_the_terms($owned_wiki_file->ID, 'wiki_file_category');
         //Don't display file if it doesn't have a category (exam, summary....)
@@ -646,6 +647,7 @@ function isceb_wiki_get_files_of_owner($user_id)
                     "isceb_wiki_file_phase" => implode(', ', array_unique($phase_name)),
                     "isceb_wiki_file_program" =>    implode(', ', array_unique($program_name)),
                     "file_attachment_url" => $file_content['url'],
+                    "isceb_wiki_download_count" => $download_count,
                 ),
             );
         }

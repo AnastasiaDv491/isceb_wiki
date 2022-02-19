@@ -188,10 +188,7 @@ if (!function_exists('isceb_create_custom_meta_box')) {
 //  Custom metabox content in admin product pages
 if (!function_exists('isceb_add_custom_content_meta_box')) {
     function isceb_add_custom_content_meta_box()
-    {   
-        echo '<button id="download_button_events_admin" onClick="isceb_event_download_attendess(event,'.get_the_id().')">Download data</button>';
-
-
+    {
         //Get all orders for the current product 
         $orders_id = get_orders_ids_by_product_id(get_the_ID());
 
@@ -340,12 +337,11 @@ add_action('woocommerce_after_checkout_billing_form', 'isceb_display_extra_field
 function isceb_display_extra_fields_after_billing_address()
 {
     if (!is_user_logged_in()) {
-        # code...
         woocommerce_form_field('isceb_program', array(
             'type'      => 'select',
             'options'   => isceb_get_programs(),
             'label'     => __('Program', 'woocommerce'),
-            'placeholder'   => _x('Program', 'placeholder', 'woocommerce'),
+            // 'placeholder'   => _x('Program', 'placeholder', 'woocommerce'),
             'required'  => true,
             'class'     => array('form-row-wide'),
             'clear'     => true
@@ -355,7 +351,7 @@ function isceb_display_extra_fields_after_billing_address()
             'type'      => 'select',
             'options'   =>  isceb_get_phases(),
             'label'     => __('Phase', 'woocommerce'),
-            'placeholder'   => _x('Phase', 'placeholder', 'woocommerce'),
+            // 'placeholder'   => _x('Phase', 'placeholder', 'woocommerce'),
             'required'  => true,
             'class'     => array('form-row-wide'),
             'clear'     => true
@@ -380,13 +376,15 @@ add_action('woocommerce_checkout_process', 'my_custom_checkout_field_process');
 
 function my_custom_checkout_field_process()
 {
-    if (!is_user_logged_in()) {
-        // Check if set, if its not set add an error.
-        if (!$_POST['isceb_program'])
-            wc_add_notice(__('Please select a program.'), 'error');
-        if (!$_POST['isceb_phase'])
-            wc_add_notice(__('Please select a phase.'), 'error');
-    }
+    //There is always an option selected so it's not needed
+    // if (!is_user_logged_in()) {
+    //     // Check if set, if its not set add an error.
+
+    //     if (!$_POST['isceb_program'])
+    //         wc_add_notice(__('Please select a program.' . $_POST['isceb_program']), 'error');
+    //     if (!$_POST['isceb_phase'])
+    //         wc_add_notice(__('Please select a phase.'), 'error');
+    // }
 }
 
 add_action('woocommerce_admin_order_data_after_shipping_address', 'my_custom_checkout_field_display_admin_order_meta', 10, 1);
