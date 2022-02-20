@@ -299,6 +299,24 @@ function isceb_get_price_html_zero_free($product)
     return apply_filters('woocommerce_get_price_html', $price, $product);
 }
 
+add_filter('woocommerce_get_price_html', 'isceb_price_free_zero_empty', 10, 2);
+function isceb_price_free_zero_empty($price, $product)
+{
+    if ($product->get_price() == 0) {
+        if ($product->is_on_sale() && $product->get_regular_price()) {
+            $regular_price = wc_get_price_to_display($product, array('qty' => 1, 'price' => $product->get_regular_price()));
+
+            $price = wc_format_price_range($regular_price, __('Free!', 'woocommerce'));
+        } else {
+            $price = '<span class="amount">' . __('Free!', 'woocommerce') . '</span>';
+        }
+    }
+
+    return $price;
+}
+
+
+
 /* WooCommerce: The Code Below Removes Checkout Fields */
 add_filter('woocommerce_checkout_fields', 'isceb_custom_override_checkout_fields');
 function isceb_custom_override_checkout_fields($fields)
