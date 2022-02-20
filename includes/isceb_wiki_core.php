@@ -169,6 +169,7 @@ function isceb_wiki_content_navigation($pageID)
         case 'program':
             $isceb_wiki_phases_of_program = get_posts(array(
                 'post_type' => 'phase',
+                'numberposts' => -1,
                 'order'     => 'ASC',
                 'meta_query' => array(
                     array(
@@ -186,6 +187,7 @@ function isceb_wiki_content_navigation($pageID)
         case 'phase':
             $get_wiki_courses = get_posts(array(
                 'post_type' => 'course',
+                'numberposts' => -1,
                 'meta_query' => array(
                     array(
                         'key' => 'phases', // name of custom field
@@ -202,6 +204,7 @@ function isceb_wiki_content_navigation($pageID)
             foreach ($wiki_file_terms as $wiki_file_term) {
                 $get_wiki_files = get_posts(array(
                     'post_type' => 'wiki-file',
+                    'numberposts' => -1,
                     'post_status' => 'publish',
                     'meta_key' => 'academic_year',
                     'orderby' => 'meta_value',
