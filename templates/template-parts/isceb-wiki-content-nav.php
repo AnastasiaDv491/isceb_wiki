@@ -12,6 +12,7 @@
 
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
+
 ?>
 
 <div class="isceb-phases-grid-container">

@@ -1,0 +1,49 @@
+{
+    "key": "group_6210fb21e0171",
+    "title": "Semester for course",
+    "fields": [
+        {
+            "key": "field_6210fb3f2523d",
+            "label": "Semester",
+            "name": "semester",
+            "type": "select",
+            "instructions": "Select the semester of the course",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "Semester 1": "Semester 1",
+                "Semester 2": "Semester 2"
+            },
+            "default_value": false,
+            "allow_null": 1,
+            "multiple": 0,
+            "ui": 0,
+            "return_format": "value",
+            "ajax": 0,
+            "placeholder": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "course"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "modified": 1645282138
+}

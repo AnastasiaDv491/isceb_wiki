@@ -185,19 +185,33 @@ function isceb_wiki_content_navigation($pageID)
             isceb_wiki_get_template('template-parts/isceb-wiki-content-nav.php', array("isceb_wiki_nav_list" => $isceb_wiki_phases_of_program));
             break;
         case 'phase':
-            $get_wiki_courses = get_posts(array(
-                'post_type' => 'course',
-                'numberposts' => -1,
-                'meta_query' => array(
-                    array(
-                        'key' => 'phases', // name of custom field
-                        'value' => '"' . get_the_ID() . '"', // matches exactly "123", not just 123. This prevents a match for "1234"
-                        'compare' => 'LIKE'
+            
+            $isceb_wiki_semesters = get_field_object('field_6210fb3f2523d');
+            // var_dump($isceb_wiki_semesters["choices"]);
+            foreach($isceb_wiki_semesters["choices"] as $isceb_wiki_semester){
+               
+                echo( '<p class="isceb_wiki_semester_title">'.$isceb_wiki_semester.'</p>' );
+                $get_wiki_courses = get_posts(array(
+                    'post_type' => 'course',
+                    'numberposts' => -1,
+                    'meta_query' => array(
+                        'relation'		=> 'AND',
+                            array(
+                                'key' => 'phases', // name of custom field
+                                'value' => '"' . get_the_ID() . '"', // matches exactly "123", not just 123. This prevents a match for "1234"
+                                'compare' => 'LIKE'
+                            ),
+                            array(
+                                'key' => 'semester', // name of custom field
+                                'value' => $isceb_wiki_semester,
+                                'compare' => '='
+                            ),
                     )
-                )
-            ));
-            isceb_wiki_get_template('template-parts/isceb-wiki-content-nav.php', array("isceb_wiki_nav_list" => $get_wiki_courses));
+                ));
+                isceb_wiki_get_template('template-parts/isceb-wiki-content-nav.php', array("isceb_wiki_nav_list" => $get_wiki_courses));
+            }
             break;
+        
         case 'course':
             $wiki_file_terms = get_terms('wiki_file_category');
 
