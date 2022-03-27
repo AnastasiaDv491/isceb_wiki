@@ -40,14 +40,12 @@ defined('ABSPATH') || exit;
             <div class="isceb-wiki-file-right-part">
 
 
-                <a href=" <?php echo $file_content['url'] ?>" download class="isceb-wiki-download-wrap" id="<?php echo $isceb_wiki_course_file->ID ?>">
+                <a href=" <?php echo $file_attachment_url ?>" download class="isceb-wiki-download-wrap" id="<?php echo $isceb_wiki_course_file->ID ?>">
                     <!-- <button class="isceb-wiki-file-download isceb-wiki-button-not-gb">Download</button> -->
                     <i class="fas fa-download fa-2x" id="<?php echo $isceb_wiki_course_file->ID ?>"></i>
                 </a>
 
             </div>
-
-            <!-- <p>About the file:</p> -->
 
 
 </article>
