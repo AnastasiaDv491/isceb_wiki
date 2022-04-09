@@ -11,7 +11,7 @@
 defined('ABSPATH') || exit;
 ?>
 
-<div class="col-md-2 widget-area" id="isceb-wiki-sidebar" role="complementary">
+<div class="col-md-auto widget-area" id="isceb-wiki-sidebar" role="complementary">
     <div class="isceb-nav-container-sticky">
         <div class="isceb-nav-header">
 
